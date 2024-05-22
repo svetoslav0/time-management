@@ -1,7 +1,13 @@
 export default {
     purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
     darkMode: false,
-    theme: {},
+    theme: {
+        extend: {
+            fontFamily: {
+                mavenPro: ['Maven Pro', 'sans-serif'],
+            },
+        },
+    },
     variants: {
         extend: {},
     },
