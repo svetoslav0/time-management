@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        userRole: {
+            type: String,
+            ref: 'Role'
+        }
     },
     {
         timestamps: true,
