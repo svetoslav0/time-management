@@ -9,10 +9,15 @@ export default function Login() {
     const {
         register,
         handleSubmit,
+        trigger,
         formState: { errors },
+        reset
     } = useForm<FormData>();
 
-    const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+    const onSubmit: SubmitHandler<FormData> = (data) => {
+        console.log(data);
+        reset();
+    };
 
     return (
         <div className='mx-auto flex max-w-sm flex-col gap-6 p-5'>
@@ -31,9 +36,11 @@ export default function Login() {
                         className={`block w-full rounded-lg border ${
                             errors.username ? 'border-red-500' : 'border-gray-300'
                         } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
-                        placeholder='Timi123'
+                        placeholder='Peter123'
                         {...register('username', { required: true })}
                         aria-invalid={errors.username ? 'true' : 'false'}
+                        onBlur={() => trigger('username')}
+
                     />
                     {errors.username?.type === 'required' && (
                         <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
@@ -56,6 +63,7 @@ export default function Login() {
                         } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
                         {...register('password', { required: true })}
                         aria-invalid={errors.password ? 'true' : 'false'}
+                        onBlur={() => trigger('password')}
                     />
                     {errors.password?.type === 'required' && (
                         <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
@@ -65,7 +73,7 @@ export default function Login() {
                 </div>
                 <button
                     type='submit'
-                    className='w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+                    className='w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-full dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
                 >
                     Login
                 </button>
