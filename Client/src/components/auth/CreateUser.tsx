@@ -107,9 +107,9 @@ export default function CreateUser() {
                         <option value='' disabled>
                             Select a role
                         </option>
-                        <option value='customer'>Customer</option>
-                        <option value='employee'>Employee</option>
-                        <option value='admin'>Admin</option>
+                        <option value='Customer'>Customer</option>
+                        <option value='Employee'>Employee</option>
+                        <option value='Admin'>Admin</option>
                     </select>
                     {errors.role && (
                         <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
