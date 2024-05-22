@@ -3,6 +3,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { createUserSchema } from '../../shared/formValidations';
 import { CreateUserDataType } from '../../shared/types';
 
+//TODO: Implement Route Guard so this page will only be available to Admin users
+
 export default function CreateUser() {
     const {
         register,
@@ -142,8 +144,7 @@ export default function CreateUser() {
                         htmlFor='rePassword'
                         className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
                     />
-                  
-                 
+
                     <input
                         type='password'
                         id='rePassword'
