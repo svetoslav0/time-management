@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema(
         },
         userRole: {
             type: String,
-            ref: 'Role'
+            ref: 'Role',
+            required: true
         }
     },
     {
