@@ -21,3 +21,15 @@ exports.login = async (userData) => {
         userRole: user.userRole,
     };
 };
+
+exports.createUser = async (userData) => {
+    const { username, firstName, lastName, password, userRole  } = userData;
+
+    const user = await User.create({ username: username, firstName: firstName, lastName:lastName, password: password, userRole:userRole });
+   
+    return {
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userRole: user.userRole,}
+};
