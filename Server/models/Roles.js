@@ -8,7 +8,7 @@ const roleSchema = new mongoose.Schema({
     unique: true
   },
   userRef: [{
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }]
 });
