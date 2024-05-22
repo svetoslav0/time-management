@@ -1,13 +1,7 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-
-type FormData = {
-    username: string;
-    firstName: string;
-    lastName: string;
-    role: string;
-    password: string;
-    rePassword: string;
-};
+import { yupResolver } from '@hookform/resolvers/yup';
+import { createUserSchema } from '../../shared/formValidations';
+import { CreateUserDataType } from '../../shared/types';
 
 export default function CreateUser() {
     const {
@@ -15,11 +9,12 @@ export default function CreateUser() {
         handleSubmit,
         trigger,
         formState: { errors },
-        watch,
         reset,
-    } = useForm<FormData>();
+    } = useForm({
+        resolver: yupResolver(createUserSchema),
+    });
 
-    const onSubmit: SubmitHandler<FormData> = (data) => {
+    const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
         console.log(data);
         reset();
     };
@@ -32,23 +27,21 @@ export default function CreateUser() {
                     <label
                         htmlFor='username'
                         className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-                    >
-                        Username
-                    </label>
+                    />
+
                     <input
                         type='text'
                         id='username'
                         className={`block w-full rounded-lg border ${
                             errors.username ? 'border-red-500' : 'border-gray-300'
                         } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
-                        placeholder='Peter123'
-                        {...register('username', { required: true })}
-                        aria-invalid={errors.username ? 'true' : 'false'}
+                        placeholder='Username'
+                        {...register('username')}
                         onBlur={() => trigger('username')}
                     />
-                    {errors.username?.type === 'required' && (
+                    {errors.username && (
                         <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                            Username required!
+                            {errors.username.message}
                         </span>
                     )}
                 </div>
@@ -56,23 +49,21 @@ export default function CreateUser() {
                     <label
                         htmlFor='firstName'
                         className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-                    >
-                        First name
-                    </label>
+                    />
+
                     <input
                         type='text'
                         id='firstName'
                         className={`block w-full rounded-lg border ${
                             errors.firstName ? 'border-red-500' : 'border-gray-300'
                         } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
-                        placeholder='Peter'
-                        {...register('firstName', { required: true })}
-                        aria-invalid={errors.username ? 'true' : 'false'}
+                        placeholder='First name'
+                        {...register('firstName')}
                         onBlur={() => trigger('firstName')}
                     />
-                    {errors.firstName?.type === 'required' && (
+                    {errors.firstName && (
                         <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                            First name required!
+                            {errors.firstName.message}
                         </span>
                     )}
                 </div>
@@ -80,23 +71,21 @@ export default function CreateUser() {
                     <label
                         htmlFor='lastName'
                         className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-                    >
-                        Last name
-                    </label>
+                    />
+
                     <input
                         type='text'
                         id='lastName'
                         className={`block w-full rounded-lg border ${
                             errors.lastName ? 'border-red-500' : 'border-gray-300'
                         } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
-                        placeholder='Petrov'
-                        {...register('lastName', { required: true })}
-                        aria-invalid={errors.username ? 'true' : 'false'}
+                        placeholder='Last name'
+                        {...register('lastName')}
                         onBlur={() => trigger('lastName')}
                     />
-                    {errors.lastName?.type === 'required' && (
+                    {errors.lastName && (
                         <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                            Last name required!
+                            {errors.lastName.message}
                         </span>
                     )}
                 </div>
@@ -104,14 +93,14 @@ export default function CreateUser() {
                     <label
                         htmlFor='role'
                         className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-                    >
-                        Select role
-                    </label>
+                    />
+
                     <select
                         id='role'
                         className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                         defaultValue=''
-                        {...register('role', { required: true })}
+                        {...register('role')}
+                        onBlur={() => trigger('role')}
                     >
                         <option value='' disabled>
                             Select a role
@@ -120,9 +109,9 @@ export default function CreateUser() {
                         <option value='employee'>Employee</option>
                         <option value='admin'>Admin</option>
                     </select>
-                    {errors.role?.type === 'required' && (
+                    {errors.role && (
                         <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                            Role required!
+                            {errors.role.message}
                         </span>
                     )}
                 </div>
@@ -130,22 +119,21 @@ export default function CreateUser() {
                     <label
                         htmlFor='password'
                         className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-                    >
-                        Password
-                    </label>
+                    />
+
                     <input
                         type='password'
                         id='password'
+                        placeholder='Password'
                         className={`block w-full rounded-lg border ${
                             errors.password ? 'border-red-500' : 'border-gray-300'
                         } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
-                        {...register('password', { required: true })}
-                        aria-invalid={errors.password ? 'true' : 'false'}
+                        {...register('password')}
                         onBlur={() => trigger('password')}
                     />
-                    {errors.password?.type === 'required' && (
+                    {errors.password && (
                         <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                            Password required!
+                            {errors.password.message}
                         </span>
                     )}
                 </div>
@@ -153,24 +141,22 @@ export default function CreateUser() {
                     <label
                         htmlFor='rePassword'
                         className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-                    >
-                        Repeat Password
-                    </label>
+                    />
+                  
+                 
                     <input
                         type='password'
                         id='rePassword'
+                        placeholder='Repeat password'
                         className={`block w-full rounded-lg border ${
                             errors.rePassword ? 'border-red-500' : 'border-gray-300'
                         } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
-                        {...register('rePassword', {
-                            validate: (value) => value === watch('password'),
-                        })}
-                        aria-invalid={errors.rePassword ? 'true' : 'false'}
+                        {...register('rePassword')}
                         onBlur={() => trigger('rePassword')}
                     />
                     {errors.rePassword && (
                         <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                            Passwords must match!
+                            {errors.rePassword.message}
                         </span>
                     )}
                 </div>
@@ -178,7 +164,7 @@ export default function CreateUser() {
                     type='submit'
                     className='block w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-full dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
                 >
-                    Register
+                    Create user
                 </button>
             </form>
         </div>

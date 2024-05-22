@@ -1,9 +1,7 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-
-type FormData = {
-    username: string;
-    password: string;
-};
+import { yupResolver } from '@hookform/resolvers/yup';
+import { loginSchema } from '../../shared/formValidations';
+import { LoginFormDataType } from '../../shared/types';
 
 export default function Login() {
     const {
@@ -11,10 +9,12 @@ export default function Login() {
         handleSubmit,
         trigger,
         formState: { errors },
-        reset
-    } = useForm<FormData>();
+        reset,
+    } = useForm({
+        resolver: yupResolver(loginSchema),
+    });
 
-    const onSubmit: SubmitHandler<FormData> = (data) => {
+    const onSubmit: SubmitHandler<LoginFormDataType> = (data) => {
         console.log(data);
         reset();
     };
@@ -27,24 +27,21 @@ export default function Login() {
                     <label
                         htmlFor='username'
                         className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-                    >
-                        Username
-                    </label>
+                    />
+
                     <input
                         type='text'
                         id='username'
                         className={`block w-full rounded-lg border ${
                             errors.username ? 'border-red-500' : 'border-gray-300'
                         } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
-                        placeholder='Peter123'
-                        {...register('username', { required: true })}
-                        aria-invalid={errors.username ? 'true' : 'false'}
+                        placeholder='Username'
+                        {...register('username')}
                         onBlur={() => trigger('username')}
-
                     />
-                    {errors.username?.type === 'required' && (
+                    {errors.username && (
                         <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                            Username required!
+                            {errors.username.message}
                         </span>
                     )}
                 </div>
@@ -52,22 +49,21 @@ export default function Login() {
                     <label
                         htmlFor='password'
                         className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-                    >
-                        Password
-                    </label>
+                    />
+
                     <input
                         type='password'
                         id='password'
+                        placeholder='Password'
                         className={`block w-full rounded-lg border ${
                             errors.password ? 'border-red-500' : 'border-gray-300'
                         } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
-                        {...register('password', { required: true })}
-                        aria-invalid={errors.password ? 'true' : 'false'}
+                        {...register('password')}
                         onBlur={() => trigger('password')}
                     />
-                    {errors.password?.type === 'required' && (
+                    {errors.password && (
                         <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                            Password required!
+                            {errors.password.message}
                         </span>
                     )}
                 </div>
