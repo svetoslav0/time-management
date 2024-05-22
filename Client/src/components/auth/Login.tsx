@@ -16,7 +16,7 @@ export default function Login() {
 
     return (
         <div className='mx-auto flex max-w-sm flex-col gap-6 p-5'>
-            <h2>Login</h2>
+            <h2 className='self-center'>Login</h2>
             <form className='' onSubmit={handleSubmit(onSubmit)}>
                 <div className='mb-5'>
                     <label
