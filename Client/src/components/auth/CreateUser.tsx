@@ -9,7 +9,7 @@ type FormData = {
     rePassword: string;
 };
 
-export default function Register() {
+export default function CreateUser() {
     const {
         register,
         handleSubmit,
