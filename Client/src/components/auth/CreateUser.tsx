@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { SubmitHandler,useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { createUserSchema } from '../../shared/formValidations';
 import { CreateUserDataType } from '../../shared/types';
@@ -27,9 +27,24 @@ export default function CreateUser() {
         <div className='mx-auto flex max-w-sm flex-col gap-6 p-5'>
             <h2 className='self-center'>Create user</h2>
             <form className='' onSubmit={handleSubmit(onSubmit)}>
-                <InputComponent errors={errors} register={register} trigger={trigger} field='username' />
-                <InputComponent errors={errors} register={register} trigger={trigger} field='firstName' />
-                <InputComponent errors={errors} register={register} trigger={trigger} field='lastName' />
+                <InputComponent
+                    error={errors.username?.message}
+                    register={register}
+                    trigger={trigger}
+                    field='username'
+                />
+                <InputComponent
+                    error={errors.firstName?.message}
+                    register={register}
+                    trigger={trigger}
+                    field='firstName'
+                />
+                <InputComponent
+                    error={errors.lastName?.message}
+                    register={register}
+                    trigger={trigger}
+                    field='lastName'
+                />
                 <div className='mb-5'>
                     <label
                         htmlFor='role'
@@ -56,8 +71,20 @@ export default function CreateUser() {
                         </span>
                     )}
                 </div>
-                <InputComponent errors={errors} register={register} trigger={trigger} field='password' />
-                <InputComponent errors={errors} register={register} trigger={trigger} field='rePassword' />
+                <InputComponent
+                    error={errors.password?.message}
+                    register={register}
+                    trigger={trigger}
+                    field='password'
+                    type='password'
+                />
+                <InputComponent
+                    error={errors.rePassword?.message}
+                    register={register}
+                    trigger={trigger}
+                    field='rePassword'
+                    type='password'
+                />
                 <button
                     type='submit'
                     className='block w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-full dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
