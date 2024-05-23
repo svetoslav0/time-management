@@ -1,5 +1,6 @@
 const { Role } = require("../models/Roles");
 
+// Function to validate user roles
 const checkRoleExistence = async (roleName) => {
     try {
         // Find the role by its name
@@ -46,9 +47,11 @@ const validateUserData = async (username, firstName, lastName, password, userRol
         throw new Error('User exists!');
     };
 
-    const roleExists = await checkRoleExistence('admin');
+    // Check if a role with the same username already exists in the database
+    const roleExists = await checkRoleExistence(userRole);
 
     if (!roleExists) {
+        // If role with the same name does not exist, throw an error
         throw new Error('Role does not exist!');
     }
 };
