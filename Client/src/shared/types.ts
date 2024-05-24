@@ -1,3 +1,5 @@
+import { FieldValues, SubmitHandler, UseFormReturn } from 'react-hook-form';
+
 export type LoginFormDataType = {
     username: string;
     password: string;
@@ -11,6 +13,7 @@ export type CreateUserDataType = {
     password: string;
     rePassword?: string;
 };
+
 
 // requestsTypes
 
@@ -29,3 +32,8 @@ export interface HttpService {
     put<T, V>(url: string, data: T, headers?: Record<string, string>): Promise<V>;
     delete<V>(url: string, headers?: Record<string, string>): Promise<V>;
 }
+
+export type FormProps<T extends FieldValues> = UseFormReturn<T> & { onSubmit: SubmitHandler<T> };
+
+export interface LoginFormProps extends FormProps<LoginFormDataType> {}
+export interface CreateUserFormProps extends FormProps<CreateUserDataType> {}
