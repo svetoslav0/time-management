@@ -14,6 +14,25 @@ export type CreateUserDataType = {
     rePassword?: string;
 };
 
+
+// requestsTypes
+
+export type MethodType = 'GET' | 'POST' | 'PUT' | 'DELETE';
+
+export interface RequestOptions<T> {
+    url: string;
+    method: MethodType;
+    data?: T;
+    headers?: Record<string, string>;
+}
+
+export interface HttpService {
+    get<V>(url: string, headers?: Record<string, string>): Promise<V>;
+    post<T, V>(url: string, data: T, headers?: Record<string, string>): Promise<V>;
+    put<T, V>(url: string, data: T, headers?: Record<string, string>): Promise<V>;
+    delete<V>(url: string, headers?: Record<string, string>): Promise<V>;
+}
+
 export type FormProps<T extends FieldValues> = UseFormReturn<T> & { onSubmit: SubmitHandler<T> };
 
 export interface LoginFormProps extends FormProps<LoginFormDataType> {}
