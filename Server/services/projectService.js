@@ -1,7 +1,7 @@
 const {Project} = require('../models/Project')
 const {validateProjectData} = require('../utils/validateProjectData')
 
-exports.create = async (projectData) => {
+exports.createProject = async (projectData) => {
     const {clientName, projectName, startingDate, pricePerHour, employeedIds} = projectData
 
     await validateProjectData(clientName, projectName, startingDate, pricePerHour, employeedIds)
