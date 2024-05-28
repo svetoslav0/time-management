@@ -3,7 +3,7 @@ const router = require("express").Router();
 const userService = require("../services/userService");
 
 router.post("/login", async (req, res) => {
-    const userData = req.body.user;
+    const userData = req.body;
 
     try {
         const user = await userService.login(userData);
@@ -16,7 +16,7 @@ router.post("/login", async (req, res) => {
 // Route to handle POST requests to create a new user
 router.post("/user", async (req, res) => {
     // Extract user data from the request body
-    const userData = req.body.user;
+    const userData = req.body;
 
     try {
         // TODO: ADD ADDITIONAL VALIDATION FOR DIFFERENT TYPES OF USERS WHEN NEEDED

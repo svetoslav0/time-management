@@ -1,6 +1,6 @@
 const isAdmin = (req, res, next) => {
     // Check if user is authenticated and has admin role
-    if (req.body.user && req.body.user.userRole === 'admin') {
+    if (req.body.username && req.body.userRole === 'admin') {
       // User is admin, proceed to the next middleware
       next();
     } else {
