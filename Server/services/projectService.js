@@ -2,9 +2,9 @@ const {Project} = require('../models/Project')
 const {validateProjectData} = require('../utils/validateProjectData')
 
 exports.createProject = async (projectData) => {
-    const {clientName, projectName, startingDate, pricePerHour, employeedIds} = projectData
+    const {clientName, projectName, startingDate, pricePerHour, employeeIds} = projectData
 
-    await validateProjectData(clientName, projectName, startingDate, pricePerHour, employeedIds)
+    await validateProjectData(clientName, projectName, startingDate, pricePerHour, employeeIds)
 
     try{
         const project = await Project.create({
@@ -12,7 +12,7 @@ exports.createProject = async (projectData) => {
             projectName: projectName, 
             startingDate: startingDate, 
             pricePerHour: pricePerHour, 
-            employeedIds: employeedIds,
+            employeeIds: employeeIds,
         })
 
         return {
@@ -20,7 +20,7 @@ exports.createProject = async (projectData) => {
             projectName: project.projectName, 
             startingDate: project.startingDate, 
             pricePerHour: project.pricePerHour, 
-            employeedIds: project.employeedIds, 
+            employeeIds: project.employeeIds, 
         }
     }catch(error){
         if(error.name === 'ValidationError'){
