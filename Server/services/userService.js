@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const {validateUserData} = require("../utils/validateUserDataUtil");
 
 exports.login = async (userData) => {
     const user = await User.findOne({ username: userData.username });
@@ -20,4 +21,42 @@ exports.login = async (userData) => {
         lastName: user.lastName,
         userRole: user.userRole,
     };
+};
+
+exports.createUser = async (userData) => {
+    const { username, firstName, lastName, password, confirmPassword, userRole  } = userData;
+    //TODO ADD VALIDATION FOR DIFFERENT KIND OF USERS
+
+    // Validate user data
+    await validateUserData(userData);
+
+    try {
+        // Create the user in the database
+        const user = await User.create({ 
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          password: password,
+          userRole: userRole 
+        });
+      
+        // Return the created user information
+        return {
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          userRole: user.userRole
+        };
+
+      } catch (error) {
+        if (error.name === 'ValidationError') {
+          // If it's a validation error, throw error with the error's message
+          throw new Error(error.message);
+        } else {
+          // For other types of errors, handle them generically
+          console.error('Error searching for user existence:', error);
+          throw new Error("Trouble creating a new user!");
+        }
+      }
+
 };
