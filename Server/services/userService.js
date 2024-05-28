@@ -58,5 +58,31 @@ exports.createUser = async (userData) => {
           throw new Error("Trouble creating a new user!");
         }
       }
-
 };
+
+exports.editUser = async (userData) => {
+  // Validate user data
+  await validateUserData(userData);
+
+  try {
+      // Edit the user in the database
+      const user = await User.findByIdAndUpdate(id, userData);
+    
+      // Return the edited user information
+      return {
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userRole: user.userRole
+      };
+
+    } catch (error) {
+      if (error.name === 'ValidationError') {
+        // If it's a validation error, throw error with the error's message
+        throw new Error(error.message);
+      } else {
+        // For other types of errors, handle them generically
+        throw new Error("Trouble editing a new user!");
+      }
+    }
+}
