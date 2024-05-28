@@ -28,7 +28,7 @@ exports.createUser = async (userData) => {
     //TODO ADD VALIDATION FOR DIFFERENT KIND OF USERS
 
     // Validate user data
-    await validateUserData(username, firstName, lastName, password, confirmPassword, userRole);
+    await validateUserData({username: username, firstName: firstName, lastName: lastName, password: password, confirmPassword: confirmPassword, userRole: userRole});
 
     try {
         // Create the user in the database

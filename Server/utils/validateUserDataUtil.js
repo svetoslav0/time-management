@@ -20,7 +20,7 @@ const checkRoleExistence = async (roleName) => {
 };
 
 // Function to validate user data before creating a new user
-const validateUserData = async (username, firstName, lastName, password, confirmPassword, userRole) => {
+const validateUserData = async ({username, firstName, lastName, password, confirmPassword, userRole}) => {
 
     // Check if the username is at least 2 characters long
     if (username.length < 2) {
