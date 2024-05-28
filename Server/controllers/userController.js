@@ -1,5 +1,5 @@
 const router = require("express").Router();
-
+const isAdmin = require('../middlewares/isAdminMiddleware')
 const userService = require("../services/userService");
 
 router.post("/login", async (req, res) => {
@@ -32,5 +32,20 @@ router.post("/user", async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 });
+
+router.post('/edit/:id', isAdmin, async (req,res) => {
+    const { username, firstName, lastName, password, confirmPassword, userRole  } = req.body;
+    const userId = req.params.id
+    try{
+        // Call the editUser function from the userService to edit a new user
+        await userService.editUser(userId, {username, firstName, lastName, password, confirmPassword, userRole })
+
+        // If user editing is successful, send a success response with the edited user
+        res.status(200).json(user);
+    }catch(error){
+        // If an error occurs during user editing, send a failure response with the error message
+        res.status(400).json({ message: error.message });
+    }
+})
 
 module.exports = router;
