@@ -24,11 +24,11 @@ exports.login = async (userData) => {
 };
 
 exports.createUser = async (userData) => {
-    const { username, firstName, lastName, password, userRole  } = userData;
+    const { username, firstName, lastName, password, confirmPassword, userRole  } = userData;
     //TODO ADD VALIDATION FOR DIFFERENT KIND OF USERS
 
     // Validate user data
-    await validateUserData(username, firstName, lastName, password, userRole);
+    await validateUserData(username, firstName, lastName, password, confirmPassword, userRole);
 
     try {
         // Create the user in the database

@@ -20,7 +20,7 @@ const checkRoleExistence = async (roleName) => {
 };
 
 // Function to validate user data before creating a new user
-const validateUserData = async (username, firstName, lastName, password, userRole) => {
+const validateUserData = async (username, firstName, lastName, password, confirmPassword, userRole) => {
 
     // Check if the username is at least 2 characters long
     if (username.length < 2) {
@@ -30,6 +30,12 @@ const validateUserData = async (username, firstName, lastName, password, userRol
     // Check if the password is at least 6 characters long
     else if (password.length < 6) {
         throw new Error('Password is not long enough');
+    }
+
+    // Check if the confirm password is the same as password
+    else if(confirmPassword !== password)
+    {
+        throw new Error('Passwords does not match!');
     };
 
     let doesUserExist;
