@@ -41,7 +41,7 @@ const validateUserData = async ({username, firstName, lastName, password, confir
     let doesUserExist;
     // Check if a user with the same username already exists in the database
     try {
-        doesUserExist = await User.findOne({ username });
+        doesUserExist = await User.findOne({ username: username });
     } catch (error) {
         // Handle any errors
         console.error('Error searching for user existence:', error);
