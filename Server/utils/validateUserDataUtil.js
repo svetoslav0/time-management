@@ -7,11 +7,8 @@ const checkRoleExistence = async (roleName) => {
         const role = await Role.findOne({ name: roleName });
 
         // If role is found, return true
-        if (role) {
-            return true;
-        } else {
-            return false;
-        }
+        return !!role;
+        
     } catch (error) {
         // Handle any errors
         console.error('Error checking role existence:', error);
@@ -20,7 +17,9 @@ const checkRoleExistence = async (roleName) => {
 };
 
 // Function to validate user data before creating a new user
-const validateUserData = async ({username, firstName, lastName, password, confirmPassword, userRole}) => {
+const validateUserData = async (userData) => {
+
+    const { username, firstName, lastName, password, confirmPassword, userRole  } = userData;
 
     // Check if the username is at least 2 characters long
     if (username.length < 2) {
