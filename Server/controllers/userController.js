@@ -38,16 +38,15 @@ router.patch("/:userId/archive", isAdmin, async (req, res) => {
     const userId = req.params.userId;
 
     try {
-        const user = await userService.getSingleUser(userId);
-        if (!user) {
-            throw new Error("User does not exist");
-        }
-
         const updatedUser = await userService
             .updateUser(userId, {
                 status: "inactive",
             })
             .populate("userRole");
+
+        if (!updatedUser) {
+            throw new Error("User does not exist");
+        }
 
         const { _id, username, firstName, lastName, status } = updatedUser;
         const userRole = updatedUser.userRole.name;
