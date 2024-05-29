@@ -2,6 +2,8 @@ const router = require("express").Router();
 
 const userService = require("../services/userService");
 
+const isAdmin = require("../middlewares/isAdminMiddleware");
+
 router.post("/login", async (req, res) => {
     const userData = req.body;
 
@@ -32,7 +34,7 @@ router.post("/user", async (req, res) => {
     }
 });
 
-router.patch("/:userId/archive", async (req, res) => {
+router.patch("/:userId/archive", isAdmin, async (req, res) => {
     const userId = req.params.userId;
 
     try {
