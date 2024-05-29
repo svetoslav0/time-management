@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 const { initializeRoles } = require("./models/Roles");
+const initializeAdmin = require("./utils/initializeAdmin");
 
 const routes = require("./routes");
 
@@ -14,6 +15,7 @@ app.use(routes);
 const mongoURI = process.env.MONGODB_URI;
 mongoose.connect(mongoURI).then(() => {
     initializeRoles();
+    initializeAdmin();
     console.log("MongoDb Connected!");
 });
 
