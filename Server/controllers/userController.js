@@ -2,8 +2,10 @@ const router = require("express").Router();
 
 const userService = require("../services/userService");
 
+
 router.post("/login", async (req, res) => {
     const userData = req.body;
+
 
     try {
         const user = await userService.login(userData);
@@ -12,6 +14,7 @@ router.post("/login", async (req, res) => {
         res.status(401).json({ message: "Invalid username or password" });
     }
 });
+
 
 // Route to handle POST requests to create a new user
 router.post("/user", async (req, res) => {
