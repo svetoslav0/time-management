@@ -43,10 +43,14 @@ router.patch("/:userId/archive", isAdmin, async (req, res) => {
             throw new Error("User does not exist");
         }
 
-        const { _id, username, firstName, lastName, userRole, status } =
-            await userService.updateUser(userId, {
+        const updatedUser = await userService
+            .updateUser(userId, {
                 status: "inactive",
-            });
+            })
+            .populate("userRole");
+
+        const { _id, username, firstName, lastName, status } = updatedUser;
+        const userRole = updatedUser.userRole.name;
 
         res.status(200).json({
             _id,
