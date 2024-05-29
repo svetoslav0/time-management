@@ -43,7 +43,7 @@ router.patch("/:userId/archive", async (req, res) => {
 
         const { _id, username, firstName, lastName, userRole, status } =
             await userService.updateUser(userId, {
-                status: "archived",
+                status: "inactive",
             });
 
         res.status(200).json({
