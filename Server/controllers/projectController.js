@@ -2,7 +2,7 @@ const router = require('express').Router()
 const projectService = require('../services/projectService')
 
 // Route to handle POST requests to create a new project
-router.post("/project", async (req, res) => {
+router.post("/", async (req, res) => {
     
     // Extract project data from the request body
     const projectData = req.body;
