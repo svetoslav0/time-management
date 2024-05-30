@@ -77,10 +77,9 @@ exports.getUsers = async (queryData) => {
         // Fetch users based on the query, incudes _id by default
         const users = await User.find(query).select('username firstName lastName userRole');;
         // Get total count of users with the applied filters
-        const totalCount = await User.countDocuments(query);
 
         return {
-            total: totalCount,
+            total: users.length,
             items: users
         };
 
