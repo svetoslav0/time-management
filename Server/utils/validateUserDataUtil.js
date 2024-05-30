@@ -14,7 +14,20 @@ const checkRoleExistence = async (roleName) => {
     }
 };
 
+const checkUserDataFieldsExistence = async (userData) => {
+    const requiredFields = Object.keys(User.schema.paths).filter(field => User.schema.paths[field].isRequired);
+
+    const missingFields = requiredFields.filter(field => !(field in userData));
+
+    if (missingFields.length > 0) {
+        const errorMessage = `One or more required fields are missing: ${missingFields.join(', ')}`;
+        throw new Error(errorMessage);
+    }
+};
+
 const validateUserData = async (userData) => {
+    await checkUserDataFieldsExistence(userData);
+    
     const {
         username,
         firstName,

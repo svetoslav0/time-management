@@ -6,7 +6,6 @@ const userService = require("../services/userService");
 router.post("/login", async (req, res) => {
     const userData = req.body;
 
-
     try {
         const user = await userService.login(userData);
         res.status(200).json(user);
@@ -30,6 +29,7 @@ router.post("/user", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+
     try {
         const queryData = req.query;
 

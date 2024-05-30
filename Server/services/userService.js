@@ -37,6 +37,7 @@ exports.createUser = async (userData) => {
     await validateUserData(userData);
 
     const role = await Role.findOne({ name: userRole });
+
     try {
         const user = await User.create({
             username: username,
@@ -53,6 +54,7 @@ exports.createUser = async (userData) => {
             userRole: userData.userRole,
         };
     } catch (error) {
+
         if (error.name === "ValidationError") {
             throw new Error(error.message);
         } else {
@@ -73,8 +75,8 @@ exports.getUsers = async (queryData) => {
             total: users.length,
             items: users
         };
-
     } catch (error) {
+
         console.error("Error fetching users:", error);
         throw new Error("Internal Server Error");
     }
