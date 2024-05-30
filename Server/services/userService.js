@@ -70,7 +70,6 @@ exports.createUser = async (userData) => {
       }
 };
 
-
 exports.editUser = async (id, userData) => {
     await validateUserDataOnUserUpdate(userData);
 
@@ -102,3 +101,23 @@ exports.getSingleUser = (userId) => User.findById(userId);
 
 exports.updateUser = (userId, userData) =>
     User.findByIdAndUpdate(userId, userData, { new: true });
+
+exports.getUsers = async (queryData) => {
+
+    try {
+        const query = {};
+
+        const users = await User.find(query).select('username firstName lastName userRole');
+        console.log(users[0].userRole);
+        const totalCount = await User.countDocuments(query);
+
+        return {
+            total: totalCount,
+            items: users
+        };
+
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        throw new Error("Internal Server Error");
+    }
+};
