@@ -33,14 +33,11 @@ exports.createUser = async (userData) => {
         confirmPassword,
         userRole,
     } = userData;
-    //TODO ADD VALIDATION FOR DIFFERENT KIND OF USERS
 
-    // Validate user data
     await validateUserData(userData);
 
     const role = await Role.findOne({ name: userRole });
     try {
-        // Create the user in the database
         const user = await User.create({
             username: username,
             firstName: firstName,
@@ -49,7 +46,6 @@ exports.createUser = async (userData) => {
             userRole: role._id,
         });
 
-        // Return the created user information
         return {
             username: user.username,
             firstName: user.firstName,
@@ -58,12 +54,28 @@ exports.createUser = async (userData) => {
         };
     } catch (error) {
         if (error.name === "ValidationError") {
-            // If it's a validation error, throw error with the error's message
             throw new Error(error.message);
         } else {
-            // For other types of errors, handle them generically
             console.error("Error searching for user existence:", error);
             throw new Error("Trouble creating a new user!");
         }
+    }
+};
+
+exports.getUsers = async (queryData) => {
+
+    try {
+        const query = {};
+
+        const users = await User.find(query).select('username firstName lastName userRole');;
+
+        return {
+            total: users.length,
+            items: users
+        };
+
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        throw new Error("Internal Server Error");
     }
 };
