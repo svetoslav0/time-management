@@ -61,7 +61,11 @@ export default function ActiveUsersDashboard() {
                         {activeUsers.map((user) => (
                             <tr
                                 key={user.username}
-                                className=' bg-gray-100 even:bg-gray-200 dark:bg-gray-800'
+                                className=' cursor-pointer border-b-2
+                                 border-gray-300
+                                  bg-gray-100 transition-colors
+                                   duration-300 ease-in-out even:bg-gray-200
+                                    hover:bg-white dark:border-gray-700 dark:bg-gray-800'
                                 onClick={() => {
                                     console.log(user.username);
                                 }}
