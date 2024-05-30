@@ -1,9 +1,9 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import ActiveUsersDashboard from './components/ActiveUsersDashboard/ActiveUsersDashboard';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import RootLayout from './components/layout/RootLayout';
+import UsersDashboard from './components/UsersDashboard/UsersDashboard';
 
 function App() {
     const router = createBrowserRouter([
@@ -31,16 +31,7 @@ function App() {
                 },
                 {
                     path: 'users',
-                    children: [
-                        {
-                            path: 'active',
-                            element: <ActiveUsersDashboard />,
-                        },
-                        {
-                            path: 'inactive',
-                            element: <p>Incative users</p>,
-                        },
-                    ],
+                    element: <UsersDashboard />,
                 },
             ],
         },

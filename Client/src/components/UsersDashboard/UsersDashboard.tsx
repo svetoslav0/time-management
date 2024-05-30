@@ -5,7 +5,7 @@ import UserCard from './UserCard';
 
 // import httpServices from '../../services/httpServices';
 
-export default function ActiveUsersDashboard() {
+export default function UsersDashboard() {
     const [activeUsers, setActiveUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
