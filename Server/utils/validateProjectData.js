@@ -18,3 +18,4 @@ function isValidDateMoment(dateString) {
     return moment(dateString, "DD-MM-YYYY", true).isValid();
 }
 
+module.exports = validateProjectData;
