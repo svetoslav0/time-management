@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import ActiveUsersDashboard from './components/ActiveUsersDashboard/ActiveUsersDashboard';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import RootLayout from './components/layout/RootLayout';
@@ -25,6 +26,19 @@ function App() {
                         {
                             path: 'create-user',
                             element: <CreateUser />,
+                        },
+                    ],
+                },
+                {
+                    path: 'users',
+                    children: [
+                        {
+                            path: 'active',
+                            element: <ActiveUsersDashboard />,
+                        },
+                        {
+                            path: 'inactive',
+                            element: <p>Incative users</p>,
                         },
                     ],
                 },
