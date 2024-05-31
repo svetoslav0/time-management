@@ -24,10 +24,9 @@ router.post("/user", async (req, res) => {
         // TODO: ADD ADDITIONAL VALIDATION FOR DIFFERENT TYPES OF USERS WHEN NEEDED
 
         // Call the createUser function from the userService to create a new user
-        const { user, token } = await userService.createUser(userData);
+        const user = await userService.createUser(userData);
 
         // If user creation is successful, send a success response with the created user
-        res.cookie("authCookie", token, { httpOnly: true, secure: true });
         res.status(200).json(user);
     } catch (error) {
         // If an error occurs during user creation, send a failure response with the error message
