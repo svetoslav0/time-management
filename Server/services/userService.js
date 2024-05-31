@@ -55,12 +55,16 @@ exports.createUser = async (userData) => {
             userRole: role._id,
         });
 
+        const token = generateToken(user);
         // Return the created user information
         return {
-            username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            userRole: userData.userRole,
+            user: {
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                userRole: userData.userRole,
+            },
+            token,
         };
     } catch (error) {
         if (error.name === "ValidationError") {
