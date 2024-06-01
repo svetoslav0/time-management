@@ -33,7 +33,7 @@ router.post("/user", async (req, res) => {
     }
 });
 
-router.post('/edit/:id', isAdmin, async (req,res) => {
+router.patch('/:id', isAdmin, async (req,res) => {
     const { username, firstName, lastName, password, confirmPassword, userRole  } = req.body;
     const userId = req.params.id
     try{
