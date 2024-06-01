@@ -67,3 +67,8 @@ exports.createUser = async (userData) => {
         }
     }
 };
+
+exports.getSingleUser = (userId) => User.findById(userId);
+
+exports.updateUser = (userId, userData) =>
+    User.findByIdAndUpdate(userId, userData, { new: true });
