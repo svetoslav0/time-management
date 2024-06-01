@@ -27,23 +27,9 @@ const validateUserData = async (userData) => {
         userRole,
     } = userData;
 
-    // Check if the username is at least 2 characters long
-    if (username.length < 2) {
-        throw new Error("Username is not long enough");
-    }
-
-    // Check if the password is at least 6 characters long
-    else if (password.length < 6) {
-        throw new Error("Password is not long enough");
-    }
-
-    // Check if the confirm password is the same as password
-    else if (confirmPassword !== password) {
-        throw new Error("Passwords does not match!");
-    }
-
     let doesUserExist;
     // Check if a user with the same username already exists in the database
+
     try {
         doesUserExist = await User.findOne({ username: username });
     } catch (error) {
@@ -57,13 +43,34 @@ const validateUserData = async (userData) => {
         throw new Error("User exists!");
     }
 
-    // Check if a role with the same username already exists in the database
+   // Check if a role with the same username already exists in the database
     const roleExists = await checkRoleExistence(userRole);
 
     if (!roleExists) {
         // If role with the same name does not exist, throw an error
         throw new Error("Role does not exist!");
     }
+
+    // Check if the username is at least 2 characters long
+    if(!username){
+        throw new Error("Username is required!")
+    }else if(username.length < 2) {
+        throw new Error("Username is not long enough");
+    }
+
+    if(!firstName){
+        throw new Error("First name is required!")
+    }else if(username.length < 2) {
+        throw new Error("First name is not long enough");
+    }
+
+    if(!lastName){
+        throw new Error("Last name is required!")
+    }else if(username.length < 2) {
+        throw new Error("Last name is not long enough");
+    }
+
+
 };
 
 module.exports = {
