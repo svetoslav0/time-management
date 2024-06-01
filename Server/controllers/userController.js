@@ -2,6 +2,8 @@ const router = require("express").Router();
 
 const userService = require("../services/userService");
 
+const isAdmin = require("../middlewares/isAdminMiddleware");
+
 router.post("/login", async (req, res) => {
     const userData = req.body;
 
@@ -34,4 +36,33 @@ router.post("/user", async (req, res) => {
     }
 });
 
+router.patch("/:userId/archive", isAdmin, async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        const updatedUser = await userService
+            .updateUser(userId, {
+                status: "inactive",
+            })
+            .populate("userRole");
+
+        if (!updatedUser) {
+            throw new Error("User does not exist");
+        }
+
+        const { _id, username, firstName, lastName, status } = updatedUser;
+        const userRole = updatedUser.userRole.name;
+
+        res.status(200).json({
+            _id,
+            username,
+            firstName,
+            lastName,
+            userRole,
+            status,
+        });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
 module.exports = router;

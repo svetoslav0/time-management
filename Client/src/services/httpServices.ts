@@ -1,29 +1,24 @@
-import { HttpService, MethodType, RequestOptions } from '../shared/types';
+import buildQueryString from './buildQueryString';
 import { httpRequest } from './httpRequests';
 
-export default function httpServices(): HttpService {
-    const request = async <T, V>(
-        url: string,
-        method: MethodType,
-        data?: T,
-        headers?: Record<string, string>
-    ): Promise<V> => {
-        const options: RequestOptions<T> = { url, method, data, headers };
-        return httpRequest<T, V>(options);
-    };
-
+export default function httpServices() {
     return {
-        get: async <V>(url: string): Promise<V> => {
-            return request<null, V>(url, 'GET');
+        get: async <V>(
+            url: string,
+            params?: Record<string, string | boolean | number>
+        ): Promise<V> => {
+            const queryString = params ? `?${buildQueryString(params)}` : '';
+            const fullUrl = url + queryString;
+            return httpRequest<null, V>({ url: fullUrl, method: 'GET' });
         },
         post: async <T, V>(url: string, data: T, headers?: Record<string, string>): Promise<V> => {
-            return request<T, V>(url, 'POST', data, headers);
+            return httpRequest<T, V>({ url, method: 'POST', data, headers });
         },
         put: async <T, V>(url: string, data: T, headers?: Record<string, string>): Promise<V> => {
-            return request<T, V>(url, 'PUT', data, headers);
+            return httpRequest<T, V>({ url, method: 'PUT', data, headers });
         },
         delete: async <V>(url: string): Promise<V> => {
-            return request<null, V>(url, 'DELETE');
+            return httpRequest<null, V>({ url, method: 'DELETE' });
         },
     };
 }
