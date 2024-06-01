@@ -11,6 +11,6 @@ exports.generateToken = (userData) => {
             userRole: userData.userRole,
         },
         SECRET_KEY,
-        { expiresIn: "7d }
+        { expiresIn: "7d" }
     );
 };
