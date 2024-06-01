@@ -1,7 +1,8 @@
 const router = require('express').Router()
 const projectService = require('../services/projectService')
+const isAdmin = require('../middlewares/isAdminMiddleware') 
 
-router.post("/", async (req, res) => {
+router.post("/", isAdmin, async (req, res) => {
     
     const projectData = req.body;
 
