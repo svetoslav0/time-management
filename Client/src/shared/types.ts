@@ -1,5 +1,13 @@
 import { FieldValues, SubmitHandler, UseFormReturn } from 'react-hook-form';
 
+export type User = {
+    username: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    active: boolean;
+};
+
 export type LoginFormDataType = {
     username: string;
     password: string;
@@ -13,7 +21,6 @@ export type CreateUserDataType = {
     password: string;
     rePassword?: string;
 };
-
 
 // requestsTypes
 

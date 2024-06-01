@@ -3,8 +3,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 import httpServices from '../../services/httpServices';
 import { loginSchema } from '../../shared/formValidations';
-import { LoginFormDataType } from '../../shared/types';
+import { LoginFormDataType, User } from '../../shared/types';
 import InputComponent from '../../UI/formComponents/InputComponent';
+
+
 
 export default function Login() {
     const {
@@ -18,7 +20,10 @@ export default function Login() {
     });
 
     const onSubmit: SubmitHandler<LoginFormDataType> = async (data) => {
-        const response = await httpServices().post('/users/login', data);
+        const response = await httpServices().post<LoginFormDataType, User>(
+            '/users/login',
+            data
+        );
         if (response) {
             localStorage.setItem('user', JSON.stringify(response)); // Convert response to a string
         }
