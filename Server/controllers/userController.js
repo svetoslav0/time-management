@@ -65,4 +65,30 @@ router.patch("/:userId/archive", isAdmin, async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 });
+
+router.patch("/:userId/unarchive", isAdmin, async (req, res) => {
+    userId = req.params.userId;
+
+    const updatedUser = await userService
+        .updateUser(userId, {
+            status: "active",
+        })
+        .populate("userRole");
+
+    if (!updatedUser) {
+        return res.status(404).json({ message: "User does not exist" });
+    }
+
+    const { _id, username, firstName, lastName, status } = updatedUser;
+    const userRole = updatedUser.userRole.name;
+
+    res.status(200).json({
+        _id,
+        username,
+        firstName,
+        lastName,
+        userRole,
+        status,
+    });
+});
 module.exports = router;
