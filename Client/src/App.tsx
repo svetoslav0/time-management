@@ -30,8 +30,13 @@ function App() {
                     ],
                 },
                 {
-                    path: 'users',
-                    element: <UsersDashboard />,
+                    path: 'dashboard',
+                    children: [
+                        {
+                            path: 'users',
+                            element: <UsersDashboard />,
+                        },
+                    ],
                 },
             ],
         },
