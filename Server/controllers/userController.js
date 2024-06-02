@@ -4,19 +4,6 @@ const userService = require("../services/userService");
 
 const isAdmin = require("../middlewares/isAdminMiddleware");
 
-router.post("/login", async (req, res) => {
-    const userData = req.body;
-
-    try {
-        const { user, token } = await userService.login(userData);
-
-        res.cookie("authCookie", token, { httpOnly: true, secure: true });
-        res.status(200).json(user);
-    } catch (error) {
-        res.status(401).json({ message: "Invalid username or password" });
-    }
-});
-
 // Route to handle POST requests to create a new user
 router.post("/user", async (req, res) => {
     // Extract user data from the request body
