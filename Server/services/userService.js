@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { validateUserData } = require("../utils/validateUserDataUtil");
 const { Role } = require("../models/Roles");
+const { generateToken } = require("../utils/jwt");
 
 exports.login = async (userData) => {
     const user = await User.findOne({ username: userData.username });
@@ -16,11 +17,16 @@ exports.login = async (userData) => {
         throw new Error("Invalid username or password");
     }
 
+    const token = generateToken(user);
+
     return {
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        userRole: user.userRole,
+        user: {
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            userRole: user.userRole,
+        },
+        token,
     };
 };
 
@@ -64,6 +70,7 @@ exports.createUser = async (userData) => {
       }
 };
 
+
 exports.editUser = async (id, userData) => {
   await validateUserData(userData);
 
@@ -85,4 +92,7 @@ exports.editUser = async (id, userData) => {
     }
 }
 
+exports.getSingleUser = (userId) => User.findById(userId);
 
+exports.updateUser = (userId, userData) =>
+    User.findByIdAndUpdate(userId, userData, { new: true });
