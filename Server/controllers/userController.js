@@ -1,7 +1,7 @@
 const router = require("express").Router();
-
+const User = require("../models/User");
+const bcrypt = require("bcrypt");
 const userService = require("../services/userService");
-
 const isAdmin = require("../middlewares/isAdminMiddleware");
 
 router.post("/login", async (req, res) => {
@@ -65,4 +65,38 @@ router.patch("/:userId/archive", isAdmin, async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 });
+
+router.patch("/:id/password_restore", isAdmin, async (req, res) => {
+    const { password, confirmPassword } = req.body;
+
+    if (!password || !confirmPassword) {
+        throw new Error('Both password and confirmPassword are required');
+    }
+
+    if (password.length < 6) {
+        throw new Error('Password must be at least 6 characters long' );
+    }
+
+    if (password !== confirmPassword) {
+        throw new Error('Passwords do not match');
+    }
+
+    try{
+        const userId = req.params.id;
+        const user = await User.findById(userId);
+
+        if(!user){
+            throw new Error('User not found');
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 12);
+        user.password = hashedPassword;
+
+        await user.save()
+        
+        res.status(200).send({ message: 'Password restored successfully' });
+    }catch(error){
+        res.status(500).send({ error: 'Internal Server Error' });
+    }
+})
 module.exports = router;
