@@ -4,6 +4,7 @@ import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import RootLayout from './components/layout/RootLayout';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
+import UserPage from './components/UserPage/UserPage';
 
 function App() {
     const router = createBrowserRouter([
@@ -35,6 +36,10 @@ function App() {
                         {
                             path: 'users',
                             element: <UsersDashboard />,
+                        },
+                        {
+                            path: 'users/:id',
+                            element: <UserPage />,
                         },
                     ],
                 },
