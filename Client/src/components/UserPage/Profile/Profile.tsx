@@ -5,7 +5,7 @@ interface ProfileProps {
 }
 
 export default function Profile({ user }: ProfileProps) {
-    // IF USER US ADMIN!
+    // IF USER US ADMIN- test!
     const isAdmin = true;
 
     if (!user) {
