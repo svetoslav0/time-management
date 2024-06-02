@@ -6,6 +6,7 @@ interface ProfileProps {
 
 export default function Profile({ user }: ProfileProps) {
     // IF USER US ADMIN!
+    const isAdmin = true;
 
     if (!user) {
         return <div className='mt-20 text-center text-6xl font-bold'>Loading...</div>; // Fallback if user data is not yet available
@@ -67,25 +68,26 @@ export default function Profile({ user }: ProfileProps) {
                 </div>
             </dl>
             {/* BUTTONS */}
-
-            <div className='mt-5 flex justify-center gap-2 align-middle'>
-                <button className='rounded-full border-2 border-yellow-500 bg-yellow-400 px-6 font-semibold text-white hover:bg-yellow-500'>
-                    Edit
-                </button>
-                <button className='rounded-full border-2 border-indigo-500 bg-indigo-400 px-6 font-semibold text-white hover:bg-indigo-500'>
-                    Reset password
-                </button>
-                {/* DEPENDS ON STATUS CONDITIONAL RENDERING*/}
-                {user.active ? (
-                    <button className='rounded-full border-2 border-red-500 bg-red-400 px-6 font-semibold text-white hover:bg-red-500'>
-                        Delete User
+            {isAdmin && (
+                <div className='mt-5 flex justify-center gap-2 align-middle'>
+                    <button className='rounded-full border-2 border-yellow-500 bg-yellow-400 px-6 font-semibold text-white hover:bg-yellow-500'>
+                        Edit
                     </button>
-                ) : (
-                    <button className='rounded-full border-2 border-green-500 bg-green-400 px-6 font-semibold text-white hover:bg-green-500'>
-                        Activate User
+                    <button className='rounded-full border-2 border-indigo-500 bg-indigo-400 px-6 font-semibold text-white hover:bg-indigo-500'>
+                        Reset password
                     </button>
-                )}
-            </div>
+                    {/* DEPENDS ON STATUS CONDITIONAL RENDERING*/}
+                    {user.active ? (
+                        <button className='rounded-full border-2 border-red-500 bg-red-400 px-6 font-semibold text-white hover:bg-red-500'>
+                            Delete User
+                        </button>
+                    ) : (
+                        <button className='rounded-full border-2 border-green-500 bg-green-400 px-6 font-semibold text-white hover:bg-green-500'>
+                            Activate User
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
