@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import RootLayout from './components/layout/RootLayout';
+import ProjectDashboard from './components/project/ProjectDashboard';
 
 function App() {
     const router = createBrowserRouter([
@@ -25,6 +26,15 @@ function App() {
                         {
                             path: 'create-user',
                             element: <CreateUser />,
+                        },
+                    ],
+                },
+                {
+                    path: 'dashboard',
+                    children: [
+                        {
+                            path: 'projects',
+                            element: <ProjectDashboard />,
                         },
                     ],
                 },
