@@ -14,7 +14,6 @@ export type CreateUserDataType = {
     rePassword?: string;
 };
 
-
 // requestsTypes
 
 export type MethodType = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -37,3 +36,14 @@ export type FormProps<T extends FieldValues> = UseFormReturn<T> & { onSubmit: Su
 
 export interface LoginFormProps extends FormProps<LoginFormDataType> {}
 export interface CreateUserFormProps extends FormProps<CreateUserDataType> {}
+
+// Project Type
+
+export type Project = {
+    projectName: string;
+    clientName: string;
+    startingDate: number;
+    pricePerHour: number;
+    listOfEmployees: string[];
+    projectStatus: string;
+};
