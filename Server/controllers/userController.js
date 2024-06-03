@@ -2,8 +2,6 @@ const router = require("express").Router();
 const isAdmin = require('../middlewares/isAdminMiddleware')
 const userService = require("../services/userService");
 
-const isAdmin = require("../middlewares/isAdminMiddleware");
-
 router.post("/login", async (req, res) => {
     const userData = req.body;
 
@@ -33,10 +31,10 @@ router.post("/user", async (req, res) => {
 
 
 router.patch('/:id', isAdmin, async (req,res) => {
-    const { username, firstName, lastName, password, confirmPassword, userRole  } = req.body;
     const userId = req.params.id
+
     try{
-        const user = await userService.editUser(userId, {username, firstName, lastName, password, confirmPassword, userRole })
+        const user = await userService.editUser(userId, req.body);
         res.status(200).json(user);
     }catch(error){
         res.status(400).json({ message: error.message });

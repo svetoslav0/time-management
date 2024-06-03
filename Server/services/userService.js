@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const { validateUserData } = require("../utils/validateUserDataUtil");
+const { validateUserDataOnUserCreate, validateUserDataOnUserUpdate } = require("../utils/validateUserDataUtil");
 const { Role } = require("../models/Roles");
 const { generateToken } = require("../utils/jwt");
 
@@ -41,7 +41,7 @@ exports.createUser = async (userData) => {
     } = userData;
 
 
-    await validateUserData(userData);
+    await validateUserDataOnUserCreate(userData);
 
     const role = await Role.findOne({ name: userRole });
     try {
@@ -72,23 +72,29 @@ exports.createUser = async (userData) => {
 
 
 exports.editUser = async (id, userData) => {
-  await validateUserData(userData);
+    await validateUserDataOnUserUpdate(userData);
 
-  try {
-      const user = await User.findByIdAndUpdate(id, userData);
+    console.log(userData);
 
-      return {
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        userRole: user.userRole
-      };
+    try {
+        const role = await Role.findOne({ name: userData.userRole });
+        userData.userRole = role;
+
+        const user = await User.findByIdAndUpdate(id, userData);
+
+        return {
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            userRole: role.name
+        };
     } catch (error) {
-      if (error.name === 'ValidationError') {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Trouble editing a new user!");
-      }
+        if (error.name === 'ValidationError') {
+            throw new Error(error.message);
+        } else {
+            console.error(error);
+            throw new Error("Trouble editing the user!");
+        }
     }
 }
 
