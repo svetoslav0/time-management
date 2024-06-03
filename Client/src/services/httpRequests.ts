@@ -1,7 +1,7 @@
 import { RequestOptions } from '../shared/types';
 
-// const host = process.env.REACT_APP_API_HOST || 'http://localhost:5173';
-const host = 'http://localhost:3000';
+const host = import.meta.env.VITE_API_BASE_URL;
+// const host = 'http://localhost:3000';
 
 export async function httpRequest<T, V>(options: RequestOptions<T>): Promise<V> {
     const { url, method, data, headers } = options;

@@ -22,9 +22,15 @@ const userSchema = new mongoose.Schema(
         },
         userRole: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Role',
-            required: true
-        }
+            ref: "Role",
+            required: true,
+        },
+        status: {
+            type: String,
+            enum: ["active", "inactive"],
+            default: "active",
+            required: true,
+        },
     },
     {
         timestamps: true,

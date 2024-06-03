@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { validateUserData } = require("../utils/validateUserDataUtil");
 const { Role } = require("../models/Roles");
+const { generateToken } = require("../utils/jwt");
 
 exports.login = async (userData) => {
     const user = await User.findOne({ username: userData.username });
@@ -16,11 +17,16 @@ exports.login = async (userData) => {
         throw new Error("Invalid username or password");
     }
 
+    const token = generateToken(user);
+
     return {
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        userRole: user.userRole,
+        user: {
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            userRole: user.userRole,
+        },
+        token,
     };
 };
 
@@ -33,14 +39,13 @@ exports.createUser = async (userData) => {
         confirmPassword,
         userRole,
     } = userData;
-    //TODO ADD VALIDATION FOR DIFFERENT KIND OF USERS
 
-    // Validate user data
+
     await validateUserData(userData);
 
     const role = await Role.findOne({ name: userRole });
     try {
-        // Create the user in the database
+
         const user = await User.create({
             username: username,
             firstName: firstName,
@@ -49,7 +54,6 @@ exports.createUser = async (userData) => {
             userRole: role._id,
         });
 
-        // Return the created user information
         return {
             username: user.username,
             firstName: user.firstName,
@@ -58,41 +62,37 @@ exports.createUser = async (userData) => {
         };
     } catch (error) {
         if (error.name === "ValidationError") {
-            // If it's a validation error, throw error with the error's message
             throw new Error(error.message);
         } else {
-            // For other types of errors, handle them generically
             console.error("Error searching for user existence:", error);
             throw new Error("Trouble creating a new user!");
         }
       }
 };
 
-exports.editUser = async (userData) => {
-  // Validate user data
+
+exports.editUser = async (id, userData) => {
   await validateUserData(userData);
 
   try {
-      // Edit the user in the database
       const user = await User.findByIdAndUpdate(id, userData);
-    
-      // Return the edited user information
+
       return {
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
         userRole: user.userRole
       };
-
     } catch (error) {
       if (error.name === 'ValidationError') {
-        // If it's a validation error, throw error with the error's message
         throw new Error(error.message);
       } else {
-        // For other types of errors, handle them generically
         throw new Error("Trouble editing a new user!");
       }
     }
 }
 
+exports.getSingleUser = (userId) => User.findById(userId);
 
+exports.updateUser = (userId, userData) =>
+    User.findByIdAndUpdate(userId, userData, { new: true });
