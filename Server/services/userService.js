@@ -108,7 +108,6 @@ exports.getUsers = async (queryData) => {
         const query = {};
 
         const users = await User.find(query).select('username firstName lastName userRole');
-        console.log(users[0].userRole);
         const totalCount = await User.countDocuments(query);
 
         return {
