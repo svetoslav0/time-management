@@ -1,72 +1,111 @@
 const { Role } = require("../models/Roles");
 const User = require("../models/User");
 
-// Function to validate user roles
 const checkRoleExistence = async (roleName) => {
     try {
-        // Find the role by its name
         const role = await Role.findOne({ name: roleName });
 
-        // If role is found, return true
         return !!role;
     } catch (error) {
-        // Handle any errors
         console.error("Error checking role existence:", error);
         return false;
     }
 };
 
-// Function to validate user data before creating a new user
-const validateUserData = async (userData) => {
+const checkUserDataFieldsExistence = async (userData) => {
+    const requiredFields = Object.keys(User.schema.paths).filter(field => User.schema.paths[field].isRequired);
+
+    const missingFields = requiredFields.filter(field => !(field in userData));
+
+    if (missingFields.length > 0) {
+        const errorMessage = `One or more required fields are missing: ${missingFields.join(', ')}`;
+        throw new Error(errorMessage);
+    }
+};
+
+const validateCommonUserDataParams = async (userData) => {
+    await checkUserDataFieldsExistence(userData);
+
     const {
         username,
         firstName,
         lastName,
-        password,
-        confirmPassword,
         userRole,
     } = userData;
 
-    // Check if the username is at least 2 characters long
-    if (username.length < 2) {
+    if (!userRole) {
+        throw new Error("userRole is required!");
+    }
+
+    const roleExists = await checkRoleExistence(userRole);
+
+    if (!roleExists) {
+        throw new Error("Role does not exist!");
+    }
+
+    if (!username) {
+        throw new Error("Username is required!")
+    } else if (username.length < 2) {
         throw new Error("Username is not long enough");
     }
 
-    // Check if the password is at least 6 characters long
-    else if (password.length < 6) {
-        throw new Error("Password is not long enough");
+    if (!firstName) {
+        throw new Error("First name is required!")
+    } else if(username.length < 2) {
+        throw new Error("First name is not long enough");
     }
 
-    // Check if the confirm password is the same as password
-    else if (confirmPassword !== password) {
-        throw new Error("Passwords does not match!");
+    if (!lastName) {
+        throw new Error("Last name is required!")
+    } else if(username.length < 2) {
+        throw new Error("Last name is not long enough");
     }
+}
 
+const validateUserDataOnUserCreate = async (userData) => {
     let doesUserExist;
-    // Check if a user with the same username already exists in the database
+
     try {
-        doesUserExist = await User.findOne({ username: username });
+        doesUserExist = await User.findOne({ username: userData.username });
     } catch (error) {
-        // Handle any errors
         console.error("Error searching for user existence:", error);
         throw new Error("Trouble creating a new user!");
     }
 
     if (doesUserExist) {
-        // If user with the same username exists, throw an error
         throw new Error("User exists!");
     }
 
-    // Check if a role with the same username already exists in the database
-    const roleExists = await checkRoleExistence(userRole);
-
-    if (!roleExists) {
-        // If role with the same name does not exist, throw an error
-        throw new Error("Role does not exist!");
+    if (userData.password.length < 6) {
+        throw new Error("Password is not long enough");
     }
+
+    else if (userData.confirmPassword !== userData.password) {
+        throw new Error("Passwords does not match!");
+    }
+
+    await validateCommonUserDataParams(userData);
 };
+
+const validateUserDataOnUserUpdate = async (userData) => {
+    let doesUserExist;
+
+    try {
+        doesUserExist = await User.findOne({ username: userData.username });
+    } catch (error) {
+        console.error("Error searching for user existence:", error);
+        throw new Error("Trouble creating a new user!");
+    }
+
+    if (!doesUserExist) {
+        throw new Error("User with the provided ID does not exist!");
+    }
+
+    await validateCommonUserDataParams(userData);
+}
 
 module.exports = {
     checkRoleExistence,
-    validateUserData,
+    validateUserDataOnUserCreate,
+    validateUserDataOnUserUpdate,
 };
