@@ -2,18 +2,8 @@ const router = require("express").Router();
 const isAdmin = require("../middlewares/isAdminMiddleware");
 const userService = require("../services/userService");
 
-router.post("/login", async (req, res) => {
-    const userData = req.body;
 
-    try {
-        const { user, token } = await userService.login(userData);
-
-        res.cookie("authCookie", token, { httpOnly: true, secure: true });
-        res.status(200).json(user);
-    } catch (error) {
-        res.status(401).json({ message: error.message });
-    }
-});
+const isAdmin = require("../middlewares/isAdminMiddleware");
 
 router.post("/user", async (req, res) => {
     const userData = req.body;
