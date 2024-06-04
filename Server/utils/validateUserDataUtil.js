@@ -1,24 +1,18 @@
-const { Role } = require("../models/Roles");
 const User = require("../models/User");
 
-const checkRoleExistence = async (roleName) => {
-    try {
-        const role = await Role.findOne({ name: roleName });
-
-        return !!role;
-    } catch (error) {
-        console.error("Error checking role existence:", error);
-        return false;
-    }
-};
-
 const checkUserDataFieldsExistence = async (userData) => {
-    const requiredFields = Object.keys(User.schema.paths).filter(field => User.schema.paths[field].isRequired);
+    const requiredFields = Object.keys(User.schema.paths).filter(
+        (field) => User.schema.paths[field].isRequired
+    );
 
-    const missingFields = requiredFields.filter(field => !(field in userData));
+    const missingFields = requiredFields.filter(
+        (field) => !(field in userData)
+    );
 
     if (missingFields.length > 0) {
-        const errorMessage = `One or more required fields are missing: ${missingFields.join(', ')}`;
+        const errorMessage = `One or more required fields are missing: ${missingFields.join(
+            ", "
+        )}`;
         throw new Error(errorMessage);
     }
 };
@@ -26,41 +20,34 @@ const checkUserDataFieldsExistence = async (userData) => {
 const validateCommonUserDataParams = async (userData) => {
     await checkUserDataFieldsExistence(userData);
 
-    const {
-        username,
-        firstName,
-        lastName,
-        userRole,
-    } = userData;
+    const { username, firstName, lastName, userRole } = userData;
+
+    const validRoles = ["admin", "employee", "customer"];
 
     if (!userRole) {
         throw new Error("userRole is required!");
-    }
-
-    const roleExists = await checkRoleExistence(userRole);
-
-    if (!roleExists) {
+    } else if (!validRoles.includes(userRole)) {
         throw new Error("Role does not exist!");
     }
 
     if (!username) {
-        throw new Error("Username is required!")
+        throw new Error("Username is required!");
     } else if (username.length < 2) {
         throw new Error("Username is not long enough");
     }
 
     if (!firstName) {
-        throw new Error("First name is required!")
-    } else if(username.length < 2) {
+        throw new Error("First name is required!");
+    } else if (username.length < 2) {
         throw new Error("First name is not long enough");
     }
 
     if (!lastName) {
-        throw new Error("Last name is required!")
-    } else if(username.length < 2) {
+        throw new Error("Last name is required!");
+    } else if (username.length < 2) {
         throw new Error("Last name is not long enough");
     }
-}
+};
 
 const validateUserDataOnUserCreate = async (userData) => {
     let doesUserExist;
@@ -78,9 +65,7 @@ const validateUserDataOnUserCreate = async (userData) => {
 
     if (userData.password.length < 6) {
         throw new Error("Password is not long enough");
-    }
-
-    else if (userData.confirmPassword !== userData.password) {
+    } else if (userData.confirmPassword !== userData.password) {
         throw new Error("Passwords does not match!");
     }
 
@@ -102,10 +87,9 @@ const validateUserDataOnUserUpdate = async (userData) => {
     }
 
     await validateCommonUserDataParams(userData);
-}
+};
 
 module.exports = {
-    checkRoleExistence,
     validateUserDataOnUserCreate,
     validateUserDataOnUserUpdate,
 };

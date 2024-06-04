@@ -4,7 +4,7 @@ const {
     validateUserDataOnUserCreate,
     validateUserDataOnUserUpdate,
 } = require("../utils/validateUserDataUtil");
-const { Role } = require("../models/Roles");
+
 const { generateToken } = require("../utils/jwt");
 
 exports.login = async (userData) => {
@@ -50,22 +50,20 @@ exports.createUser = async (userData) => {
 
     await validateUserDataOnUserCreate(userData);
 
-    const role = await Role.findOne({ name: userRole });
-
     try {
         const user = await User.create({
             username: username,
             firstName: firstName,
             lastName: lastName,
             password: password,
-            userRole: role._id,
+            userRole: userRole,
         });
 
         return {
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
-            userRole: userData.userRole,
+            userRole: user.userRole,
         };
     } catch (error) {
         if (error.name === "ValidationError") {
@@ -83,16 +81,14 @@ exports.editUser = async (id, userData) => {
     console.log(userData);
 
     try {
-        const role = await Role.findOne({ name: userData.userRole });
-        userData.userRole = role;
-
         const user = await User.findByIdAndUpdate(id, userData);
 
         return {
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
-            userRole: role.name,
+
+            userRole: user.userRole,
         };
     } catch (error) {
         if (error.name === "ValidationError") {

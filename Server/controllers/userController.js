@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+
 const userService = require("../services/userService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
 
@@ -44,18 +45,16 @@ router.patch("/:id", isAdmin, async (req, res) => {
 router.patch("/:userId/archive", isAdmin, async (req, res) => {
     const userId = req.params.userId;
 
-    const updatedUser = await userService
-        .updateUser(userId, {
-            status: "inactive",
-        })
-        .populate("userRole");
+    const updatedUser = await userService.updateUser(userId, {
+        status: "inactive",
+    });
 
     if (!updatedUser) {
         return res.status(404).json({ message: "User does not exist" });
     }
 
-    const { _id, username, firstName, lastName, status } = updatedUser;
-    const userRole = updatedUser.userRole.name;
+    const { _id, username, firstName, lastName, userRole, status } =
+        updatedUser;
 
     res.status(200).json({
         _id,
@@ -102,18 +101,16 @@ router.patch("/:id/password_restore", isAdmin, async (req, res) => {
 router.patch("/:userId/unarchive", isAdmin, async (req, res) => {
     const userId = req.params.userId;
 
-    const updatedUser = await userService
-        .updateUser(userId, {
-            status: "active",
-        })
-        .populate("userRole");
+    const updatedUser = await userService.updateUser(userId, {
+        status: "active",
+    });
 
     if (!updatedUser) {
         return res.status(404).json({ message: "User does not exist" });
     }
 
-    const { _id, username, firstName, lastName, status } = updatedUser;
-    const userRole = updatedUser.userRole.name;
+    const { _id, username, firstName, lastName, userRole, status } =
+        updatedUser;
 
     res.status(200).json({
         _id,
