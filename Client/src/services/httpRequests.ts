@@ -28,7 +28,6 @@ export async function httpRequest<T, V>(options: RequestOptions<T>): Promise<V> 
 
     try {
         const response = await fetch(host + url, request);
-        console.log(import.meta.env);
 
         if (!response.ok) {
             if (response.status === 403) {
