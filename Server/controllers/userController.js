@@ -1,19 +1,10 @@
 const router = require("express").Router();
 const isAdmin = require("../middlewares/isAdminMiddleware");
+const User = require("../models/User");
+const bcrypt = require("bcrypt");
+
 const userService = require("../services/userService");
-
-router.post("/login", async (req, res) => {
-    const userData = req.body;
-
-    try {
-        const { user, token } = await userService.login(userData);
-
-        res.cookie("authCookie", token, { httpOnly: true, secure: true });
-        res.status(200).json(user);
-    } catch (error) {
-        res.status(401).json({ message: error.message });
-    }
-});
+const isAdmin = require("../middlewares/isAdminMiddleware");
 
 router.post("/user", async (req, res) => {
     const userData = req.body;
@@ -29,7 +20,9 @@ router.post("/user", async (req, res) => {
 
 router.get("/", async (req, res) => {
     try {
-        const queryData = req.query;
+        const queryData = {
+            status: req.query.status,
+        };
 
         const users = await userService.getUsers(queryData);
 
@@ -74,8 +67,40 @@ router.patch("/:userId/archive", isAdmin, async (req, res) => {
     });
 });
 
+router.patch("/:id/password_restore", isAdmin, async (req, res) => {
+    const { password, confirmPassword } = req.body;
+
+    if (!password || !confirmPassword) {
+        throw new Error('Both password and confirmPassword are required');
+    }
+
+    if (password.length < 6) {
+        throw new Error('Password must be at least 6 characters long' );
+    }
+
+    if (password !== confirmPassword) {
+        throw new Error('Passwords do not match');
+    }
+
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId);
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        user.password = await bcrypt.hash(password, 12);
+        await user.save()
+        
+        res.status(200).send({ message: 'Password restored successfully' });
+    } catch (error) {
+        res.status(500).send({ error: 'Internal Server Error' });
+    }
+})
+
 router.patch("/:userId/unarchive", isAdmin, async (req, res) => {
-    userId = req.params.userId;
+    const userId = req.params.userId;
 
     const updatedUser = await userService.updateUser(userId, {
         status: "active",

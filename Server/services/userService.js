@@ -4,6 +4,7 @@ const {
     validateUserDataOnUserCreate,
     validateUserDataOnUserUpdate,
 } = require("../utils/validateUserDataUtil");
+
 const { generateToken } = require("../utils/jwt");
 
 exports.login = async (userData) => {
@@ -86,7 +87,8 @@ exports.editUser = async (id, userData) => {
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
-            userRole: user.name,
+
+            userRole: user.userRole,
         };
     } catch (error) {
         if (error.name === "ValidationError") {
@@ -106,6 +108,10 @@ exports.updateUser = (userId, userData) =>
 exports.getUsers = async (queryData) => {
     try {
         const query = {};
+
+        if (queryData.status) {
+            query.status = queryData.status;
+        }
 
         const users = await User.find(query).select(
             "username firstName lastName userRole"
