@@ -40,12 +40,11 @@ exports.createUser = async (userData) => {
         userRole,
     } = userData;
 
-
     await validateUserDataOnUserCreate(userData);
 
     const role = await Role.findOne({ name: userRole });
-    try {
 
+    try {
         const user = await User.create({
             username: username,
             firstName: firstName,
@@ -113,7 +112,6 @@ exports.getUsers = async (queryData) => {
             total: users.length,
             items: users
         };
-
     } catch (error) {
         console.error("Error fetching users:", error);
         throw new Error("Internal Server Error");
