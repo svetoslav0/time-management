@@ -12,7 +12,20 @@ const checkRoleExistence = async (roleName) => {
     }
 };
 
+const checkUserDataFieldsExistence = async (userData) => {
+    const requiredFields = Object.keys(User.schema.paths).filter(field => User.schema.paths[field].isRequired);
+
+    const missingFields = requiredFields.filter(field => !(field in userData));
+
+    if (missingFields.length > 0) {
+        const errorMessage = `One or more required fields are missing: ${missingFields.join(', ')}`;
+        throw new Error(errorMessage);
+    }
+};
+
 const validateCommonUserDataParams = async (userData) => {
+    await checkUserDataFieldsExistence(userData);
+
     const {
         username,
         firstName,
@@ -61,6 +74,14 @@ const validateUserDataOnUserCreate = async (userData) => {
 
     if (doesUserExist) {
         throw new Error("User exists!");
+    }
+
+    if (userData.password.length < 6) {
+        throw new Error("Password is not long enough");
+    }
+
+    else if (userData.confirmPassword !== userData.password) {
+        throw new Error("Passwords does not match!");
     }
 
     await validateCommonUserDataParams(userData);
