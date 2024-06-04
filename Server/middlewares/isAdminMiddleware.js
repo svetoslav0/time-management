@@ -1,8 +1,9 @@
 const isAdmin = (req, res, next) => {
-    // This middleware currently does not perform any checks.
-    // It will be updated to verify JWT tokens and enforce admin-only access once JWT authentication is implemented.
-
-    next();
+    if (req.body.username && req.body.userRole === 'admin') {
+      next();
+    } else {
+      res.status(403).json({ error: 'Unauthorized' });
+    }
 };
 
 module.exports = isAdmin;
