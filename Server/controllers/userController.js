@@ -71,20 +71,15 @@ router.patch("/:userId/archive", isAdmin, async (req, res) => {
     }
 });
 
-// Route to handle GET requests to get user information
 router.get("/", async (req, res) => {
     try {
-        // Extract query data from the request body
         const queryData = req.query;
 
-        // Call the getUsers function from the userService to get the user information
         const users = await userService.getUsers(queryData);
 
-        // If operation is successful, send a success response
         res.status(200).json(users);
     }
     catch (error) {
-        // If an error occurs during collection of the data, send a failure response with the error message
         res.status(400).json({ message: error.message });
     }
 });
