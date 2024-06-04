@@ -1,7 +1,9 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const { validateUserDataOnUserCreate, validateUserDataOnUserUpdate } = require("../utils/validateUserDataUtil");
-const { Role } = require("../models/Roles");
+const {
+    validateUserDataOnUserCreate,
+    validateUserDataOnUserUpdate,
+} = require("../utils/validateUserDataUtil");
 const { generateToken } = require("../utils/jwt");
 
 exports.login = async (userData) => {
@@ -47,22 +49,20 @@ exports.createUser = async (userData) => {
 
     await validateUserDataOnUserCreate(userData);
 
-    const role = await Role.findOne({ name: userRole });
-
     try {
         const user = await User.create({
             username: username,
             firstName: firstName,
             lastName: lastName,
             password: password,
-            userRole: role._id,
+            userRole: userRole,
         });
 
         return {
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
-            userRole: userData.userRole,
+            userRole: user.userRole,
         };
     } catch (error) {
         if (error.name === "ValidationError") {
@@ -71,7 +71,7 @@ exports.createUser = async (userData) => {
             console.error("Error searching for user existence:", error);
             throw new Error("Trouble creating a new user!");
         }
-      }
+    }
 };
 
 exports.editUser = async (id, userData) => {
@@ -80,26 +80,23 @@ exports.editUser = async (id, userData) => {
     console.log(userData);
 
     try {
-        const role = await Role.findOne({ name: userData.userRole });
-        userData.userRole = role;
-
         const user = await User.findByIdAndUpdate(id, userData);
 
         return {
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
-            userRole: role.name
+            userRole: user.name,
         };
     } catch (error) {
-        if (error.name === 'ValidationError') {
+        if (error.name === "ValidationError") {
             throw new Error(error.message);
         } else {
             console.error(error);
             throw new Error("Trouble editing the user!");
         }
     }
-}
+};
 
 exports.getSingleUser = (userId) => User.findById(userId);
 
@@ -107,15 +104,16 @@ exports.updateUser = (userId, userData) =>
     User.findByIdAndUpdate(userId, userData, { new: true });
 
 exports.getUsers = async (queryData) => {
-
     try {
         const query = {};
 
-        const users = await User.find(query).select('username firstName lastName userRole');
+        const users = await User.find(query).select(
+            "username firstName lastName userRole"
+        );
 
         return {
             total: users.length,
-            items: users
+            items: users,
         };
     } catch (error) {
         console.error("Error fetching users:", error);

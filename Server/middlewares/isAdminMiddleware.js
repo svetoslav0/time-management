@@ -1,4 +1,3 @@
-
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
@@ -12,16 +11,13 @@ const isAdmin = async (req, res, next) => {
 
     try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await userService
-            .getSingleUser(decodedToken._id)
-            .populate("userRole");
+        const user = await userService.getSingleUser(decodedToken._id);
 
-        if (!user || user.userRole.name !== "admin") {
+        if (!user || user.userRole !== "admin") {
             return res.status(401).json({ message: "unauthorized" });
         }
-      
+
         next();
-      
     } catch (error) {
         return res.status(403).json({ message: "Invalid token" });
     }
