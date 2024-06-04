@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const isAdmin = require('../middlewares/isAdminMiddleware')
+const isAdmin = require("../middlewares/isAdminMiddleware");
 const userService = require("../services/userService");
 
 router.post("/login", async (req, res) => {
@@ -22,36 +22,35 @@ router.post("/user", async (req, res) => {
         const user = await userService.createUser(userData);
 
         res.status(200).json(user);
-    }
-    catch (error) {
+    } catch (error) {
         res.status(400).json({ message: error.message });
     }
 });
 
 router.get("/", async (req, res) => {
     try {
-        const queryData = req.query;
+        const queryData = {
+            status: req.query.status,
+        };
 
         const users = await userService.getUsers(queryData);
 
         res.status(200).json(users);
-    }
-    catch (error) {
+    } catch (error) {
         res.status(400).json({ message: error.message });
     }
 });
 
+router.patch("/:id", isAdmin, async (req, res) => {
+    const userId = req.params.id;
 
-router.patch('/:id', isAdmin, async (req,res) => {
-    const userId = req.params.id
-
-    try{
+    try {
         const user = await userService.editUser(userId, req.body);
         res.status(200).json(user);
-    }catch(error){
+    } catch (error) {
         res.status(400).json({ message: error.message });
     }
-})
+});
 
 router.patch("/:userId/archive", isAdmin, async (req, res) => {
     const userId = req.params.userId;

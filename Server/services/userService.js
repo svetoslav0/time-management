@@ -1,6 +1,9 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const { validateUserDataOnUserCreate, validateUserDataOnUserUpdate } = require("../utils/validateUserDataUtil");
+const {
+    validateUserDataOnUserCreate,
+    validateUserDataOnUserUpdate,
+} = require("../utils/validateUserDataUtil");
 const { Role } = require("../models/Roles");
 const { generateToken } = require("../utils/jwt");
 
@@ -71,7 +74,7 @@ exports.createUser = async (userData) => {
             console.error("Error searching for user existence:", error);
             throw new Error("Trouble creating a new user!");
         }
-      }
+    }
 };
 
 exports.editUser = async (id, userData) => {
@@ -89,17 +92,17 @@ exports.editUser = async (id, userData) => {
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
-            userRole: role.name
+            userRole: role.name,
         };
     } catch (error) {
-        if (error.name === 'ValidationError') {
+        if (error.name === "ValidationError") {
             throw new Error(error.message);
         } else {
             console.error(error);
             throw new Error("Trouble editing the user!");
         }
     }
-}
+};
 
 exports.getSingleUser = (userId) => User.findById(userId);
 
@@ -107,15 +110,20 @@ exports.updateUser = (userId, userData) =>
     User.findByIdAndUpdate(userId, userData, { new: true });
 
 exports.getUsers = async (queryData) => {
-
     try {
         const query = {};
 
-        const users = await User.find(query).select('username firstName lastName userRole');
+        if (queryData.status) {
+            query.status = queryData.status;
+        }
+
+        const users = await User.find(query).select(
+            "username firstName lastName userRole"
+        );
 
         return {
             total: users.length,
-            items: users
+            items: users,
         };
     } catch (error) {
         console.error("Error fetching users:", error);
