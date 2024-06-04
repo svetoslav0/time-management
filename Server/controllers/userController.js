@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const isAdmin = require("../middlewares/isAdminMiddleware");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
