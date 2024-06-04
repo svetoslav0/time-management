@@ -11,6 +11,10 @@ exports.login = async (userData) => {
         throw new Error("Invalid username or password");
     }
 
+    if (user.status == "inactive") {
+        throw new Error("Your account is inactive. Please contact support.");
+    }
+
     const isValid = await bcrypt.compare(userData.password, user.password);
 
     if (!isValid) {
@@ -25,6 +29,7 @@ exports.login = async (userData) => {
             firstName: user.firstName,
             lastName: user.lastName,
             userRole: user.userRole,
+            status: user.status,
         },
         token,
     };
