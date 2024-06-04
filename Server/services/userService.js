@@ -113,7 +113,6 @@ exports.getUsers = async (queryData) => {
             items: users
         };
     } catch (error) {
-
         console.error("Error fetching users:", error);
         throw new Error("Internal Server Error");
     }
