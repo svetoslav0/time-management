@@ -56,31 +56,53 @@ router.patch('/:id', isAdmin, async (req,res) => {
 router.patch("/:userId/archive", isAdmin, async (req, res) => {
     const userId = req.params.userId;
 
-    try {
-        const updatedUser = await userService
-            .updateUser(userId, {
-                status: "inactive",
-            })
-            .populate("userRole");
+    const updatedUser = await userService
+        .updateUser(userId, {
+            status: "inactive",
+        })
+        .populate("userRole");
 
-        if (!updatedUser) {
-            throw new Error("User does not exist");
-        }
-
-        const { _id, username, firstName, lastName, status } = updatedUser;
-        const userRole = updatedUser.userRole.name;
-
-        res.status(200).json({
-            _id,
-            username,
-            firstName,
-            lastName,
-            userRole,
-            status,
-        });
-    } catch (error) {
-        res.status(404).json({ message: error.message });
+    if (!updatedUser) {
+        return res.status(404).json({ message: "User does not exist" });
     }
+
+    const { _id, username, firstName, lastName, status } = updatedUser;
+    const userRole = updatedUser.userRole.name;
+
+    res.status(200).json({
+        _id,
+        username,
+        firstName,
+        lastName,
+        userRole,
+        status,
+    });
+});
+
+router.patch("/:userId/unarchive", isAdmin, async (req, res) => {
+    userId = req.params.userId;
+
+    const updatedUser = await userService
+        .updateUser(userId, {
+            status: "active",
+        })
+        .populate("userRole");
+
+    if (!updatedUser) {
+        return res.status(404).json({ message: "User does not exist" });
+    }
+
+    const { _id, username, firstName, lastName, status } = updatedUser;
+    const userRole = updatedUser.userRole.name;
+
+    res.status(200).json({
+        _id,
+        username,
+        firstName,
+        lastName,
+        userRole,
+        status,
+    });
 });
 
 module.exports = router;

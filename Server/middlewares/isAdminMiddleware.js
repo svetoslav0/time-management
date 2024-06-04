@@ -1,8 +1,29 @@
-const isAdmin = (req, res, next) => {
-    if (req.body.username && req.body.userRole === 'admin') {
+
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+
+const userService = require("../services/userService");
+
+const isAdmin = async (req, res, next) => {
+    const token = req.cookies.authCookie;
+    if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+    }
+
+    try {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await userService
+            .getSingleUser(decodedToken._id)
+            .populate("userRole");
+
+        if (!user || user.userRole.name !== "admin") {
+            return res.status(401).json({ message: "unauthorized" });
+        }
+      
         next();
-    } else {
-        res.status(403).json({ error: 'Unauthorized' });
+      
+    } catch (error) {
+        return res.status(403).json({ message: "Invalid token" });
     }
 };
 
