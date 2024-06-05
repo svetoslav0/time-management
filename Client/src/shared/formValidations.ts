@@ -26,6 +26,10 @@ export const projectFormSchema = yup.object().shape({
         .min(1, 'At least one employee must be selected')
         .of(yup.string().required())
         .required('At least one employee must be selected'),
-    customerId: yup.string().required('Select Customer!'),
+    customerIds: yup
+        .array()
+        .min(1, 'At least one customer must be selected')
+        .of(yup.string().required())
+        .required('At least one customer must be selected'),
     startingDate: yup.string().required('Please select date'),
 });
