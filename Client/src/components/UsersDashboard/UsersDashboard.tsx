@@ -1,67 +1,48 @@
 import { useEffect, useState } from 'react';
 
+import httpServices from '../../services/httpServices';
 import { User } from '../../shared/types';
 import UserCard from './UserCard';
 
-// import httpServices from '../../services/httpServices';
-
 export default function UsersDashboard() {
-    const [activeUsers, setActiveUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [active, setActive] = useState<boolean>(true);
 
     useEffect(() => {
-        const users: User[] = [
-            {
-                username: 'JohnnySinsJr',
-                firstName: 'John',
-                lastName: 'Doe',
-                role: 'admin',
-                active: true,
-            },
-            {
-                username: 'Jan365',
-                firstName: 'Jane',
-                lastName: 'Doe',
-                role: 'employee',
-                active: true,
-            },
-            {
-                username: 'Petar4o',
-                firstName: 'Peter',
-                lastName: 'Petrov',
-                role: 'customer',
-                active: true,
-            },
-            {
-                username: 'WolverineX',
-                firstName: 'Hugh',
-                lastName: 'Jackman',
-                role: 'customer',
-                active: true,
-            },
-        ];
-        // const fetchActiveUsers = async () => {
-        //     const response = await httpServices().get('/users/active');
-        //     setActiveUsers(response);
-        //     ;
-        // };
-        // fetchActiveUsers();
-        setLoading(false);
-        setActiveUsers(users);
-    }, []);
+        httpServices()
+            .get<{ total: number; items: User[] }>(
+                `/users?status=${active ? 'active' : 'inactive'}`
+            )
+            .then((response) => {
+                setUsers(response.items);
+                setLoading(false);
+            });
+    }, [active]);
 
     return (
         <div className='mx-auto flex flex-col gap-6 p-5'>
-            <h2 className='self-center'>Active Users</h2>
+            <h2 className='self-center font-bold'>{active ? 'Active' : 'Inactive'} Users</h2>
             {loading ? (
                 <div className='self-center'>Loading...</div>
             ) : (
                 <div className='flex flex-wrap gap-4'>
-                    {activeUsers.map((user) => (
-                        <UserCard key={user.username} user={user} />
-                    ))}
+                    {users.map(
+                        (user) => (
+                            active ? (user.status = 'Active') : (user.status = 'Inactive'),
+                            (<UserCard key={user.username} user={user} />)
+                        )
+                    )}
                 </div>
             )}
+            <button
+                className='self-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700'
+                onClick={() => {
+                    setActive(!active);
+                }}
+            >
+                {active ? 'Show Inactive users' : 'Show Active users'}
+            </button>
         </div>
     );
 }
