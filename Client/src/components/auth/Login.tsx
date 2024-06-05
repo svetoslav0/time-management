@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import useLogin from './hooks/useLogin';
@@ -9,6 +10,8 @@ import InputComponent from '@/UI/formComponents/InputComponent';
 
 export default function Login() {
     const login = useLogin();
+
+    const [isVisible, setIsVisible] = useState(false);
 
     const {
         register,
@@ -21,6 +24,10 @@ export default function Login() {
 
     const onSubmit: SubmitHandler<LoginFormDataType> = (data) => {
         login(data);
+    };
+
+    const toggleVisibility = () => {
+        setIsVisible((prevVisibility) => !prevVisibility);
     };
 
     return (
@@ -38,7 +45,10 @@ export default function Login() {
                     register={register}
                     trigger={trigger}
                     field='password'
-                    type='password'
+                    type={isVisible ? 'text': 'password'}
+                    password={true}
+                    toggleVisibility={toggleVisibility}
+                    isVisible={isVisible}
                 />
                 <button
                     type='submit'
