@@ -21,7 +21,7 @@ export default function Login() {
 
     const onSubmit: SubmitHandler<LoginFormDataType> = async (data) => {
         const response = await httpServices().post<LoginFormDataType, User>(
-            '/users/login',
+            '/login',
             data
         );
         if (response) {
