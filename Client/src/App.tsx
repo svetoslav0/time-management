@@ -3,12 +3,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import RootLayout from './components/layout/RootLayout';
-
 import ProjectDashboard from './components/project/ProjectDashboard';
-
-import UsersDashboard from './components/UsersDashboard/UsersDashboard';
+import ProjectFormControl from './components/projectForm/ProjectFormControl';
 import UserPage from './components/UserPage/UserPage';
-
+import UsersDashboard from './components/UsersDashboard/UsersDashboard';
 
 function App() {
     const router = createBrowserRouter([
@@ -35,6 +33,10 @@ function App() {
                     ],
                 },
                 {
+                    path: 'admin',
+                    children: [{ path: 'projectForm', element: <ProjectFormControl /> }],
+                },
+                {
                     path: 'dashboard',
                     children: [
                         {
@@ -42,10 +44,8 @@ function App() {
                             element: <ProjectDashboard />,
                         },
                         {
-
                             path: 'users',
                             element: <UsersDashboard />,
-
                         },
                         {
                             path: 'users/:id',
