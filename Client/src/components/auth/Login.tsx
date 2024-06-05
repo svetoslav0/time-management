@@ -15,14 +15,12 @@ export default function Login() {
         handleSubmit,
         trigger,
         formState: { errors },
-        reset,
     } = useForm({
         resolver: yupResolver(loginSchema),
     });
 
     const onSubmit: SubmitHandler<LoginFormDataType> = (data) => {
         login(data);
-        reset();
     };
 
     return (
