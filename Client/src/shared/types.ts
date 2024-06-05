@@ -19,7 +19,7 @@ export type CreateUserDataType = {
     lastName: string;
     userRole: string;
     password: string;
-    rePassword?: string;
+    confirmPassword?: string;
 };
 
 // requestsTypes

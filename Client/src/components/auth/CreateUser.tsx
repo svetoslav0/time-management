@@ -81,10 +81,10 @@ export default function CreateUser() {
                     type='password'
                 />
                 <InputComponent
-                    error={errors.rePassword?.message}
+                    error={errors.confirmPassword?.message}
                     register={register}
                     trigger={trigger}
-                    field='rePassword'
+                    field='confirmPassword'
                     type='password'
                 />
                 <button

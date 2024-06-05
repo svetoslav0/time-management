@@ -11,5 +11,5 @@ export const createUserSchema = yup.object().shape({
     lastName: yup.string().required('Last name is required!'),
     userRole: yup.string().required('Role is required!'),
     password: yup.string().required('Password is required!'),
-    rePassword: yup.string().oneOf([yup.ref('password'), undefined], 'Passwords must match!'),
+    confirmPassword: yup.string().oneOf([yup.ref('password'), undefined], 'Passwords must match!'),
 });
