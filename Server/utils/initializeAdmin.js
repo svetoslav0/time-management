@@ -1,15 +1,8 @@
 const User = require("../models/User");
-const { Role } = require("../models/Roles");
 
 const initializeAdmin = async () => {
     try {
-        const adminRole = await Role.findOne({ name: "admin" });
-
-        if (!adminRole) {
-            throw new Error("Admin role does not exist");
-        }
-
-        const adminUser = await User.findOne({ userRole: adminRole._id });
+        const adminUser = await User.findOne({ userRole: "admin" });
 
         if (!adminUser) {
             const adminUserData = {
@@ -17,15 +10,10 @@ const initializeAdmin = async () => {
                 firstName: "admin",
                 lastName: "admin",
                 password: "admin123",
-                userRole: adminRole._id,
+                userRole: "admin",
             };
 
             const createdAdmin = await User.create(adminUserData);
-
-            await Role.updateOne(
-                { _id: adminRole._id },
-                { $push: { userRef: createdAdmin._id } }
-            );
 
             console.log("Admin user created");
         } else {

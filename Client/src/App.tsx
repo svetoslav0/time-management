@@ -3,7 +3,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import RootLayout from './components/layout/RootLayout';
+
+import ProjectDashboard from './components/project/ProjectDashboard';
+
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
+import UserPage from './components/UserPage/UserPage';
+
 
 function App() {
     const router = createBrowserRouter([
@@ -33,8 +38,18 @@ function App() {
                     path: 'dashboard',
                     children: [
                         {
+                            path: 'projects',
+                            element: <ProjectDashboard />,
+                        },
+                        {
+
                             path: 'users',
                             element: <UsersDashboard />,
+
+                        },
+                        {
+                            path: 'users/:id',
+                            element: <UserPage />,
                         },
                     ],
                 },
