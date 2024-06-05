@@ -4,8 +4,8 @@ export type User = {
     username: string;
     firstName: string;
     lastName: string;
-    role: string;
-    active: boolean;
+    userRole: string;
+    status: string;
 };
 
 export type LoginFormDataType = {
@@ -19,7 +19,7 @@ export type CreateUserDataType = {
     lastName: string;
     userRole: string;
     password: string;
-    rePassword?: string;
+    confirmPassword?: string;
 };
 
 // requestsTypes

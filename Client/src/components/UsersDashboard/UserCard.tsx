@@ -34,16 +34,16 @@ export default function UserCard({ user }: { user: User }) {
                         Role:
                         <span className='ms-3 flex-1 whitespace-nowrap font-light'>
                             {' '}
-                            {user.role}
+                            {user.userRole}
                         </span>
                     </p>
                 </li>
                 <li>
                     <p>
                         <span
-                            className={`ms-3 flex-1 whitespace-nowrap font-light ${user.active ? 'text-lime-400' : 'text-red-400'}`}
+                            className={`ms-3 flex-1 whitespace-nowrap font-light ${user.status === 'Active' ? 'text-lime-400' : 'text-red-400'}`}
                         >
-                            {user.active ? 'Active' : 'Inactive'}
+                            {user.status}
                         </span>
                     </p>
                 </li>
