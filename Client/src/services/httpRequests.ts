@@ -13,6 +13,7 @@ export async function httpRequest<T, V>(options: RequestOptions<T>): Promise<V> 
 
     const request: RequestInit = {
         method,
+        credentials: 'include',
         headers: fetchHeaders,
     };
 

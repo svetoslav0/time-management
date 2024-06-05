@@ -17,7 +17,7 @@ export type CreateUserDataType = {
     username: string;
     firstName: string;
     lastName: string;
-    role: string;
+    userRole: string;
     password: string;
     rePassword?: string;
 };
