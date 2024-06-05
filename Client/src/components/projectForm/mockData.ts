@@ -102,7 +102,7 @@ export const PROJECTS: {
         projectName: string;
         pricePerHour: number;
         employeeIds: string[];
-        customerId: string;
+        customerIds: string[];
         startingDate: string;
     };
 } = {
@@ -110,7 +110,7 @@ export const PROJECTS: {
         projectName: 'Green Palace',
         pricePerHour: 22,
         employeeIds: ['1', '2', '3'],
-        customerId: '104',
+        customerIds: ['104'],
         startingDate: '2024-07-17',
     },
 
@@ -118,7 +118,7 @@ export const PROJECTS: {
         projectName: 'project',
         pricePerHour: 2,
         employeeIds: ['1', '2', '3'],
-        customerId: '104',
+        customerIds: ['105', '106'],
         startingDate: '2024-11-10',
     },
 };
