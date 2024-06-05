@@ -1,4 +1,4 @@
-import type {  CustomerProps, EmployeesProps } from './types';
+import type { CustomerProps, EmployeesProps } from './types';
 
 export const EMPLOYEES: EmployeesProps[] = [
     {
@@ -96,3 +96,29 @@ export const CUSTOMERS: CustomerProps[] = [
         companyName: 'BA',
     },
 ];
+
+export const PROJECTS: {
+    [key: string]: {
+        projectName: string;
+        pricePerHour: number;
+        employeeIds: string[];
+        customerId: string;
+        startingDate: string;
+    };
+} = {
+    '1': {
+        projectName: 'Green Palace',
+        pricePerHour: 22,
+        employeeIds: ['1', '2', '3'],
+        customerId: '104',
+        startingDate: '2024-07-17',
+    },
+
+    '2': {
+        projectName: 'project',
+        pricePerHour: 2,
+        employeeIds: ['1', '2', '3'],
+        customerId: '104',
+        startingDate: '2024-11-10',
+    },
+};
