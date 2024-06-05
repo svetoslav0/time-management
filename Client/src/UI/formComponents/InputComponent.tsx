@@ -1,14 +1,18 @@
 import { ComponentPropsWithoutRef } from 'react';
 import { FieldValues, Path, UseFormRegister, UseFormTrigger } from 'react-hook-form';
+import { AiFillEye,AiOutlineEyeInvisible } from 'react-icons/ai';
 
 import { capitalizeAndFormat } from '../../shared/utils';
 
 type InputComponentProps<T extends FieldValues> = {
-    error:string | undefined;
+    error: string | undefined;
     register: UseFormRegister<T>;
     trigger: UseFormTrigger<T>;
     field: Path<T>;
     type?: string;
+    password?: boolean;
+    toggleVisibility?: () => void;
+    isVisible?: boolean;
 } & ComponentPropsWithoutRef<'input'>;
 
 export default function InputComponent<T extends FieldValues>({
@@ -17,10 +21,13 @@ export default function InputComponent<T extends FieldValues>({
     trigger,
     field,
     type = 'text',
+    password,
+    toggleVisibility,
+    isVisible,
     ...props
 }: InputComponentProps<T>) {
     return (
-        <div className='mb-5'>
+        <div className='relative mb-5'>
             <label
                 htmlFor={field}
                 className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
@@ -37,6 +44,18 @@ export default function InputComponent<T extends FieldValues>({
                 onBlur={() => trigger(field)}
                 {...props}
             />
+            {password && (
+                <span
+                    onClick={toggleVisibility}
+                    className='absolute right-4 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-gray-400'
+                >
+                    {isVisible ? (
+                        <AiFillEye className='h-6 w-6' />
+                    ) : (
+                        <AiOutlineEyeInvisible className='h-6 w-6' />
+                    )}
+                </span>
+            )}
             {error && (
                 <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
                     {error}
