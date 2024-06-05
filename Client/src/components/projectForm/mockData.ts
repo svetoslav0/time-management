@@ -1,4 +1,4 @@
-import type { ClientProps, EmployeesProps } from './types';
+import type {  CustomerProps, EmployeesProps } from './types';
 
 export const EMPLOYEES: EmployeesProps[] = [
     {
@@ -45,7 +45,7 @@ export const EMPLOYEES: EmployeesProps[] = [
     },
 ];
 
-export const CUSTOMERS: ClientProps[] = [
+export const CUSTOMERS: CustomerProps[] = [
     {
         id: '100',
         userName: 'george',
