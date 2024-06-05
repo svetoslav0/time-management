@@ -1,33 +1,34 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import httpServices from '../../services/httpServices';
-import { loginSchema } from '../../shared/formValidations';
-import { LoginFormDataType, User } from '../../shared/types';
-import InputComponent from '../../UI/formComponents/InputComponent';
+import useLogin from './hooks/useLogin';
 
-
+import { loginSchema } from '@/shared/formValidations';
+import { LoginFormDataType } from '@/shared/types';
+import InputComponent from '@/UI/formComponents/InputComponent';
 
 export default function Login() {
+    const login = useLogin();
+
+    const [isVisible, setIsVisible] = useState(false);
+
     const {
         register,
         handleSubmit,
         trigger,
         formState: { errors },
-        reset,
     } = useForm({
         resolver: yupResolver(loginSchema),
     });
 
-    const onSubmit: SubmitHandler<LoginFormDataType> = async (data) => {
-        const response = await httpServices().post<LoginFormDataType, User>(
-            '/login',
-            data
-        );
-        if (response) {
-            localStorage.setItem('user', JSON.stringify(response)); // Convert response to a string
-        }
-        reset();
+    const onSubmit: SubmitHandler<LoginFormDataType> = (data) => {
+        login(data);
+    };
+
+    const toggleVisibility = () => {
+        setIsVisible((prevVisibility) => !prevVisibility);
+
     };
 
     return (
@@ -45,7 +46,10 @@ export default function Login() {
                     register={register}
                     trigger={trigger}
                     field='password'
-                    type='password'
+                    type={isVisible ? 'text': 'password'}
+                    password={true}
+                    toggleVisibility={toggleVisibility}
+                    isVisible={isVisible}
                 />
                 <button
                     type='submit'
