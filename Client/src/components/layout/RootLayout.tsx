@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { Outlet } from 'react-router-dom';
 
 import { Navigation } from './Navigation';
@@ -17,6 +18,25 @@ export default function RootLayout() {
         <div className={`flex min-h-screen flex-col ${darkMode ? 'dark' : ''}`}>
             <Navigation onChangeDarkMode={handleDarkMode} mode={darkMode} />
             <main className='flex-grow'>
+                <Toaster
+                    position='top-center'
+                    gutter={12}
+                    containerStyle={{ margin: '30px' }}
+                    toastOptions={{
+                        success: {
+                            duration: 3000,
+                        },
+                        error: {
+                            duration: 5000,
+                        },
+                        style: darkMode
+                            ? {
+                                  backgroundColor: '#374151',
+                                  color: '#f3f3f5',
+                              }
+                            : {},
+                    }}
+                />
                 <Outlet />
             </main>
             <footer className='m-auto h-10 w-3/4 text-center'>footer</footer>
