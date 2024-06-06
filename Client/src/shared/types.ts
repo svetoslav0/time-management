@@ -19,7 +19,12 @@ export type CreateUserDataType = {
     lastName: string;
     userRole: string;
     password: string;
-    rePassword?: string;
+    description?: string | undefined;
+    confirmPassword: string;
+    experience?: string | undefined;
+    companyName?: string | undefined;
+    phoneNumber?: string | undefined;
+    address?: string | undefined;
 };
 
 // requestsTypes
