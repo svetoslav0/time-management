@@ -28,6 +28,7 @@ export default function Login() {
 
     const toggleVisibility = () => {
         setIsVisible((prevVisibility) => !prevVisibility);
+
     };
 
     return (

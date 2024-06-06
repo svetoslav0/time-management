@@ -4,8 +4,8 @@ export type User = {
     username: string;
     firstName: string;
     lastName: string;
-    role: string;
-    active: boolean;
+    userRole: string;
+    status: string;
 };
 
 export type LoginFormDataType = {
@@ -25,6 +25,7 @@ export type CreateUserDataType = {
     companyName?: string | undefined;
     phoneNumber?: string | undefined;
     address?: string | undefined;
+
 };
 
 // requestsTypes
