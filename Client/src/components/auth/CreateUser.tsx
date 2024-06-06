@@ -26,7 +26,6 @@ export default function CreateUser() {
     });
 
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
-        console.log(data);
         createUser(data);
     };
 
