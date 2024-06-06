@@ -26,15 +26,17 @@ function App() {
                             path: 'login',
                             element: <Login />,
                         },
-                        {
-                            path: 'create-user',
-                            element: <CreateUser />,
-                        },
                     ],
                 },
                 {
                     path: 'admin',
-                    children: [{ path: 'projectForm', element: <ProjectFormControl /> }],
+                    children: [
+                        { path: 'projectForm', element: <ProjectFormControl /> },
+                        {
+                            path: 'createUser',
+                            element: <CreateUser />,
+                        },
+                    ],
                 },
                 {
                     path: 'dashboard',
