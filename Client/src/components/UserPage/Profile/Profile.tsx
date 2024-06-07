@@ -22,7 +22,7 @@ export default function Profile({ user }: ProfileProps) {
                     </h3>
                     <p>Junior developer</p>
                     <p className='mt-1 text-xs font-medium text-gray-600'>
-                        {user.active ? (
+                        {user.status === 'active' ? (
                             <span className='rounded-full bg-green-500 px-2'>Active</span>
                         ) : (
                             <span className='rounded-full bg-red-500 px-2'>Inactive</span>
@@ -60,7 +60,7 @@ export default function Profile({ user }: ProfileProps) {
                 </div>
                 <div className='flex flex-col'>
                     <dt className='text-sm font-medium text-gray-600'>Role</dt>
-                    <dd className='text-center text-xs text-gray-500'>{user.role}</dd>
+                    <dd className='text-center text-xs text-gray-500'>{user.userRole}</dd>
                 </div>
                 <div className='flex flex-col'>
                     <dt className='text-sm font-medium text-gray-600'>Last active </dt>
@@ -77,7 +77,7 @@ export default function Profile({ user }: ProfileProps) {
                         Reset password
                     </button>
                     {/* DEPENDS ON STATUS CONDITIONAL RENDERING*/}
-                    {user.active ? (
+                    {user.status === 'active' ? (
                         <button className='rounded-full border-2 border-red-500 bg-red-400 px-6 font-semibold text-white hover:bg-red-500'>
                             Delete User
                         </button>

@@ -6,6 +6,7 @@ export type User = {
     lastName: string;
     userRole: string;
     status: string;
+    _id: string;
 };
 
 export type LoginFormDataType = {

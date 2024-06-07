@@ -15,6 +15,7 @@ export default function UsersDashboard() {
                 `/users?status=${active ? 'active' : 'inactive'}`
             )
             .then((response) => {
+                console.log(response)
                 setUsers(response.items);
                 setLoading(false);
             });
@@ -30,7 +31,7 @@ export default function UsersDashboard() {
                     {users.map(
                         (user) => (
                             active ? (user.status = 'Active') : (user.status = 'Inactive'),
-                            (<UserCard key={user.username} user={user} />)
+                            (<UserCard key={user._id} user={user} />)
                         )
                     )}
                 </div>
