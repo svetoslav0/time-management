@@ -5,18 +5,6 @@ const bcrypt = require("bcrypt");
 const userService = require("../services/userService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
 
-router.post("/user", async (req, res) => {
-    const userData = req.body;
-
-    try {
-        const user = await userService.createUser(userData);
-
-        res.status(200).json(user);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
-
 router.get("/", async (req, res) => {
     try {
         const queryData = {
@@ -27,6 +15,18 @@ router.get("/", async (req, res) => {
         const users = await userService.getUsers(queryData);
 
         res.status(200).json(users);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.post("/", isAdmin, async (req, res) => {
+    const userData = req.body;
+
+    try {
+        const user = await userService.createUser(userData);
+
+        res.status(200).json(user);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
