@@ -113,6 +113,10 @@ exports.getUsers = async (queryData) => {
             query.status = queryData.status;
         }
 
+        if (queryData.userRole) {
+            query.userRole = queryData.userRole;
+        }
+
         const users = await User.find(query).select(
             "username firstName lastName userRole"
         );

@@ -6,6 +6,7 @@ export type User = {
     lastName: string;
     userRole: string;
     status: string;
+    _id: string;
 };
 
 export type LoginFormDataType = {
@@ -19,7 +20,13 @@ export type CreateUserDataType = {
     lastName: string;
     userRole: string;
     password: string;
-    confirmPassword?: string;
+    description?: string | undefined;
+    confirmPassword: string;
+    experience?: string | undefined;
+    companyName?: string | undefined;
+    phoneNumber?: string | undefined;
+    address?: string | undefined;
+
 };
 
 // requestsTypes

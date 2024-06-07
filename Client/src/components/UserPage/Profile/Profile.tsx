@@ -47,6 +47,7 @@ export default function Profile({ user }: ProfileProps) {
                 </div>
                 {/* DESCRIPTION */}
                 <div>
+
                     <p className='text-pretty text-sm text-gray-500'>
                         Lorem ipsum dolor sit, amet consectetur adipisicing elit. At velit illum
                         provident a, ipsa maiores deleniti consectetur nobis et eaque.
@@ -80,6 +81,7 @@ export default function Profile({ user }: ProfileProps) {
                     <div className='mt-5 flex justify-center gap-2 align-middle'>
                         <button className='rounded-full border-2 border-yellow-500 bg-yellow-400 px-6 font-semibold text-white hover:bg-yellow-500'>
                             Edit
+
                         </button>
                         <button
                             onClick={() => setIsModalOpen(true)}
