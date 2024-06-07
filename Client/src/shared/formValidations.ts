@@ -33,3 +33,14 @@ export const projectFormSchema = yup.object().shape({
         .required('At least one customer must be selected'),
     startingDate: yup.string().required('Please select date'),
 });
+
+export const resetPasswordSchema = yup.object().shape({
+    password: yup
+        .string()
+        .required('Password is required!')
+        .min(6, 'Password must be at least 6 characters long'),
+    confirmPassword: yup
+        .string()
+        .oneOf([yup.ref('password'), undefined], 'Passwords must match')
+        .required('Please confirm your password'),
+});
