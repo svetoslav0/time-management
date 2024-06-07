@@ -9,9 +9,8 @@ import { projectFormSchema } from '../../shared/formValidations';
 import InputComponent from '../../UI/formComponents/InputComponent';
 import cn from '../../util/cn';
 import Calendar from './Calendar';
-import CustomerSelector from './CustomerSelector';
-import EmployeesSelector from './EmployeesSelector';
 import { CUSTOMERS, EMPLOYEES, PROJECTS } from './mockData';
+import MultiSelector from './MultiSelector';
 
 dayjs.extend(customParseFormat);
 
@@ -19,7 +18,7 @@ export type ProjectFormDataType = {
     projectName: string;
     pricePerHour: number;
     employeeIds: string[];
-    customerId: string;
+    customerIds: string[];
     startingDate: string;
 };
 
@@ -28,7 +27,7 @@ export default function ProjectFormControl() {
     const [projectName, setProjectName] = useState('');
     const [pricePerHour, setPricePerHour] = useState<number | string>('');
     const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
-    const [selectedCustomer, setSelectedCustomer] = useState('');
+    const [selectedCustomer, setSelectedCustomer] = useState<string[]>([]);
     const currentDate = dayjs();
     const [selectedDate, setSelectedDate] = useState<Dayjs | string>('');
     const [showCalendar, setShowCalendar] = useState(false);
@@ -55,7 +54,7 @@ export default function ProjectFormControl() {
         console.log(data);
         reset();
         setSelectedEmployees([]);
-        setSelectedCustomer('');
+        setSelectedCustomer([]);
         setPricePerHour('');
         setProjectName('');
         setSelectedDate('');
@@ -75,8 +74,8 @@ export default function ProjectFormControl() {
                 setValue('projectName', project.projectName);
                 setPricePerHour(project.pricePerHour);
                 setValue('pricePerHour', project.pricePerHour);
-                setSelectedCustomer(project.customerId);
-                setValue('customerId', project.customerId);
+                setSelectedCustomer(project.customerIds);
+                setValue('customerIds', project.customerIds);
                 setSelectedEmployees(project.employeeIds);
                 setValue('employeeIds', project.employeeIds);
             }
@@ -91,9 +90,9 @@ export default function ProjectFormControl() {
     }, [selectedEmployees, setValue, clearErrors]);
 
     useEffect(() => {
-        setValue('customerId', selectedCustomer);
+        setValue('customerIds', selectedCustomer);
         if (selectedCustomer) {
-            clearErrors('customerId');
+            clearErrors('customerIds');
         }
     }, [selectedCustomer, setValue, clearErrors]);
 
@@ -150,11 +149,13 @@ export default function ProjectFormControl() {
                                 }}
                                 min={0}
                             />
-                            <CustomerSelector
-                                error={errors.customerId?.message}
-                                customers={CUSTOMERS}
-                                selectedCustomer={selectedCustomer}
-                                setSelectedCustomer={setSelectedCustomer}
+                            <MultiSelector
+                                error={errors.customerIds?.message}
+                                usersList={CUSTOMERS}
+                                selectedUsers={selectedCustomer}
+                                setSelectedUsers={setSelectedCustomer}
+                                field='customerIds'
+                                placeholder='Customers'
                             />
                             <div className='relative'>
                                 <input
@@ -198,11 +199,13 @@ export default function ProjectFormControl() {
                                 )}
                             </div>
 
-                            <EmployeesSelector
+                            <MultiSelector
                                 error={errors.employeeIds?.message}
-                                employees={EMPLOYEES}
-                                selectedEmployees={selectedEmployees}
-                                setSelectedEmployees={setSelectedEmployees}
+                                usersList={EMPLOYEES}
+                                selectedUsers={selectedEmployees}
+                                setSelectedUsers={setSelectedEmployees}
+                                field='employeeIds'
+                                placeholder='Employees'
                             />
                         </div>
                         <div className='flex w-full justify-center'>
