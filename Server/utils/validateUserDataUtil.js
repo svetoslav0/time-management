@@ -70,6 +70,7 @@ const validateUserDataOnUserCreate = async (userData) => {
     }
 
     await validateCommonUserDataParams(userData);
+    roleBasedUserValidation(userData);
 };
 
 const validateUserDataOnUserUpdate = async (userData) => {
@@ -88,6 +89,44 @@ const validateUserDataOnUserUpdate = async (userData) => {
 
     await validateCommonUserDataParams(userData);
 };
+
+function roleBasedUserValidation(userData) {
+    const { userRole, experienceLevel, companyName, phoneNumber, address } =
+        userData;
+
+    switch (userRole) {
+        case "employee":
+            const validExperienceLevels = [
+                "Junior",
+                "Mid-Level",
+                "Senior",
+                "Architect",
+            ];
+            if (!experienceLevel) {
+                throw new Error("Experience level is required for employees.");
+            } else if (!validExperienceLevels.includes(experienceLevel)) {
+                throw new Error(
+                    `Invalid experience level. Valid options are: ${validExperienceLevels.join(
+                        ", "
+                    )}.`
+                );
+            }
+            break;
+        case "customer":
+            if (!companyName) {
+                throw new Error("Company name is required for customers.");
+            }
+            if (!phoneNumber) {
+                throw new Error("Phone number is required for customers.");
+            }
+            if (!address) {
+                throw new Error("Address is required for customers.");
+            }
+            break;
+        default:
+            throw new Error("Invalid user role specified.");
+    }
+}
 
 module.exports = {
     validateUserDataOnUserCreate,
