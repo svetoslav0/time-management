@@ -39,7 +39,7 @@ router.get("/:id", async (req, res) => {
         const user = await userService.getSingleUser(userId);
         res.status(200).json(user);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(404).json({ message: "User does not exist" });
     }
 });
 
