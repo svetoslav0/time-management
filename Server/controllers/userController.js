@@ -34,9 +34,10 @@ router.post("/", isAdmin, async (req, res) => {
 
 router.patch("/:id", isAdmin, async (req, res) => {
     const userId = req.params.id;
+    const userData = req.body;
 
     try {
-        const user = await userService.editUser(userId, req.body);
+        const user = await userService.editUser(userId, userData);
         res.status(200).json(user);
     } catch (error) {
         res.status(400).json({ message: error.message });

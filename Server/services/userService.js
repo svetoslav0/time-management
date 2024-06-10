@@ -50,6 +50,7 @@ exports.createUser = async (userData) => {
     } = userData;
 
     await validateUserDataOnUserCreate(userData);
+    
     const newUser = {
         username,
         firstName,
@@ -97,9 +98,7 @@ exports.createUser = async (userData) => {
 };
 
 exports.editUser = async (id, userData) => {
-    await validateUserDataOnUserUpdate(userData);
-
-    console.log(userData);
+    await validateUserDataOnUserUpdate(id, userData);
 
     try {
         const user = await User.findByIdAndUpdate(id, userData);

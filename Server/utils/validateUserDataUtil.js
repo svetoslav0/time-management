@@ -73,14 +73,14 @@ const validateUserDataOnUserCreate = async (userData) => {
     roleBasedUserValidation(userData);
 };
 
-const validateUserDataOnUserUpdate = async (userData) => {
+const validateUserDataOnUserUpdate = async (id, userData) => {
     let doesUserExist;
 
     try {
-        doesUserExist = await User.findOne({ username: userData.username });
+        doesUserExist = await User.findById(id);
     } catch (error) {
         console.error("Error searching for user existence:", error);
-        throw new Error("Trouble creating a new user!");
+        throw new Error("Having trouble searching for a user!");
     }
 
     if (!doesUserExist) {
@@ -88,6 +88,7 @@ const validateUserDataOnUserUpdate = async (userData) => {
     }
 
     await validateCommonUserDataParams(userData);
+    roleBasedUserValidation(userData);
 };
 
 function roleBasedUserValidation(userData) {
