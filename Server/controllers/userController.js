@@ -12,9 +12,22 @@ router.get("/", async (req, res) => {
             userRole: req.query.userRole,
         };
 
-        const users = await userService.getUsers(queryData);
+        queryData.limit = parseInt(req.query.limit) || 100;
+        queryData.offset = parseInt(req.query.offset) || 0;
 
-        res.status(200).json(users);
+        if (queryData.limit > 100 || queryData.limit <= 0) {
+            throw new Error(
+                "Limit value must be greater than 0 and not greater than 100"
+            );
+        }
+
+        if (queryData.offset < 0) {
+            throw new Error("Offset value must not be below 0");
+        }
+
+        const { items, total } = await userService.getUsers(queryData);
+
+        res.status(200).json({ total, items });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
