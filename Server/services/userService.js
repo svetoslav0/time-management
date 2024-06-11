@@ -8,27 +8,27 @@ const {
 const { generateToken } = require("../utils/jwt");
 
 exports.login = async (userData) => {
-    const user = await User.findOne({ username: userData.username });
+    const user = await User.findOne({ email: userData.email });
 
     if (!user) {
-        throw new Error("Invalid username or password");
+        throw new Error("Invalid email or password!");
     }
 
     if (user.status == "inactive") {
-        throw new Error("Your account is inactive. Please contact support.");
+        throw new Error("Your account is inactive. Please contact support!");
     }
 
     const isValid = await bcrypt.compare(userData.password, user.password);
 
     if (!isValid) {
-        throw new Error("Invalid username or password");
+        throw new Error("Invalid email or password!");
     }
 
     const token = generateToken(user);
 
     return {
         user: {
-            username: user.username,
+            email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
             userRole: user.userRole,
@@ -40,7 +40,7 @@ exports.login = async (userData) => {
 
 exports.createUser = async (userData) => {
     const {
-        username,
+        email,
         firstName,
         lastName,
         password,
@@ -50,8 +50,9 @@ exports.createUser = async (userData) => {
     } = userData;
 
     await validateUserDataOnUserCreate(userData);
+
     const newUser = {
-        username,
+        email,
         firstName,
         lastName,
         password,
@@ -71,7 +72,7 @@ exports.createUser = async (userData) => {
         const user = await User.create(newUser);
 
         const response = {
-            username: user.username,
+            email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
             userRole: user.userRole,
@@ -97,15 +98,19 @@ exports.createUser = async (userData) => {
 };
 
 exports.editUser = async (id, userData) => {
-    await validateUserDataOnUserUpdate(userData);
-
-    console.log(userData);
+    await validateUserDataOnUserUpdate(id, userData);
 
     try {
-        const user = await User.findByIdAndUpdate(id, userData);
+        const options = { new: true, runValidators: true };
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(userData.password, salt);
+        userData.password = hashedPassword;
+
+        const user = await User.findByIdAndUpdate(id, userData, options);
 
         return {
-            username: user.username,
+            email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
 
@@ -139,7 +144,7 @@ exports.getUsers = async (queryData) => {
         }
 
         const users = await User.find(query)
-            .select("username firstName lastName userRole")
+            .select("email firstName lastName userRole")
             .skip(queryData.offset)
             .limit(queryData.limit);
 
@@ -151,6 +156,6 @@ exports.getUsers = async (queryData) => {
         };
     } catch (error) {
         console.error("Error fetching users:", error);
-        throw new Error("Internal Server Error");
+        throw new Error("Internal Server Error!");
     }
 };

@@ -6,18 +6,18 @@ const initializeAdmin = async () => {
 
     if (!adminUser) {
       const adminUserData = {
-        username: "admin",
+        email: "admin@abv.bg",
         firstName: "admin",
         lastName: "admin",
         password: "admin123",
         userRole: "admin",
       };
 
-      const createdAdmin = await User.create(adminUserData);
+      await User.create(adminUserData);
 
-      console.log("Admin user created");
+      console.log("Admin user created!");
     } else {
-      console.log("Admin user already exists");
+      console.log("Admin user already exists!");
     }
   } catch (error) {
     console.error("Error initializing admin:", error);
