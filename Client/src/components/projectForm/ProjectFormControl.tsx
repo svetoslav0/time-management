@@ -33,7 +33,7 @@ export default function ProjectFormControl() {
     const [showCalendar, setShowCalendar] = useState(false);
     const [editProjectName, setEditProjectName] = useState('');
 
-    const action = searchParams.get('action');
+    const action = searchParams.get('action') === 'edit' ? 'edit' : 'create';
     const projectId = searchParams.get('projectId');
 
     const methods = useForm<ProjectFormDataType>({
