@@ -23,7 +23,6 @@ export default function UserPage() {
             .get<User>(`/users/${id}`)
             .then((response) => {
                 setUser(response);
-                console.log(response)
             });
     }, [id]);
 

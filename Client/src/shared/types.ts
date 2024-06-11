@@ -7,6 +7,11 @@ export type User = {
     userRole: string;
     status: string;
     createdAt: string;
+    description?: string | undefined;
+    experienceLevel?: string | undefined;
+    companyName?: string | undefined;
+    phoneNumber?: string | undefined;
+    address?: string | undefined;
     _id: string;
 };
 
@@ -23,11 +28,10 @@ export type CreateUserDataType = {
     password: string;
     description?: string | undefined;
     confirmPassword: string;
-    experience?: string | undefined;
+    experienceLevel?: string | undefined;
     companyName?: string | undefined;
     phoneNumber?: string | undefined;
     address?: string | undefined;
-
 };
 
 // requestsTypes
