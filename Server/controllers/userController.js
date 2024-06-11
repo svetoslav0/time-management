@@ -12,17 +12,19 @@ router.get("/", async (req, res) => {
             userRole: req.query.userRole,
         };
 
+        const users = await userService.getUsers(queryData);
+
         queryData.limit = parseInt(req.query.limit) || 100;
         queryData.offset = parseInt(req.query.offset) || 0;
 
         if (queryData.limit > 100 || queryData.limit <= 0) {
             throw new Error(
-                "Limit value must be greater than 0 and not greater than 100"
+                "Limit value must be greater than 0 and not greater than 100!"
             );
         }
 
         if (queryData.offset < 0) {
-            throw new Error("Offset value must not be below 0");
+            throw new Error("Offset value must not be below 0!");
         }
 
         const { items, total } = await userService.getUsers(queryData);
@@ -52,15 +54,16 @@ router.get("/:id", async (req, res) => {
         const user = await userService.getSingleUser(userId);
         res.status(200).json(user);
     } catch (error) {
-        res.status(404).json({ message: "User does not exist" });
+        res.status(404).json({ message: "User does not exist!" });
     }
 });
 
 router.patch("/:id", isAdmin, async (req, res) => {
     const userId = req.params.id;
+    const userData = req.body;
 
     try {
-        const user = await userService.editUser(userId, req.body);
+        const user = await userService.editUser(userId, userData);
         res.status(200).json(user);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -75,7 +78,7 @@ router.patch("/:userId/archive", isAdmin, async (req, res) => {
     });
 
     if (!updatedUser) {
-        return res.status(404).json({ message: "User does not exist" });
+        return res.status(404).json({ message: "User does not exist!" });
     }
 
     const { _id, email, firstName, lastName, userRole, status } =
@@ -95,15 +98,15 @@ router.patch("/:id/password_restore", isAdmin, async (req, res) => {
     const { password, confirmPassword } = req.body;
 
     if (!password || !confirmPassword) {
-        throw new Error("Both password and confirmPassword are required");
+        throw new Error("Both password and confirmPassword are required!");
     }
 
     if (password.length < 6) {
-        throw new Error("Password must be at least 6 characters long");
+        throw new Error("Password must be at least 6 characters long!");
     }
 
     if (password !== confirmPassword) {
-        throw new Error("Passwords do not match");
+        throw new Error("Passwords do not match!");
     }
 
     try {
@@ -111,15 +114,15 @@ router.patch("/:id/password_restore", isAdmin, async (req, res) => {
         const user = await User.findById(userId);
 
         if (!user) {
-            throw new Error("User not found");
+            throw new Error("User not found!");
         }
 
         user.password = await bcrypt.hash(password, 12);
         await user.save();
 
-        res.status(200).send({ message: "Password restored successfully" });
+        res.status(200).send({ message: "Password restored successfully!" });
     } catch (error) {
-        res.status(500).send({ error: "Internal Server Error" });
+        res.status(500).send({ error: "Internal Server Error!" });
     }
 });
 
@@ -131,7 +134,7 @@ router.patch("/:userId/unarchive", isAdmin, async (req, res) => {
     });
 
     if (!updatedUser) {
-        return res.status(404).json({ message: "User does not exist" });
+        return res.status(404).json({ message: "User does not exist!" });
     }
 
     const { _id, email, firstName, lastName, userRole, status } =

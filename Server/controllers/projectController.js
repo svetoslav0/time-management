@@ -21,7 +21,7 @@ router.get("/:id", async (req, res) => {
         const project = await projectService.getSingleProject(projectId);
         res.status(200).json(project);
     } catch (error) {
-        res.status(404).json({ message: "Project does not exist" });
+        res.status(404).json({ message: "Project does not exist!" });
     }
 });
 module.exports = router;
