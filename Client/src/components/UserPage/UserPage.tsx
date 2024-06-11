@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+
+import { User } from '../../shared/types';
 import Profile from './Profile/Profile';
 import Table from './Table/Table';
-import { User } from '../../shared/types';
 
 export interface Project {
     id: number;
@@ -17,7 +18,8 @@ export default function UserPage() {
 
     useEffect(() => {
         const user: User = {
-            username: 'JohnnySinsJr',
+            _id: 'dd',
+            email: 'JohnnySinsJr@abv.bg',
             firstName: 'John',
             lastName: 'Doe',
             userRole: 'Admin',

@@ -1,7 +1,7 @@
 import { FieldValues, SubmitHandler, UseFormReturn } from 'react-hook-form';
 
 export type User = {
-    username: string;
+    email: string;
     firstName: string;
     lastName: string;
     userRole: string;
@@ -10,12 +10,12 @@ export type User = {
 };
 
 export type LoginFormDataType = {
-    username: string;
+    email: string;
     password: string;
 };
 
 export type CreateUserDataType = {
-    username: string;
+    email: string;
     firstName: string;
     lastName: string;
     userRole: string;
