@@ -16,4 +16,14 @@ router.post("/", isAdmin, async (req, res) => {
     }
 });
 
+router.get("/", async (req, res) => {
+    try{
+        const projects = await projectService.getProjects()
+
+        res.status(200).json(projects)
+    }catch(error) {
+        res.status(403).json({ message: error.message });
+    }
+})
+
 module.exports = router;

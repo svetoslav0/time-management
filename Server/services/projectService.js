@@ -31,5 +31,13 @@ exports.createProject = async (projectData) => {
             throw new Error("Trouble creating a new project!");
         }
     }
-
 }
+
+exports.getProjects = async () => {
+    try {
+       return await Project.find()
+    } catch (error) {
+        console.error("Error fetching projects:", error);
+        throw new Error("Internal Server Error");
+    }
+};
