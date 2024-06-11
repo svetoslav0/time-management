@@ -121,7 +121,7 @@ exports.editUser = async (id, userData) => {
     }
 };
 
-exports.getSingleUser = (userId) => User.findById(userId);
+exports.getSingleUser = (userId) => User.findById(userId).select("-password");
 
 exports.updateUser = (userId, userData) =>
     User.findByIdAndUpdate(userId, userData, { new: true });
