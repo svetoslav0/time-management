@@ -6,7 +6,7 @@ const initializeAdmin = async () => {
 
     if (!adminUser) {
       const adminUserData = {
-        email: "admin@abv.bg",
+        email: "admin@example.com",
         firstName: "admin",
         lastName: "admin",
         password: "admin123",
