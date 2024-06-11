@@ -54,7 +54,7 @@ const validateProjectData = async (customerIds, projectName, startingDate, price
 }
 
 function isValidDateMoment(dateString) {
-    return moment(dateString, "DD-MM-YYYY", true).isValid();
+    return moment(dateString, "YYYY-MM-DD", true).isValid();
 }
 
 module.exports = validateProjectData;
