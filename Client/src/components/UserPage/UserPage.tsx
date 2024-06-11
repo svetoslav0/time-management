@@ -21,8 +21,8 @@ export default function UserPage() {
             firstName: 'John',
             lastName: 'Doe',
             userRole: 'Admin',
-            status: 'active',
-            _id: '1',
+            status: 'Active',
+
         };
 
         setUser(user);

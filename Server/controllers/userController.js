@@ -14,9 +14,47 @@ router.get("/", async (req, res) => {
 
         const users = await userService.getUsers(queryData);
 
-        res.status(200).json(users);
+        queryData.limit = parseInt(req.query.limit) || 100;
+        queryData.offset = parseInt(req.query.offset) || 0;
+
+        if (queryData.limit > 100 || queryData.limit <= 0) {
+            throw new Error(
+                "Limit value must be greater than 0 and not greater than 100"
+            );
+        }
+
+        if (queryData.offset < 0) {
+            throw new Error("Offset value must not be below 0");
+        }
+
+        const { items, total } = await userService.getUsers(queryData);
+
+        res.status(200).json({ total, items });
     } catch (error) {
         res.status(400).json({ message: error.message });
+    }
+});
+
+router.post("/", isAdmin, async (req, res) => {
+    const userData = req.body;
+
+    try {
+        const user = await userService.createUser(userData);
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.get("/:id", async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const user = await userService.getSingleUser(userId);
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(404).json({ message: "User does not exist" });
     }
 });
 
