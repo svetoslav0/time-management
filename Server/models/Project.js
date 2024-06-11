@@ -20,6 +20,11 @@ const projectSchema = new Schema({
     type: Number,
     required: true
   },
+  status: {
+    type: String,
+    enum: ["inProgress", "completed"],
+    default: "inProgress",
+  },
   employeeIds: [{
     type: Schema.Types.ObjectId,
     ref: 'User'
