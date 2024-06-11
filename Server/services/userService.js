@@ -138,12 +138,15 @@ exports.getUsers = async (queryData) => {
             query.userRole = queryData.userRole;
         }
 
-        const users = await User.find(query).select(
-            "username firstName lastName userRole"
-        );
+        const users = await User.find(query)
+            .select("username firstName lastName userRole")
+            .skip(queryData.offset)
+            .limit(queryData.limit);
+
+        const total = await User.countDocuments(query);
 
         return {
-            total: users.length,
+            total: total,
             items: users,
         };
     } catch (error) {
