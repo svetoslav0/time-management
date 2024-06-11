@@ -46,25 +46,46 @@ exports.createUser = async (userData) => {
         password,
         confirmPassword,
         userRole,
+        description,
     } = userData;
 
     await validateUserDataOnUserCreate(userData);
+    const newUser = {
+        username,
+        firstName,
+        lastName,
+        password,
+        userRole,
+        ...(description && { description }),
+        ...(userRole === "employee" && {
+            experienceLevel: userData.experienceLevel,
+        }),
+        ...(userRole === "customer" && {
+            companyName: userData.companyName,
+            phoneNumber: userData.phoneNumber,
+            address: userData.address,
+        }),
+    };
 
     try {
-        const user = await User.create({
-            username: username,
-            firstName: firstName,
-            lastName: lastName,
-            password: password,
-            userRole: userRole,
-        });
+        const user = await User.create(newUser);
 
-        return {
+        const response = {
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
             userRole: user.userRole,
+            ...(userRole === "employee" && {
+                experienceLevel: user.experienceLevel,
+            }),
+            ...(userRole === "customer" && {
+                companyName: user.companyName,
+                phoneNumber: user.phoneNumber,
+                address: user.address,
+            }),
         };
+
+        return response;
     } catch (error) {
         if (error.name === "ValidationError") {
             throw new Error(error.message);

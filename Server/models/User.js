@@ -30,6 +30,22 @@ const userSchema = new mongoose.Schema(
             enum: ["active", "inactive"],
             default: "active",
         },
+        description: {
+            type: String,
+        },
+        experienceLevel: {
+            type: String,
+            enum: ["Junior", "Mid-Level", "Senior", "Architect"],
+        },
+        companyName: {
+            type: String,
+        },
+        phoneNumber: {
+            type: String,
+        },
+        address: {
+            type: String,
+        },
     },
     {
         timestamps: true,
