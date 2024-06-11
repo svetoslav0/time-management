@@ -18,13 +18,11 @@ exports.createProject = async (projectData) => {
         employeeIds
     );
 
-    const isoDate = startingDate.split("-").reverse().join("-");
-
     try {
         const project = await Project.create({
             customerIds: customerIds,
             projectName: projectName,
-            startingDate: isoDate,
+            startingDate: startingDate,
             pricePerHour: pricePerHour,
             employeeIds: employeeIds,
         });
