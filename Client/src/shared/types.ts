@@ -6,6 +6,7 @@ export type User = {
     lastName: string;
     userRole: string;
     status: string;
+    createdAt: string;
     _id: string;
 };
 

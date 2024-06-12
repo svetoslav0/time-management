@@ -1,12 +1,13 @@
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { useState } from 'react';
 
 import { User } from '../../../shared/types';
 import ResetPasswordModal from '../ResetPasswordModal/ResetPasswordModal';
-
 interface ProfileProps {
     user?: User;
 }
-
+dayjs.extend(advancedFormat);
 export default function Profile({ user }: ProfileProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -15,7 +16,7 @@ export default function Profile({ user }: ProfileProps) {
     };
 
     const isAdmin = true;
-
+    const userCreatedAt = dayjs(user?.createdAt).format('Do MMMM, YYYY');
     if (!user) {
         return <div className='mt-20 text-center text-6xl font-bold'>Loading...</div>; // Fallback if user data is not yet available
     }
@@ -29,9 +30,9 @@ export default function Profile({ user }: ProfileProps) {
                         <h3 className='text-lg font-bold text-gray-900 sm:text-xl'>
                             {user.firstName} {user.lastName} - {user.email}
                         </h3>
-                        <p>Junior developer</p>
+                        <p>Junior developer(need to get position from BE)</p>
                         <p className='mt-1 text-xs font-medium text-gray-600'>
-                            {user.status === 'Active' ? (
+                            {user.status === 'active' ? (
                                 <span className='rounded-full bg-green-500 px-2'>Active</span>
                             ) : (
                                 <span className='rounded-full bg-red-500 px-2'>Inactive</span>
@@ -48,7 +49,6 @@ export default function Profile({ user }: ProfileProps) {
                 </div>
                 {/* DESCRIPTION */}
                 <div>
-
                     <p className='text-pretty text-sm text-gray-500'>
                         Lorem ipsum dolor sit, amet consectetur adipisicing elit. At velit illum
                         provident a, ipsa maiores deleniti consectetur nobis et eaque.
@@ -58,15 +58,19 @@ export default function Profile({ user }: ProfileProps) {
                 <dl className='mt-6 flex justify-between sm:gap-6'>
                     <div className='flex flex-col'>
                         <dt className='text-sm font-medium text-gray-600'>Total hours</dt>
-                        <dd className='text-center text-xs text-gray-500'>+570</dd>
+                        <dd className='text-center text-xs text-gray-500'>
+                            +570(currently hard coded)
+                        </dd>
                     </div>
                     <div className='flex flex-col'>
                         <dt className='text-sm font-medium text-gray-600'>Active projects</dt>
-                        <dd className='text-center text-xs text-gray-500'>3</dd>
+                        <dd className='text-center text-xs text-gray-500'>
+                            3(currently hard coded)
+                        </dd>
                     </div>
                     <div className='flex flex-col'>
                         <dt className='text-sm font-medium text-gray-600'>Registered</dt>
-                        <dd className='text-center text-xs text-gray-500'>31st June, 2021</dd>
+                        <dd className='text-center text-xs text-gray-500'>{userCreatedAt}</dd>
                     </div>
                     <div className='flex flex-col'>
                         <dt className='text-sm font-medium text-gray-600'>Role</dt>
@@ -74,7 +78,9 @@ export default function Profile({ user }: ProfileProps) {
                     </div>
                     <div className='flex flex-col'>
                         <dt className='text-sm font-medium text-gray-600'>Last active </dt>
-                        <dd className='text-xs text-gray-500'>3 minutes ago</dd>
+                        <dd className='text-xs text-gray-500'>
+                            3 minutes ago(currently hard coded)
+                        </dd>
                     </div>
                 </dl>
                 {/* BUTTONS */}
@@ -82,7 +88,6 @@ export default function Profile({ user }: ProfileProps) {
                     <div className='mt-5 flex justify-center gap-2 align-middle'>
                         <button className='rounded-full border-2 border-yellow-500 bg-yellow-400 px-6 font-semibold text-white hover:bg-yellow-500'>
                             Edit
-
                         </button>
                         <button
                             onClick={() => setIsModalOpen(true)}

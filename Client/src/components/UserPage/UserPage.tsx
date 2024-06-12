@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 
+import { useParams } from 'react-router-dom';
+
+import httpServices from '../../services/httpServices';
 import { User } from '../../shared/types';
 import Profile from './Profile/Profile';
 import Table from './Table/Table';
@@ -15,20 +18,17 @@ export interface Project {
 export default function UserPage() {
     const [user, setUser] = useState<User | undefined>(undefined);
     const [projects, setProjects] = useState<Project[] | undefined>(undefined);
-
+    const { id } = useParams<string>();
     useEffect(() => {
-        const user: User = {
-            _id: 'dd',
-            email: 'JohnnySinsJr@abv.bg',
-            firstName: 'John',
-            lastName: 'Doe',
-            userRole: 'Admin',
-            status: 'Active',
 
-        };
+        httpServices()
+            .get<User>(`/users/${id}`)
+            .then((response) => {
+                setUser(response);
+                console.log(response)
+            });
+    }, [id]);
 
-        setUser(user);
-    }, []);
 
     useEffect(() => {
         const projects: Project[] = [
