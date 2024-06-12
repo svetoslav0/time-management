@@ -12,8 +12,6 @@ router.get("/", async (req, res) => {
             userRole: req.query.userRole,
         };
 
-        const users = await userService.getUsers(queryData);
-
         queryData.limit = parseInt(req.query.limit) || 100;
         queryData.offset = parseInt(req.query.offset) || 0;
 
