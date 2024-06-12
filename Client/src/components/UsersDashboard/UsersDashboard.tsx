@@ -15,7 +15,6 @@ export default function UsersDashboard() {
                 `/users?status=${active ? 'active' : 'inactive'}`
             )
             .then((response) => {
-                console.log(response)
                 setUsers(response.items);
                 setLoading(false);
             });
