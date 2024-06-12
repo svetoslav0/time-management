@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
 
-exports.isValidObjectId = (id) => {
+exports.validateObjectId = (id) => {
     return mongoose.Types.ObjectId.isValid(id);
 };
