@@ -94,7 +94,7 @@ const validateUserDataOnUserUpdate = async (id, userData) => {
     else if (doesUserIdExists.email !== userData.email) {
         throw new Error("Email address cannot be changed!");
     }
-    else if (IsPasswordChanged) {
+    else if (!IsPasswordChanged) {
         throw new Error("Password change not allowed here! Use password restore instead.");
     }
 
