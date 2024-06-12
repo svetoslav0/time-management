@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const validator = require('validator');
+const bcrypt = require("bcrypt");
 
 const checkUserDataFieldsExistence = async (userData) => {
     const requiredFields = Object.keys(User.schema.paths).filter(
@@ -85,11 +86,16 @@ const validateUserDataOnUserUpdate = async (id, userData) => {
         throw new Error("Error updating user!");
     }
 
+    const IsPasswordChanged = await bcrypt.compare(userData.password, doesUserIdExists.password)
+
     if (!doesUserIdExists) {
         throw new Error("User with the provided ID does not exist!");
     }
     else if (doesUserIdExists.email !== userData.email) {
         throw new Error("Email address cannot be changed!");
+    }
+    else if (IsPasswordChanged) {
+        throw new Error("Password change not allowed here! Use password restore instead.");
     }
 
     await validateCommonUserDataParams(userData);

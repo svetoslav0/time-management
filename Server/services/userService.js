@@ -102,11 +102,7 @@ exports.editUser = async (id, userData) => {
 
     try {
         const options = { new: true, runValidators: true };
-
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(userData.password, salt);
-        userData.password = hashedPassword;
-
+        
         const user = await User.findByIdAndUpdate(id, userData, options);
 
         return {
