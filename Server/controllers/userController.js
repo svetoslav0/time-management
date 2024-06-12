@@ -70,25 +70,15 @@ router.patch("/:id", isAdmin, async (req, res) => {
 router.patch("/:userId/archive", isAdmin, async (req, res) => {
     const userId = req.params.userId;
 
-    const updatedUser = await userService.updateUser(userId, {
-        status: "inactive",
-    });
-
-    if (!updatedUser) {
-        return res.status(404).json({ message: "User does not exist" });
+    try {
+        const updatedUser = await userService.updateUserStatus(
+            userId,
+            "inactive"
+        );
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        res.status(404).send({ message: error.message });
     }
-
-    const { _id, username, firstName, lastName, userRole, status } =
-        updatedUser;
-
-    res.status(200).json({
-        _id,
-        username,
-        firstName,
-        lastName,
-        userRole,
-        status,
-    });
 });
 
 router.patch("/:id/password_restore", isAdmin, async (req, res) => {
@@ -126,25 +116,15 @@ router.patch("/:id/password_restore", isAdmin, async (req, res) => {
 router.patch("/:userId/unarchive", isAdmin, async (req, res) => {
     const userId = req.params.userId;
 
-    const updatedUser = await userService.updateUser(userId, {
-        status: "active",
-    });
-
-    if (!updatedUser) {
-        return res.status(404).json({ message: "User does not exist" });
+    try {
+        const updatedUser = await userService.updateUserStatus(
+            userId,
+            "active"
+        );
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        res.status(404).send({ message: error.message });
     }
-
-    const { _id, username, firstName, lastName, userRole, status } =
-        updatedUser;
-
-    res.status(200).json({
-        _id,
-        username,
-        firstName,
-        lastName,
-        userRole,
-        status,
-    });
 });
 
 module.exports = router;
