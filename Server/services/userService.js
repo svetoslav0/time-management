@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const { isValidObjectId } = require("../utils/validateObjectId");
+const { validateObjectId } = require("../utils/validateObjectId");
 const {
     validateUserDataOnUserCreate,
     validateUserDataOnUserUpdate,
