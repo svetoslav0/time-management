@@ -1,19 +1,19 @@
 const User = require("../models/User");
 const validator = require('validator');
 
-const checkUserDataFieldsExistence = async (userData) => {
+const checkUserDataFieldsExistence = async (userData, isUpdate = false) => {
     const requiredFields = Object.keys(User.schema.paths).filter(
         (field) => User.schema.paths[field].isRequired
     );
 
-    const missingFields = requiredFields.filter(
+    const fieldsToCheck = isUpdate ? requiredFields.filter(field => !['password', 'confirmPassword'].includes(field)) : requiredFields;
+
+    const missingFields = fieldsToCheck.filter(
         (field) => !(field in userData)
     );
 
     if (missingFields.length > 0) {
-        const errorMessage = `One or more required fields are missing: ${missingFields.join(
-            ", "
-        )}!`;
+        const errorMessage = `One or more required fields are missing: ${missingFields.join(", ")}!`;
         throw new Error(errorMessage);
     }
 };
@@ -23,16 +23,7 @@ const validateCommonUserDataParams = async (userData) => {
 
     const validRoles = ["admin", "employee", "customer"];
 
-    if (!firstName) {
-        throw new Error("First name field is missing!");  
-    }
-    else if (!lastName) {
-        throw new Error("Last name field is missing!");  
-    }
-    else if (!userRole) {
-        throw new Error("User role field is missing!");  
-    }
-    else if (!validRoles.includes(userRole)) {
+    if (!validRoles.includes(userRole)) {
         throw new Error("User role does not exist!");
     }
     else if (firstName.length < 2) {
@@ -93,6 +84,7 @@ const validateUserDataOnUserUpdate = async (id, userData) => {
         throw new Error("User with the provided ID does not exist!");
     }
 
+    await checkUserDataFieldsExistence(userData, true);
     await validateCommonUserDataParams(userData);
     await roleBasedUserValidation(userData);
 };
