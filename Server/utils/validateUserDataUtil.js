@@ -6,7 +6,7 @@ const checkUserDataFieldsExistence = async (userData, isUpdate = false) => {
         (field) => User.schema.paths[field].isRequired
     );
 
-    const fieldsToCheck = isUpdate ? requiredFields.filter(field => !['password', 'confirmPassword'].includes(field)) : requiredFields;
+    const fieldsToCheck = isUpdate ? requiredFields.filter(field => !['password', 'email'].includes(field)) : requiredFields;
 
     const missingFields = fieldsToCheck.filter(
         (field) => !(field in userData)
