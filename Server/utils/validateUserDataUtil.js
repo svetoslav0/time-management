@@ -19,8 +19,6 @@ const checkUserDataFieldsExistence = async (userData) => {
 };
 
 const validateCommonUserDataParams = async (userData) => {
-    await checkUserDataFieldsExistence(userData);
-
     const {firstName, lastName, userRole } = userData;
 
     const validRoles = ["admin", "employee", "customer"];
@@ -66,6 +64,8 @@ const validateUserDataOnUserCreate = async (userData) => {
     if (doesUserExist) {
         throw new Error("User exists!");
     }
+
+    await checkUserDataFieldsExistence(userData);
     await validateAuthUserDataParams(userData);
     await validateCommonUserDataParams(userData);
     await roleBasedUserValidation(userData);
