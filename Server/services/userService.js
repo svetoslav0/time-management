@@ -100,6 +100,8 @@ exports.createUser = async (userData) => {
 exports.editUser = async (id, userData) => {
     await validateUserDataOnUserUpdate(id, userData);
 
+    delete userData.password;
+
     try {
         const options = { new: true, runValidators: true };
         
@@ -109,7 +111,6 @@ exports.editUser = async (id, userData) => {
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
-
             userRole: user.userRole,
         };
     } catch (error) {
