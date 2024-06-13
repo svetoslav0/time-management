@@ -25,27 +25,19 @@ const validateCommonUserDataParams = async (userData) => {
 
     const validRoles = ["admin", "employee", "customer"];
 
-    if (!userRole) {
-        throw new Error("User role is required!");
-    } else if (!validRoles.includes(userRole)) {
+   if (!validRoles.includes(userRole)) {
         throw new Error("User role does not exist!");
     }
 
-    if (!email) {
-        throw new Error("Email is required!");
-    } else if (!validateEmail(email)) {
+    if (!validateEmail(email)) {
         throw new Error("The email address you entered is not valid!");
     }
 
-    if (!firstName) {
-        throw new Error("First name is required!");
-    } else if (firstName.length < 2) {
+    if (firstName.length < 2) {
         throw new Error("First name is not long enough!");
     }
 
-    if (!lastName) {
-        throw new Error("Last name is required!");
-    } else if (lastName.length < 2) {
+    if (lastName.length < 2) {
         throw new Error("Last name is not long enough!");
     }
 };
@@ -87,9 +79,6 @@ const validateUserDataOnUserUpdate = async (id, userData) => {
 
     if (!doesUserIdExists) {
         throw new Error("User with the provided ID does not exist!");
-    }
-    else if (doesUserIdExists.email !== userData.email) {
-        throw new Error("Email address cannot be changed!");
     }
 
     await validateCommonUserDataParams(userData);
