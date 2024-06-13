@@ -101,11 +101,13 @@ exports.editUser = async (id, userData) => {
     await validateUserDataOnUserUpdate(id, userData);
 
     delete userData.password;
+    delete userData.email;
 
     try {
-        const options = { new: true, runValidators: true };
-        
-        const user = await User.findByIdAndUpdate(id, userData, options);
+        const user = await User.findById(id).exec();
+
+        Object.assign(user, userData);
+        await user.save();
 
         return {
             email: user.email,
