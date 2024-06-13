@@ -21,16 +21,12 @@ const checkUserDataFieldsExistence = async (userData) => {
 const validateCommonUserDataParams = async (userData) => {
     await checkUserDataFieldsExistence(userData);
 
-    const { email, firstName, lastName, userRole } = userData;
+    const {firstName, lastName, userRole } = userData;
 
     const validRoles = ["admin", "employee", "customer"];
 
    if (!validRoles.includes(userRole)) {
         throw new Error("User role does not exist!");
-    }
-
-    if (!validateEmail(email)) {
-        throw new Error("The email address you entered is not valid!");
     }
 
     if (firstName.length < 2) {
@@ -40,6 +36,21 @@ const validateCommonUserDataParams = async (userData) => {
     if (lastName.length < 2) {
         throw new Error("Last name is not long enough!");
     }
+};
+
+const validateAuthUserDataParams = async (userData) => {
+    const {email, password, confirmPassword} = userData;
+
+    if (!validateEmail(email)) {
+        throw new Error("The email address you entered is not valid!");
+    }
+
+    if (password.length < 6) {
+        throw new Error("Password is not long enough!");
+    } else if (confirmPassword !== password) {
+        throw new Error("Passwords does not match!");
+    }
+
 };
 
 const validateUserDataOnUserCreate = async (userData) => {
@@ -55,15 +66,9 @@ const validateUserDataOnUserCreate = async (userData) => {
     if (doesUserExist) {
         throw new Error("User exists!");
     }
-
-    if (userData.password.length < 6) {
-        throw new Error("Password is not long enough!");
-    } else if (userData.confirmPassword !== userData.password) {
-        throw new Error("Passwords does not match!");
-    }
-
+    await validateAuthUserDataParams(userData);
     await validateCommonUserDataParams(userData);
-    roleBasedUserValidation(userData);
+    await roleBasedUserValidation(userData);
 };
 
 const validateUserDataOnUserUpdate = async (id, userData) => {
@@ -82,10 +87,10 @@ const validateUserDataOnUserUpdate = async (id, userData) => {
     }
 
     await validateCommonUserDataParams(userData);
-    roleBasedUserValidation(userData);
+    await roleBasedUserValidation(userData);
 };
 
-function roleBasedUserValidation(userData) {
+const roleBasedUserValidation = async (userData) => {
     const { userRole, experienceLevel, companyName, phoneNumber, address } =
         userData;
 
