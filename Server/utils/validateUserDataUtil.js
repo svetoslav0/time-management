@@ -19,25 +19,32 @@ const checkUserDataFieldsExistence = async (userData) => {
 };
 
 const validateCommonUserDataParams = async (userData) => {
-    const {firstName, lastName, userRole } = userData;
+    const { firstName, lastName, userRole } = userData;
 
     const validRoles = ["admin", "employee", "customer"];
 
-   if (!validRoles.includes(userRole)) {
+    if (!firstName) {
+        throw new Error("First name field is missing!");  
+    }
+    else if (!lastName) {
+        throw new Error("Last name field is missing!");  
+    }
+    else if (!userRole) {
+        throw new Error("User role field is missing!");  
+    }
+    else if (!validRoles.includes(userRole)) {
         throw new Error("User role does not exist!");
     }
-
-    if (firstName.length < 2) {
+    else if (firstName.length < 2) {
         throw new Error("First name is not long enough!");
     }
-
-    if (lastName.length < 2) {
+    else if (lastName.length < 2) {
         throw new Error("Last name is not long enough!");
     }
 };
 
 const validateAuthUserDataParams = async (userData) => {
-    const {email, password, confirmPassword} = userData;
+    const { email, password, confirmPassword } = userData;
 
     if (!validateEmail(email)) {
         throw new Error("The email address you entered is not valid!");
