@@ -105,7 +105,7 @@ export default function Profile({ user }: ProfileProps) {
                         {user.status === 'Active' ? (
                             <button
                                 onClick={() =>
-                                    useStatusChange({ state: user.status, _id: user._id })
+                                    useStatusChange({ state: user?.status, _id: user?._id })
                                 }
                                 className='rounded-full border-2 border-red-500 bg-red-400 px-6 font-semibold text-white hover:bg-red-500'
                             >
@@ -114,7 +114,7 @@ export default function Profile({ user }: ProfileProps) {
                         ) : (
                             <button
                                 onClick={() =>
-                                    useStatusChange({ state: user.status, _id: user._id })
+                                    useStatusChange({ state: user?.status, _id: user?._id })
                                 }
                                 className='rounded-full border-2 border-green-500 bg-green-400 px-6 font-semibold text-white hover:bg-green-500'
                             >

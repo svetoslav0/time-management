@@ -1,9 +1,7 @@
 import httpServices from '@/services/httpServices';
 import { User } from '@/shared/types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-
-const queryClient = useQueryClient();
 
 const urlKeys = {
     archive: (id: string) => `/users/${id}/archive`,
@@ -21,7 +19,6 @@ export default function useUserMutate() {
     const { mutate: useStatusChange } = useMutation<User, Error, UseMutationProps>({
         mutationFn: (data) => put<null, User>(generateUrl(data), null),
         onSuccess: () => {
-            // queryClient.invalidateQueries(['user'])
             toast.success('Succesfuly archived user');
         },
         onError: (error) => {

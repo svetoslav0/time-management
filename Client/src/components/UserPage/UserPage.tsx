@@ -24,7 +24,7 @@ export default function UserPage() {
             firstName: 'John',
             lastName: 'Doe',
             userRole: 'Admin',
-            status: 'аActive',
+            status: 'Active',
             createdAt: '12-13-2024',
             _id: '123123123',
         };
