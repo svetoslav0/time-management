@@ -13,13 +13,13 @@ type UseMutationProps = {
     _id: string;
 };
 
-const { put } = httpServices();
+const { patch } = httpServices();
 
 export default function useUserMutate() {
     const { mutate: useStatusChange } = useMutation<User, Error, UseMutationProps>({
-        mutationFn: (data) => put<null, User>(generateUrl(data), null),
+        mutationFn: (data) => patch<null, User>(generateUrl(data), null),
         onSuccess: () => {
-            toast.success('Succesfuly archived user');
+            toast.success('Succesfuly status changed');
         },
         onError: (error) => {
             toast.error(error.message);
@@ -29,7 +29,7 @@ export default function useUserMutate() {
 }
 
 function generateUrl({ state, _id }: UseMutationProps) {
-    if (state === 'Active') {
+    if (state === 'active') {
         return `/users/${_id}/archive`;
     }
     return `/users/${_id}/unarchive`;

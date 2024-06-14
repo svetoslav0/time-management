@@ -20,5 +20,8 @@ export default function httpServices() {
         delete: async <V>(url: string): Promise<V> => {
             return httpRequest<null, V>({ url, method: 'DELETE' });
         },
+        patch: async <T, V>(url: string, data: T, headers?: Record<string, string>): Promise<V> => {
+            return httpRequest<T, V>({ url, method: 'PATCH', data, headers });
+        },
     };
 }

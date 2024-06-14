@@ -27,12 +27,11 @@ export type CreateUserDataType = {
     companyName?: string | undefined;
     phoneNumber?: string | undefined;
     address?: string | undefined;
-
 };
 
 // requestsTypes
 
-export type MethodType = 'GET' | 'POST' | 'PUT' | 'DELETE';
+export type MethodType = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
 export interface RequestOptions<T> {
     url: string;

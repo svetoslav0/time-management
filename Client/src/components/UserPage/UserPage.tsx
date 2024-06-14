@@ -19,17 +19,13 @@ export default function UserPage() {
     const [projects, setProjects] = useState<Project[] | undefined>(undefined);
     const { id } = useParams<string>();
     useEffect(() => {
-        const user: User = {
-            username: 'JohnnySinsJr',
-            firstName: 'John',
-            lastName: 'Doe',
-            userRole: 'Admin',
-            status: 'Active',
-            createdAt: '12-13-2024',
-            _id: '123123123',
-        };
-        setUser(user);
-    }, []);
+        httpServices()
+            .get<User>(`/users/${id}`)
+            .then((response) => {
+                setUser(response);
+                // console.log(response);
+            });
+    }, [id]);
 
     useEffect(() => {
         const projects: Project[] = [
@@ -68,7 +64,7 @@ export default function UserPage() {
 
     return (
         <div className='flex flex-col p-8'>
-            <Profile user={user} />
+            <Profile user={user} userState={setUser} />
             <Table projects={projects} />
         </div>
     );
