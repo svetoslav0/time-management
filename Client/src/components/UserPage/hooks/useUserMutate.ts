@@ -3,11 +3,6 @@ import { User } from '@/shared/types';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
-const urlKeys = {
-    archive: (id: string) => `/users/${id}/archive`,
-    unarchive: (id: string) => `/users/${id}/unarchive`,
-};
-
 type UseMutationProps = {
     state: string;
     _id: string;
