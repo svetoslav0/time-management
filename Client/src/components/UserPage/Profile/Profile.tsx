@@ -26,8 +26,7 @@ export default function Profile({ user, userState }: ProfileProps) {
         if (user) {
             useStatusChange({ state: user.status, _id: user._id });
             const updatedStatus = user.status === 'active' ? 'inactive' : 'active';
-            const updatedUser = { ...user, status: updatedStatus };
-            userState(updatedUser);
+            userState({ ...user, status: updatedStatus });
         }
     };
 
