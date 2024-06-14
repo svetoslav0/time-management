@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import { User } from '../../../shared/types';
 import ResetPasswordModal from '../ResetPasswordModal/ResetPasswordModal';
+import useUserMutate from '../hooks/useUserMutate';
+
 interface ProfileProps {
     user?: User;
 }
@@ -14,6 +16,10 @@ export default function Profile({ user }: ProfileProps) {
     const closeModal = () => {
         setIsModalOpen((state) => (state = false));
     };
+
+    const useStatusChange = useUserMutate();
+
+    // Test on react query mutation
 
     const isAdmin = true;
     const userCreatedAt = dayjs(user?.createdAt).format('Do MMMM, YYYY');
@@ -32,7 +38,7 @@ export default function Profile({ user }: ProfileProps) {
                         </h3>
                         <p>Junior developer(need to get position from BE)</p>
                         <p className='mt-1 text-xs font-medium text-gray-600'>
-                            {user.status === 'active' ? (
+                            {user.status === 'Active' ? (
                                 <span className='rounded-full bg-green-500 px-2'>Active</span>
                             ) : (
                                 <span className='rounded-full bg-red-500 px-2'>Inactive</span>
@@ -97,11 +103,21 @@ export default function Profile({ user }: ProfileProps) {
                         </button>
                         {/* DEPENDS ON STATUS CONDITIONAL RENDERING*/}
                         {user.status === 'Active' ? (
-                            <button className='rounded-full border-2 border-red-500 bg-red-400 px-6 font-semibold text-white hover:bg-red-500'>
+                            <button
+                                onClick={() =>
+                                    useStatusChange({ state: user.status, _id: user._id })
+                                }
+                                className='rounded-full border-2 border-red-500 bg-red-400 px-6 font-semibold text-white hover:bg-red-500'
+                            >
                                 Delete User
                             </button>
                         ) : (
-                            <button className='rounded-full border-2 border-green-500 bg-green-400 px-6 font-semibold text-white hover:bg-green-500'>
+                            <button
+                                onClick={() =>
+                                    useStatusChange({ state: user.status, _id: user._id })
+                                }
+                                className='rounded-full border-2 border-green-500 bg-green-400 px-6 font-semibold text-white hover:bg-green-500'
+                            >
                                 Activate User
                             </button>
                         )}

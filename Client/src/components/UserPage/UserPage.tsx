@@ -19,13 +19,17 @@ export default function UserPage() {
     const [projects, setProjects] = useState<Project[] | undefined>(undefined);
     const { id } = useParams<string>();
     useEffect(() => {
-        httpServices()
-            .get<User>(`/users/${id}`)
-            .then((response) => {
-                setUser(response);
-                console.log(response)
-            });
-    }, [id]);
+        const user: User = {
+            username: 'JohnnySinsJr',
+            firstName: 'John',
+            lastName: 'Doe',
+            userRole: 'Admin',
+            status: 'аActive',
+            createdAt: '12-13-2024',
+            _id: '123123123',
+        };
+        setUser(user);
+    }, []);
 
     useEffect(() => {
         const projects: Project[] = [
