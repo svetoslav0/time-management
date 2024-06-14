@@ -1,7 +1,7 @@
 // UTIL/USER_DATA
 
 export interface UserData {
-    username: string;
+    email: string;
     id: string;
     token: string;
 }
