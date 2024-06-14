@@ -1,7 +1,7 @@
 export function capitalizeAndFormat(string: string) {
     switch (string) {
-        case 'username':
-            return 'Username';
+        case 'email':
+            return 'Email';
         case 'lastName':
             return 'Last Name';
         case 'firstName':

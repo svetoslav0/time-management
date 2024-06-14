@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+
 import { User } from '../../shared/types';
 
 export default function UserCard({ user }: { user: User }) {
@@ -11,7 +12,7 @@ export default function UserCard({ user }: { user: User }) {
             }}
         >
             <h5 className='mb-3 text-base font-semibold text-gray-900 dark:text-white md:text-xl'>
-                User: {user.username}
+                User: {user.email}
             </h5>
 
             <ul className='my-4 space-y-3'>
