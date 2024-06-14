@@ -56,7 +56,7 @@ exports.getSingleProject = (projectId) => Project.findById(projectId);
 
 exports.updateProject = async (projectId, projectData) => {
 
-    await validateProjectData(projectData);
+    await validateProjectData(customerIds, projectName, startingDate, pricePerHour, employeeIds)
 
     try {
         const project = await Project.findByIdAndUpdate(projectId, projectData );
