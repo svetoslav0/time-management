@@ -36,10 +36,10 @@ export default function Login() {
             <h2 className='self-center'>Login</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <InputComponent
-                    error={errors.username?.message}
+                    error={errors.email?.message}
                     register={register}
                     trigger={trigger}
-                    field='username'
+                    field='email'
                 />
                 <InputComponent
                     error={errors.password?.message}
