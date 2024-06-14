@@ -6,7 +6,7 @@ const userService = require("../services/userService");
 const isAdmin = async (req, res, next) => {
     const token = req.cookies.authCookie;
     if (!token) {
-        return res.status(401).json({ message: "No token provided" });
+        return res.status(401).json({ message: "No token provided!" });
     }
 
     try {
@@ -19,7 +19,7 @@ const isAdmin = async (req, res, next) => {
 
         next();
     } catch (error) {
-        return res.status(403).json({ message: "Invalid token" });
+        return res.status(403).json({ message: "Invalid token!" });
     }
 };
 
