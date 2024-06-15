@@ -52,7 +52,7 @@ export function Navigation({ mode, onChangeDarkMode }: NavigationProps) {
                 <li>
                     {isLoggedIn ? (
                         <span className='text-1xl mx-4 text-center font-bold leading-9 tracking-tight text-gray-900'>
-                            {user?.username}
+                            {user?.email}
                         </span>
                     ) : (
                         ''
