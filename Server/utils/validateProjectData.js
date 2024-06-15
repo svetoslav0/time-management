@@ -6,10 +6,10 @@ const validateProjectData = async (customerIds, projectName, startingDate, price
     let employees;
     
     if (!Array.isArray(customerIds) || customerIds.length === 0) {
-        throw new Error('At least one customer ID is required');
+        throw new Error('At least one customer ID is required!');
     }
     else if (!Array.isArray(employeeIds) || employeeIds.length === 0) {
-        throw new Error('At least one employee ID is required')
+        throw new Error('At least one employee ID is required!')
     }
 
     try {
@@ -28,28 +28,28 @@ const validateProjectData = async (customerIds, projectName, startingDate, price
     }
   
     if (customers.length !== customerIds.length) {
-        throw new Error('All customer IDs should belong to users with the corresponding role');
+        throw new Error('All customer IDs should belong to users with the corresponding role!');
     }
     else if (employees.length !== employeeIds.length) {
-        throw new Error('All employee IDs should belong to users with the corresponding role')
+        throw new Error('All employee IDs should belong to users with the corresponding role!')
     }
     else if (!projectName) {
-        throw new Error('Project Name is missing');
+        throw new Error('Project Name is missing!');
     } else if (projectName.length < 2) {
-        throw new Error('Project Name is not long enough');
+        throw new Error('Project Name is not long enough!');
     } else if (!startingDate) {
-        throw new Error('Starting Date is missing');
+        throw new Error('Starting Date is missing!');
     } else if (!pricePerHour) {
-        throw new Error('Price per hour is missing');
+        throw new Error('Price per hour is missing!');
     } else if (!Number(pricePerHour)) {
-        throw new Error('Price per hour has non-numeric value')
+        throw new Error('Price per hour has non-numeric value!')
     } else if (Number(pricePerHour) <= 0) {
-        throw new Error('Price per hour has a negative numeric value');
+        throw new Error('Price per hour has a negative numeric value!');
     }
 
     const isValidDate = isValidDateMoment(startingDate)
     if (!isValidDate) {
-        throw new Error('Starting Date is in incorrect format, it must be DD-MM-YYYY');
+        throw new Error('Starting Date is in incorrect format, it must be DD-MM-YYYY!');
     }
 }
 

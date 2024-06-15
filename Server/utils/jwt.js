@@ -6,7 +6,7 @@ exports.generateToken = (userData) => {
     return jwt.sign(
         {
             _id: userData._id,
-            username: userData.username,
+            email: userData.email,
             firstName: userData.firstName,
             lastName: userData.lastName,
             userRole: userData.userRole,

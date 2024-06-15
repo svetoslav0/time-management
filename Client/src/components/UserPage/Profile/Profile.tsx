@@ -28,7 +28,7 @@ export default function Profile({ user }: ProfileProps) {
                 <div className='sm:flex sm:justify-between sm:gap-4'>
                     <div>
                         <h3 className='text-lg font-bold text-gray-900 sm:text-xl'>
-                            {user.firstName} {user.lastName} - {user.username}
+                            {user.firstName} {user.lastName} - {user.email}
                         </h3>
                         <p>Junior developer(need to get position from BE)</p>
                         <p className='mt-1 text-xs font-medium text-gray-600'>
