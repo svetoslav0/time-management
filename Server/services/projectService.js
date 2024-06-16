@@ -17,7 +17,6 @@ exports.createProject = async (projectData) => {
         pricePerHour,
         employeeIds
     );
-
     try {
         const project = await Project.create({
             customerIds: customerIds,
@@ -28,6 +27,7 @@ exports.createProject = async (projectData) => {
         });
 
         return {
+            projectId: project._id,
             customerIds: customerIds,
             projectName: project.projectName,
             startingDate: project.startingDate,
