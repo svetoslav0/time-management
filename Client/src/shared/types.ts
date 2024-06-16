@@ -33,6 +33,17 @@ export type CreateUserDataType = {
     phoneNumber?: string | undefined;
     address?: string | undefined;
 };
+export type EditUserDataType = {
+    username: string;
+    firstName: string;
+    lastName: string;
+    userRole: string;
+    description?: string | undefined;
+    experienceLevel?: string | undefined;
+    companyName?: string | undefined;
+    phoneNumber?: string | undefined;
+    address?: string | undefined;
+};
 
 // requestsTypes
 
