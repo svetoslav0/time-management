@@ -73,11 +73,11 @@ export default function CreateUser() {
                 {userType === 'employee' && (
                     <div className='mb-5'>
                         <select
-                            id='experience'
+                            id='experienceLevel'
                             className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                             defaultValue=''
-                            {...register('experience')}
-                            onBlur={() => trigger('experience')}
+                            {...register('experienceLevel')}
+                            onBlur={() => trigger('experienceLevel')}
                         >
                             <option value='' disabled>
                                 Select experience
@@ -87,9 +87,9 @@ export default function CreateUser() {
                             <option value='senior'>Senior</option>
                             <option value='architect'>Architect</option>
                         </select>
-                        {errors.experience && (
+                        {errors.experienceLevel && (
                             <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                                {errors.experience.message}
+                                {errors.experienceLevel.message}
                             </span>
                         )}
                     </div>

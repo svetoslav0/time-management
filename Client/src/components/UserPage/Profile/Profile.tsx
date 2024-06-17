@@ -3,6 +3,7 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { useState } from 'react';
 
 import { User } from '../../../shared/types';
+import EditUserModal from '../EditUserModal/EditUserModal';
 import ResetPasswordModal from '../ResetPasswordModal/ResetPasswordModal';
 interface ProfileProps {
     user?: User;
@@ -10,9 +11,11 @@ interface ProfileProps {
 dayjs.extend(advancedFormat);
 export default function Profile({ user }: ProfileProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const closeModal = () => {
-        setIsModalOpen((state) => (state = false));
+        setIsModalOpen(false);
+        setIsEditModalOpen(false);
     };
 
     const isAdmin = true;
@@ -86,7 +89,10 @@ export default function Profile({ user }: ProfileProps) {
                 {/* BUTTONS */}
                 {isAdmin && (
                     <div className='mt-5 flex justify-center gap-2 align-middle'>
-                        <button className='rounded-full border-2 border-yellow-500 bg-yellow-400 px-6 font-semibold text-white hover:bg-yellow-500'>
+                        <button
+                            onClick={() => setIsEditModalOpen(true)}
+                            className='rounded-full border-2 border-yellow-500 bg-yellow-400 px-6 font-semibold text-white hover:bg-yellow-500'
+                        >
                             Edit
                         </button>
                         <button
@@ -108,7 +114,8 @@ export default function Profile({ user }: ProfileProps) {
                     </div>
                 )}
             </div>
-            <ResetPasswordModal isOpen={isModalOpen} onClose={closeModal} />
+            <ResetPasswordModal isOpen={isModalOpen} onClose={closeModal}  />
+            <EditUserModal isOpen={isEditModalOpen} onClose={closeModal} user={user}/>
         </>
     );
 }
