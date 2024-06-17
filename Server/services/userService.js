@@ -129,7 +129,7 @@ exports.editUser = async (id, userData) => {
 exports.getSingleUser = (userId) => User.findById(userId).select("-password");
 
 exports.updateUserStatus = async (userId, newStatus) => {
-    if (!isValidObjectId(userId)) {
+    if (!validateObjectId(userId)) {
         throw new Error("Invalid user ID");
     }
 
