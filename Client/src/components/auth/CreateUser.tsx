@@ -82,10 +82,10 @@ export default function CreateUser() {
                             <option value='' disabled>
                                 Select experience
                             </option>
-                            <option value='junior'>Junior</option>
-                            <option value='mid-level'>Mid-Level</option>
-                            <option value='senior'>Senior</option>
-                            <option value='architect'>Architect</option>
+                            <option value='Junior'>Junior</option>
+                            <option value='Mid-level'>Mid-Level</option>
+                            <option value='Senior'>Senior</option>
+                            <option value='Architect'>Architect</option>
                         </select>
                         {errors.experienceLevel && (
                             <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
