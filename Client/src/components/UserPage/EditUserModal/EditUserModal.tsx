@@ -1,21 +1,22 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
-// import { useState } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-// import toast from 'react-hot-toast';
+
+import useEditUser from '../hooks/useEditUser';
 
 import { editUserSchema } from '@/shared/formValidations';
-import { User } from '@/shared/types';
+import { EditUserDataType, User } from '@/shared/types';
 import InputComponent from '@/UI/formComponents/InputComponent';
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     user: User;
+    userState: Dispatch<SetStateAction<EditUserDataType | undefined>>;
 }
 
 interface EditUser {
-    username: string;
+    email: string;
     firstName: string;
     lastName: string;
     description?: string | undefined;
@@ -25,7 +26,7 @@ interface EditUser {
     address?: string | undefined;
 }
 
-export default function EditUserModal({ isOpen, onClose, user }: ModalProps) {
+export default function EditUserModal({ isOpen, onClose, user, userState }: ModalProps) {
     const {
         register,
         handleSubmit,
@@ -35,17 +36,21 @@ export default function EditUserModal({ isOpen, onClose, user }: ModalProps) {
         reset,
     } = useForm({ resolver: yupResolver(editUserSchema) });
 
-    const onSubmit: SubmitHandler<EditUser> = (data) => {
+    const { editUser, isSuccess } = useEditUser();
+
+    const onSubmit: SubmitHandler<EditUserDataType> = (data) => {
         console.log(data);
-        // toast.success('User successfully edited!');
-        // onClose();
-        // reset();
+        data.userRole = user.userRole;
+        data.status = user.status;
+        editUser(data);
+        userState(data);
+        onClose();
     };
     const experience = 'Senior';
     const allExperienceOptions = ['Junior', 'Mid-level', 'Senior', 'Architect'];
     const otherExperienceOptions = allExperienceOptions.filter((option) => option !== experience);
     useEffect(() => {
-        setValue('username', user.username);
+        setValue('email', user.email);
         setValue('firstName', user.firstName);
         setValue('lastName', user.lastName);
         setValue('companyName', user.companyName);
@@ -54,6 +59,11 @@ export default function EditUserModal({ isOpen, onClose, user }: ModalProps) {
         setValue('description', user.description);
         setValue('experienceLevel', experience); //use dynamic data if user.experience is not undefined
     }, [setValue, user]);
+    useEffect(() => {
+        if (isSuccess) {
+            reset();
+        }
+    }, [reset, isSuccess]);
 
     if (!isOpen) return null;
 
@@ -66,11 +76,11 @@ export default function EditUserModal({ isOpen, onClose, user }: ModalProps) {
 
                         <div>
                             <InputComponent
-                                error={errors.username?.message}
+                                error={errors.email?.message}
                                 register={register}
                                 trigger={trigger}
-                                field='username'
-                                defaultValue={user.username}
+                                field='email'
+                                defaultValue={user.email}
                             />
                             <InputComponent
                                 error={errors.firstName?.message}

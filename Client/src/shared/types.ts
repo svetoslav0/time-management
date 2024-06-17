@@ -34,15 +34,16 @@ export type CreateUserDataType = {
     address?: string | undefined;
 };
 export type EditUserDataType = {
-    username: string;
+    email: string;
     firstName: string;
     lastName: string;
-    userRole: string;
+    userRole?: string;
     description?: string | undefined;
     experienceLevel?: string | undefined;
     companyName?: string | undefined;
     phoneNumber?: string | undefined;
     address?: string | undefined;
+    status?: string;
 };
 
 // requestsTypes

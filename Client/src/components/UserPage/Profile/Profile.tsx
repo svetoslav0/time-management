@@ -2,14 +2,14 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import { User } from '../../../shared/types';
+import { EditUserDataType, User } from '../../../shared/types';
 import EditUserModal from '../EditUserModal/EditUserModal';
-import ResetPasswordModal from '../ResetPasswordModal/ResetPasswordModal';
 import useUserMutate from '../hooks/useUserMutate';
+import ResetPasswordModal from '../ResetPasswordModal/ResetPasswordModal';
 
 interface ProfileProps {
     user?: User;
-    userState: Dispatch<SetStateAction<User | undefined>>;
+    userState: Dispatch<SetStateAction<User | EditUserDataType | undefined>>;
 }
 
 dayjs.extend(advancedFormat);
@@ -20,6 +20,7 @@ export default function Profile({ user, userState }: ProfileProps) {
 
     const closeModal = () => {
         setIsModalOpen(false);
+        setIsEditModalOpen(false);
     };
 
     const useStatusChange = useUserMutate();
@@ -30,7 +31,6 @@ export default function Profile({ user, userState }: ProfileProps) {
             const updatedStatus = user.status === 'active' ? 'inactive' : 'active';
             userState({ ...user, status: updatedStatus });
         }
-
     };
 
     const isAdmin = true;
@@ -136,8 +136,13 @@ export default function Profile({ user, userState }: ProfileProps) {
                     </div>
                 )}
             </div>
-            <ResetPasswordModal isOpen={isModalOpen} onClose={closeModal}  />
-            <EditUserModal isOpen={isEditModalOpen} onClose={closeModal} user={user}/>
+            <ResetPasswordModal isOpen={isModalOpen} onClose={closeModal} />
+            <EditUserModal
+                isOpen={isEditModalOpen}
+                onClose={closeModal}
+                user={user}
+                userState={userState}
+            />
         </>
     );
 }
