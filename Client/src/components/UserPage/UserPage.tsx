@@ -66,7 +66,7 @@ export default function UserPage() {
 
     return (
         <div className='flex flex-col p-8'>
-            <Profile user={user} />
+            <Profile user={user} userState={setUser} />
             <Table projects={projects} />
         </div>
     );

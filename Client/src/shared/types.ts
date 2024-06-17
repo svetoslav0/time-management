@@ -47,7 +47,7 @@ export type EditUserDataType = {
 
 // requestsTypes
 
-export type MethodType = 'GET' | 'POST' | 'PUT' | 'DELETE';
+export type MethodType = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
 export interface RequestOptions<T> {
     url: string;
