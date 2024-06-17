@@ -1,12 +1,12 @@
 import * as yup from 'yup';
 
 export const loginSchema = yup.object().shape({
-    username: yup.string().required('Username is required!'),
+    email: yup.string().email('Invalid email format').required('Email is required!'),
     password: yup.string().required('Password is required!'),
 });
 
 export const createUserSchema = yup.object().shape({
-    username: yup.string().min(2, 'User Name need to be at least 6 characters').required('Username is required'),
+    email: yup.string().email('Invalid email format').required('email is required'),
     firstName: yup.string().required('First name is required'),
     lastName: yup.string().required('Last name is required'),
     password: yup
@@ -19,7 +19,33 @@ export const createUserSchema = yup.object().shape({
         .oneOf([yup.ref('password'), undefined], 'Passwords must match')
         .required('Confirm Password is required'),
     userRole: yup.string().required('User role is required'),
-    experience: yup.string().when('userRole', ([userRole], schema) => {
+    experienceLevel: yup.string().when('userRole', ([userRole], schema) => {
+        return userRole === 'employee'
+            ? schema.required('Experience is required')
+            : schema.notRequired();
+    }),
+    companyName: yup.string().when('userRole', ([userRole], schema) => {
+        return userRole === 'customer'
+            ? schema.required('Company Name is required')
+            : schema.notRequired();
+    }),
+    phoneNumber: yup.string().when('userRole', ([userRole], schema) => {
+        return userRole === 'customer'
+            ? schema.required('Phone Number is required')
+            : schema.notRequired();
+    }),
+    address: yup.string().when('userRole', ([userRole], schema) => {
+        return userRole === 'customer'
+            ? schema.required('Address is required')
+            : schema.notRequired();
+    }),
+    description: yup.string(),
+});
+export const editUserSchema = yup.object().shape({
+    username: yup.string().min(2, 'User Name need to be at least 6 characters').required('Username is required'),
+    firstName: yup.string().required('First name is required'),
+    lastName: yup.string().required('Last name is required'),
+    experienceLevel: yup.string().when('userRole', ([userRole], schema) => {
         return userRole === 'employee'
             ? schema.required('Experience is required')
             : schema.notRequired();

@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const { validateObjectId } = require("../utils/validateObjectId");
 const {
     validateUserDataOnUserCreate,
     validateUserDataOnUserUpdate,
@@ -8,27 +9,27 @@ const {
 const { generateToken } = require("../utils/jwt");
 
 exports.login = async (userData) => {
-    const user = await User.findOne({ username: userData.username });
+    const user = await User.findOne({ email: userData.email });
 
     if (!user) {
-        throw new Error("Invalid username or password");
+        throw new Error("Invalid email or password!");
     }
 
     if (user.status == "inactive") {
-        throw new Error("Your account is inactive. Please contact support.");
+        throw new Error("Your account is inactive. Please contact support!");
     }
 
     const isValid = await bcrypt.compare(userData.password, user.password);
 
     if (!isValid) {
-        throw new Error("Invalid username or password");
+        throw new Error("Invalid email or password!");
     }
 
     const token = generateToken(user);
 
     return {
         user: {
-            username: user.username,
+            email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
             userRole: user.userRole,
@@ -40,7 +41,7 @@ exports.login = async (userData) => {
 
 exports.createUser = async (userData) => {
     const {
-        username,
+        email,
         firstName,
         lastName,
         password,
@@ -50,8 +51,9 @@ exports.createUser = async (userData) => {
     } = userData;
 
     await validateUserDataOnUserCreate(userData);
+
     const newUser = {
-        username,
+        email,
         firstName,
         lastName,
         password,
@@ -71,7 +73,7 @@ exports.createUser = async (userData) => {
         const user = await User.create(newUser);
 
         const response = {
-            username: user.username,
+            email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
             userRole: user.userRole,
@@ -97,18 +99,21 @@ exports.createUser = async (userData) => {
 };
 
 exports.editUser = async (id, userData) => {
-    await validateUserDataOnUserUpdate(userData);
+    await validateUserDataOnUserUpdate(id, userData);
 
-    console.log(userData);
+    delete userData.password;
+    delete userData.email;
 
     try {
-        const user = await User.findByIdAndUpdate(id, userData);
+        const user = await User.findById(id).exec();
+
+        Object.assign(user, userData);
+        await user.save();
 
         return {
-            username: user.username,
+            email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
-
             userRole: user.userRole,
         };
     } catch (error) {
@@ -123,8 +128,30 @@ exports.editUser = async (id, userData) => {
 
 exports.getSingleUser = (userId) => User.findById(userId).select("-password");
 
-exports.updateUser = (userId, userData) =>
-    User.findByIdAndUpdate(userId, userData, { new: true });
+exports.updateUserStatus = async (userId, newStatus) => {
+    if (!isValidObjectId(userId)) {
+        throw new Error("Invalid user ID");
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { status: newStatus },
+        { new: true }
+    );
+
+    if (!updatedUser) {
+        throw new Error("User does not exist");
+    }
+
+    return {
+        _id: updatedUser._id,
+        username: updatedUser.username,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        userRole: updatedUser.userRole,
+        status: updatedUser.status,
+    };
+};
 
 exports.getUsers = async (queryData) => {
     try {
@@ -139,7 +166,7 @@ exports.getUsers = async (queryData) => {
         }
 
         const users = await User.find(query)
-            .select("username firstName lastName userRole")
+            .select("email firstName lastName userRole")
             .skip(queryData.offset)
             .limit(queryData.limit);
 
@@ -151,6 +178,6 @@ exports.getUsers = async (queryData) => {
         };
     } catch (error) {
         console.error("Error fetching users:", error);
-        throw new Error("Internal Server Error");
+        throw new Error("Internal Server Error!");
     }
 };

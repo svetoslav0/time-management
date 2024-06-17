@@ -1,29 +1,45 @@
 import { FieldValues, SubmitHandler, UseFormReturn } from 'react-hook-form';
 
 export type User = {
-    username: string;
+    email: string;
     firstName: string;
     lastName: string;
     userRole: string;
     status: string;
     createdAt: string;
+    description?: string | undefined;
+    experienceLevel?: string | undefined;
+    companyName?: string | undefined;
+    phoneNumber?: string | undefined;
+    address?: string | undefined;
     _id: string;
 };
 
 export type LoginFormDataType = {
-    username: string;
+    email: string;
     password: string;
 };
 
 export type CreateUserDataType = {
-    username: string;
+    email: string;
     firstName: string;
     lastName: string;
     userRole: string;
     password: string;
     description?: string | undefined;
     confirmPassword: string;
-    experience?: string | undefined;
+    experienceLevel?: string | undefined;
+    companyName?: string | undefined;
+    phoneNumber?: string | undefined;
+    address?: string | undefined;
+};
+export type EditUserDataType = {
+    username: string;
+    firstName: string;
+    lastName: string;
+    userRole: string;
+    description?: string | undefined;
+    experienceLevel?: string | undefined;
     companyName?: string | undefined;
     phoneNumber?: string | undefined;
     address?: string | undefined;

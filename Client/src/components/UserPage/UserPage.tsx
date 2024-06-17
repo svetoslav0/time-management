@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import { useParams } from 'react-router-dom';
 
 import httpServices from '../../services/httpServices';
@@ -19,13 +20,14 @@ export default function UserPage() {
     const [projects, setProjects] = useState<Project[] | undefined>(undefined);
     const { id } = useParams<string>();
     useEffect(() => {
+
         httpServices()
             .get<User>(`/users/${id}`)
             .then((response) => {
                 setUser(response);
-                // console.log(response);
             });
     }, [id]);
+
 
     useEffect(() => {
         const projects: Project[] = [

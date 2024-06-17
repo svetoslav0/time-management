@@ -1,4 +1,5 @@
 export const urlKeys = {
     login: '/login',
-    createUser: '/users/',
+    createUser: '/users',
+    editUser: '/users',
 };
