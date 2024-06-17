@@ -96,10 +96,10 @@ export default function CreateUser() {
                 )}
 
                 <InputComponent
-                    error={errors.username?.message}
+                    error={errors.email?.message}
                     register={register}
                     trigger={trigger}
-                    field='username'
+                    field='email'
                 />
                 <InputComponent
                     error={errors.firstName?.message}

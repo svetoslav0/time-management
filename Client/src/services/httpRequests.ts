@@ -1,5 +1,7 @@
 import { RequestOptions } from '../shared/types';
 
+import { clearUserData } from '@/util/util';
+
 const host = import.meta.env.VITE_API_BASE_URL;
 // const host = 'http://localhost:3000';
 
@@ -31,7 +33,7 @@ export async function httpRequest<T, V>(options: RequestOptions<T>): Promise<V> 
 
         if (!response.ok) {
             if (response.status === 403) {
-                // clearUserData();
+                clearUserData();
             }
             const error = await response.json();
             throw new Error(error.message || `HTTP Request failed with status ${response.status}`);
