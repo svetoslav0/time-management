@@ -42,7 +42,7 @@ export const createUserSchema = yup.object().shape({
     description: yup.string(),
 });
 export const editUserSchema = yup.object().shape({
-    username: yup.string().min(2, 'User Name need to be at least 6 characters').required('Username is required'),
+    email: yup.string().email('Invalid email format').required('email is required'),
     firstName: yup.string().required('First name is required'),
     lastName: yup.string().required('Last name is required'),
     experienceLevel: yup.string().when('userRole', ([userRole], schema) => {
