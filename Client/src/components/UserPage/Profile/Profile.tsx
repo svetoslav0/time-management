@@ -23,11 +23,11 @@ export default function Profile({ user, userState }: ProfileProps) {
         setIsEditModalOpen(false);
     };
 
-    const useStatusChange = useUserMutate();
+    const statusChange = useUserMutate();
 
     const handleStatusChange = () => {
         if (user) {
-            useStatusChange({ state: user.status, _id: user._id });
+            statusChange({ state: user.status, _id: user._id });
             const updatedStatus = user.status === 'active' ? 'inactive' : 'active';
             userState({ ...user, status: updatedStatus });
         }
