@@ -15,14 +15,20 @@ router.post("/", isAdmin, async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-    try{
-        const projects = await projectService.getProjects()
+    const { status } = req.query;
 
-        res.status(200).json(projects)
-    }catch(error) {
+    if (status && !["inProgress", "completed"].includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+    }
+
+    try {
+        const projects = await projectService.getProjects(status);
+
+        res.status(200).json(projects);
+    } catch (error) {
         res.status(403).json({ message: error.message });
     }
-})
+});
 
 router.get("/:id", async (req, res) => {
     const projectId = req.params.id;
@@ -46,4 +52,3 @@ router.patch("/:id", isAdmin, async (req, res) => {
     }
 });
 module.exports = router;
-
