@@ -1,23 +1,23 @@
-import { resetPasswordSchema } from '@/shared/formValidations';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { SubmitHandler,useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+
+import useUserPasswordReset from '../hooks/useUserPasswordReset';
+
+import { resetPasswordSchema } from '@/shared/formValidations';
+import { ResetPassword } from '@/shared/types';
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-interface ResetPassword {
-    password: string;
-    confirmPassword: string;
-}
-
 export default function ResetPasswordModal({ isOpen, onClose }: ModalProps) {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState<boolean>(false);
+    const { passwordReset, isSuccess } = useUserPasswordReset();
 
     const {
         register,
@@ -28,12 +28,17 @@ export default function ResetPasswordModal({ isOpen, onClose }: ModalProps) {
 
     const onSubmit: SubmitHandler<ResetPassword> = (data) => {
         toast.success('Password successfully changed!');
-        console.log(data);
+        passwordReset(data);
         onClose();
         reset();
         setShowPassword(false);
         setShowRepeatPassword(false);
     };
+    useEffect(() => {
+        if (isSuccess) {
+            reset();
+        }
+    }, [reset, isSuccess]);
 
     if (!isOpen) return null;
 
