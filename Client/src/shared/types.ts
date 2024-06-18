@@ -69,6 +69,11 @@ export type FormProps<T extends FieldValues> = UseFormReturn<T> & { onSubmit: Su
 export interface LoginFormProps extends FormProps<LoginFormDataType> {}
 export interface CreateUserFormProps extends FormProps<CreateUserDataType> {}
 
+export interface ResetPassword {
+    password: string;
+    confirmPassword: string;
+}
+
 // Project Type
 
 export type Project = {

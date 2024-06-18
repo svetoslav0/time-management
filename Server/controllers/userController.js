@@ -104,10 +104,9 @@ router.patch("/:id/password_restore", isAdmin, async (req, res) => {
         if (!user) {
             throw new Error("User not found!");
         }
-
-        user.password = await bcrypt.hash(password, 12);
+        // user.password = await bcrypt.hash(password, 12);
+        user.password = password;
         await user.save();
-
         res.status(200).send({ message: "Password restored successfully!" });
     } catch (error) {
         res.status(500).send({ error: "Internal Server Error!" });
