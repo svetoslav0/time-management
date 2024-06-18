@@ -40,11 +40,25 @@ export default function ResetPasswordModal({ isOpen, onClose }: ModalProps) {
         }
     }, [reset, isSuccess]);
 
+    const handleOuterClick = () => {
+        onClose();
+        reset();
+        setShowPassword(false);
+        setShowRepeatPassword(false);
+    };
+
+    const handleInnerClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+    };
+
     if (!isOpen) return null;
 
     return (
-        <div className='fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50'>
-            <div className='rounded-lg bg-white p-6 shadow-lg'>
+        <div
+            onClick={handleOuterClick}
+            className='fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50'
+        >
+            <div onClick={handleInnerClick} className='rounded-lg bg-white p-6 shadow-lg'>
                 <div className='mx-auto w-[300px]'>
                     <form className='space-y-6' onSubmit={handleSubmit(onSubmit)}>
                         <h3 className='text-xl font-medium text-gray-900'>Password change!</h3>
