@@ -27,9 +27,16 @@ export default function Profile({ user, userState }: ProfileProps) {
 
     const handleStatusChange = () => {
         if (user) {
-            statusChange({ state: user.status, _id: user._id });
-            const updatedStatus = user.status === 'active' ? 'inactive' : 'active';
-            userState({ ...user, status: updatedStatus });
+            const confirmMessage =
+                user.status === 'active'
+                    ? 'Are you sure you want to deactivate this user?'
+                    : 'Are you sure you want to activate this user?';
+
+            if (confirm(confirmMessage)) {
+                statusChange({ state: user.status, _id: user._id });
+                const updatedStatus = user.status === 'active' ? 'inactive' : 'active';
+                userState({ ...user, status: updatedStatus });
+            }
         }
     };
 
