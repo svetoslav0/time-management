@@ -28,7 +28,6 @@ export default function ResetPasswordModal({ isOpen, onClose }: ModalProps) {
 
     const onSubmit: SubmitHandler<ResetPassword> = (data) => {
         toast.success('Password successfully changed!');
-        console.log(data)
         passwordReset(data);
         onClose();
         reset();

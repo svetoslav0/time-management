@@ -12,7 +12,7 @@ export default function useUserPasswordReset() {
     const { mutate: passwordReset, isSuccess } = useMutation<User, Error, ResetPassword>({
         mutationFn: (data) => patch<ResetPassword, User>(urlKeys.editUser + `/${id}/password_restore`, data),
         onSuccess: () => {
-            toast.success('Password changed successfully!');
+            // toast.success('Password changed successfully!');
         },
         onError: (error) => {
             toast.error(error.message);
