@@ -166,7 +166,7 @@ exports.getUsers = async (queryData) => {
         }
 
         const users = await User.find(query)
-            .select("email firstName lastName userRole")
+            .select("-password -updatedAt")
             .skip(queryData.offset)
             .limit(queryData.limit);
 
