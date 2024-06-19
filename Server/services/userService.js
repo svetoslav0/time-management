@@ -145,7 +145,7 @@ exports.updateUserStatus = async (userId, newStatus) => {
 
     return {
         _id: updatedUser._id,
-        username: updatedUser.username,
+        email: updatedUser.email,
         firstName: updatedUser.firstName,
         lastName: updatedUser.lastName,
         userRole: updatedUser.userRole,
