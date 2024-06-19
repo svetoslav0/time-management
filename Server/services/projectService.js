@@ -59,6 +59,14 @@ exports.getProjects = async (status) => {
 exports.getSingleProject = (projectId) => Project.findById(projectId);
 
 exports.updateProject = async (projectId, projectData) => {
+    const {
+        customerIds,
+        projectName,
+        startingDate,
+        pricePerHour,
+        employeeIds,
+    } = projectData;
+
     await validateProjectData(
         customerIds,
         projectName,
@@ -68,7 +76,11 @@ exports.updateProject = async (projectId, projectData) => {
     );
 
     try {
-        const project = await Project.findByIdAndUpdate(projectId, projectData);
+        const project = await Project.findByIdAndUpdate(
+            projectId,
+            projectData,
+            { new: true }
+        );
 
         return {
             customerIds: project.customerIds,
