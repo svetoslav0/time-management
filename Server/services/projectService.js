@@ -1,5 +1,5 @@
 const Project = require("../models/Project");
-const validateProjectData = require("../utils/validateProjectData");
+const validateProjectData = require("../utils/validateProjectDataUtil");
 
 exports.createProject = async (projectData) => {
     const {
