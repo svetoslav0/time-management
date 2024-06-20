@@ -1,10 +1,10 @@
-const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
 const userService = require("../services/userService");
 
 const isAdmin = async (req, res, next) => {
     const token = req.cookies.authCookie;
+    
     if (!token) {
         return res.status(401).json({ message: "No token provided!" });
     }
