@@ -2,7 +2,8 @@ export const urlKeys = {
     login: '/login',
     createUser: '/users',
     editUser: '/users',
-    getUsers: '/users'
+    getUsers: '/users',
+    createProject: '/projects'
 };
 
 export const queryKeys = {
