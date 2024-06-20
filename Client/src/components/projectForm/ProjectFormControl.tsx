@@ -9,8 +9,9 @@ import { projectFormSchema } from '../../shared/formValidations';
 import InputComponent from '../../UI/formComponents/InputComponent';
 import cn from '../../util/cn';
 import Calendar from './Calendar';
-import { CUSTOMERS, PROJECTS } from './mockData';
+import { PROJECTS } from './mockData';
 import MultiSelector from './MultiSelector';
+
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
 
 dayjs.extend(customParseFormat);
@@ -25,6 +26,7 @@ export type ProjectFormDataType = {
 
 export default function ProjectFormControl() {
     const { data: employeeResponse } = useFetchUsers('employee', 'active');
+    const { data: customerResponse } = useFetchUsers('customer', 'active');
     const [searchParams] = useSearchParams();
     const [projectName, setProjectName] = useState('');
     const [pricePerHour, setPricePerHour] = useState<number | string>('');
@@ -151,14 +153,14 @@ export default function ProjectFormControl() {
                                 }}
                                 min={0}
                             />
-                            {/* <MultiSelector
+                            <MultiSelector
                                 error={errors.customerIds?.message}
-                                usersList={CUSTOMERS}
+                                usersList={customerResponse}
                                 selectedUsers={selectedCustomer}
                                 setSelectedUsers={setSelectedCustomer}
                                 field='customerIds'
                                 placeholder='Customers'
-                            /> */}
+                            />
                             <div className='relative'>
                                 <input
                                     type='date'
