@@ -1,49 +1,5 @@
-import type { CustomerProps, EmployeesProps } from './types';
+import type { CustomerProps } from './types';
 
-export const EMPLOYEES: EmployeesProps[] = [
-    {
-        id: '1',
-        email: 'ivan1',
-        firstName: 'Ivan',
-        lastName: 'Ivanov',
-    },
-    {
-        id: '2',
-        email: 'george',
-        firstName: 'Georgi',
-        lastName: 'Georgiev',
-    },
-    {
-        id: '3',
-        email: 'nik12',
-        firstName: 'Nikolay',
-        lastName: 'Dimitrov',
-    },
-    {
-        id: '4',
-        email: 'tZhelev',
-        firstName: 'Tsvetomir',
-        lastName: 'Zhelev',
-    },
-    {
-        id: '5',
-        email: 'Grozdan',
-        firstName: 'Grozdan',
-        lastName: 'Karadzhov',
-    },
-    {
-        id: '6',
-        email: 'simo',
-        firstName: 'Simeon',
-        lastName: 'Asparuhov',
-    },
-    {
-        id: '7',
-        email: 'asen',
-        firstName: 'Asen',
-        lastName: 'Bojanov',
-    },
-];
 
 export const CUSTOMERS: CustomerProps[] = [
     {
