@@ -8,7 +8,7 @@ exports.logHours = async (hoursData) => {
     const { projectId, userId, date, hours, notes } = hoursData;
     
     try {
-        await Hours.create({
+        const loggedHours = await Hours.create({
             projectId,
             userId,
             date,
@@ -16,6 +16,7 @@ exports.logHours = async (hoursData) => {
             notes
         });
 
+        return loggedHours;
     } catch (error) {
         console.error('Error creating new Hours entity:', error);
         throw new Error("Trouble logging hours!");
