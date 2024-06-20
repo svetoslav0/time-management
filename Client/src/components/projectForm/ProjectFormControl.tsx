@@ -13,6 +13,7 @@ import { PROJECTS } from './mockData';
 import MultiSelector from './MultiSelector';
 
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
+import useProjectCreate from './hooks/useProjectCreate';
 
 dayjs.extend(customParseFormat);
 
@@ -36,6 +37,7 @@ export default function ProjectFormControl() {
     const [selectedDate, setSelectedDate] = useState<Dayjs | string>('');
     const [showCalendar, setShowCalendar] = useState(false);
     const [editProjectName, setEditProjectName] = useState('');
+    const {createProject} = useProjectCreate()
 
     const action = searchParams.get('action') === 'edit' ? 'edit' : 'create';
     const projectId = searchParams.get('projectId');
@@ -55,7 +57,7 @@ export default function ProjectFormControl() {
     } = methods;
 
     const onSubmit: SubmitHandler<ProjectFormDataType> = async (data) => {
-        console.log(data);
+        createProject(data);
         reset();
         setSelectedEmployees([]);
         setSelectedCustomer([]);
