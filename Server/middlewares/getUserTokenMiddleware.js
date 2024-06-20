@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 const userService = require("../services/userService");
 
-const isAdmin = async (req, res, next) => {
+const getJwtToken = async (req, res, next) => {
     const token = req.cookies.authCookie;
     
     if (!token) {
@@ -11,11 +11,8 @@ const isAdmin = async (req, res, next) => {
 
     try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await userService.getSingleUser(decodedToken._id);
 
-        if (!user || user.userRole !== "admin") {
-            return res.status(401).json({ message: "unauthorized" });
-        }
+        req.userToken = decodedToken;
 
         next();
     } catch (error) {
@@ -23,4 +20,4 @@ const isAdmin = async (req, res, next) => {
     }
 };
 
-module.exports = isAdmin;
+module.exports = getJwtToken;

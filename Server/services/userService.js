@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const { validateObjectId } = require("../utils/validateObjectId");
+const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const {
     validateUserDataOnUserCreate,
     validateUserDataOnUserUpdate,
@@ -130,7 +130,7 @@ exports.getSingleUser = (userId) => User.findById(userId).select("-password");
 
 exports.updateUserStatus = async (userId, newStatus) => {
     if (!validateObjectId(userId)) {
-        throw new Error("Invalid user ID");
+        throw new Error("Invalid user ID!");
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -140,7 +140,7 @@ exports.updateUserStatus = async (userId, newStatus) => {
     );
 
     if (!updatedUser) {
-        throw new Error("User does not exist");
+        throw new Error("User does not exist!");
     }
 
     return {
