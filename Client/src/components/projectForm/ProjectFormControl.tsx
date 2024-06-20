@@ -9,8 +9,9 @@ import { projectFormSchema } from '../../shared/formValidations';
 import InputComponent from '../../UI/formComponents/InputComponent';
 import cn from '../../util/cn';
 import Calendar from './Calendar';
-import { CUSTOMERS, EMPLOYEES, PROJECTS } from './mockData';
+import { CUSTOMERS, PROJECTS } from './mockData';
 import MultiSelector from './MultiSelector';
+import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
 
 dayjs.extend(customParseFormat);
 
@@ -23,6 +24,7 @@ export type ProjectFormDataType = {
 };
 
 export default function ProjectFormControl() {
+    const { data: employeeResponse } = useFetchUsers('employee', 'active');
     const [searchParams] = useSearchParams();
     const [projectName, setProjectName] = useState('');
     const [pricePerHour, setPricePerHour] = useState<number | string>('');
@@ -149,14 +151,14 @@ export default function ProjectFormControl() {
                                 }}
                                 min={0}
                             />
-                            <MultiSelector
+                            {/* <MultiSelector
                                 error={errors.customerIds?.message}
                                 usersList={CUSTOMERS}
                                 selectedUsers={selectedCustomer}
                                 setSelectedUsers={setSelectedCustomer}
                                 field='customerIds'
                                 placeholder='Customers'
-                            />
+                            /> */}
                             <div className='relative'>
                                 <input
                                     type='date'
@@ -201,7 +203,7 @@ export default function ProjectFormControl() {
 
                             <MultiSelector
                                 error={errors.employeeIds?.message}
-                                usersList={EMPLOYEES}
+                                usersList={employeeResponse}
                                 selectedUsers={selectedEmployees}
                                 setSelectedUsers={setSelectedEmployees}
                                 field='employeeIds'
