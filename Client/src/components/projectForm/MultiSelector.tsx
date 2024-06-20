@@ -2,12 +2,11 @@ import { ComponentPropsWithoutRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import cn from '../../util/cn';
-import type { CustomerProps, EmployeesProps } from './types';
 
-type UserProps = EmployeesProps | CustomerProps;
+import { UserResponseDetails } from '@/shared/types';
 
 type UserSelectorProps = {
-    usersList: UserProps[];
+    usersList: UserResponseDetails | undefined;
     selectedUsers: string[];
     setSelectedUsers: React.Dispatch<React.SetStateAction<string[]>>;
     error: string | undefined;
@@ -27,11 +26,11 @@ export default function MultiSelector({
 
     const { register } = useFormContext();
 
-    const filteredUsers = usersList.filter((user) => {
+    const filteredUsers = usersList?.items.filter((user) => {
         const fullName = `${user.firstName} ${user.lastName}`;
         return (
             fullName.toLowerCase().includes(itemList.toLowerCase().trim()) &&
-            !selectedUsers.includes(user.id)
+            !selectedUsers.includes(user._id)
         );
     });
 
@@ -47,7 +46,7 @@ export default function MultiSelector({
                 {selectedUsers.length ? (
                     <div className='relative flex w-full flex-wrap gap-2 rounded-md  p-2.5'>
                         {selectedUsers.map((id) => {
-                            const user = usersList.find((user) => user.id === id);
+                            const user = usersList?.items.find((user) => user._id === id);
                             return (
                                 <div
                                     key={id}
@@ -94,17 +93,17 @@ export default function MultiSelector({
                 {isListOpen && (
                     <div className='absolute z-10 mt-2 flex max-h-52 w-full overflow-y-auto bg-gray-50 p-1 scrollbar-thin scrollbar-track-slate-50 scrollbar-thumb-slate-200 dark:bg-gray-600 dark:text-gray-50 dark:scrollbar-track-slate-600 dark:scrollbar-thumb-slate-800'>
                         <ul className='w-full'>
-                            {filteredUsers.length ? (
+                            {filteredUsers && filteredUsers.length ? (
                                 filteredUsers.map((user) => (
                                     <li
-                                        key={user.id}
+                                        key={user._id}
                                         className='w-full cursor-pointer rounded-md p-2 hover:bg-rose-50 hover:text-rose-500 dark:hover:bg-gray-700'
                                         onMouseDown={(e) => e.preventDefault()}
                                         onClick={() => {
                                             setIsListOpen(true);
                                             setSelectedUsers((prevUsers) => [
                                                 ...prevUsers,
-                                                user.id,
+                                                user._id,
                                             ]);
                                         }}
                                     >
