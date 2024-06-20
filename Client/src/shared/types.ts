@@ -1,5 +1,31 @@
 import { FieldValues, SubmitHandler, UseFormReturn } from 'react-hook-form';
 
+export type UserDetails = {
+    _id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    userRole: string;
+    status: string;
+    createdAt: string;
+    description?: string | undefined;
+};
+
+export type EmployeeDetails = {
+    experienceLevel: string;
+} & UserDetails;
+
+export type CustomerDetails = {
+    companyName: string;
+    phoneNumber: string;
+    address: string;
+} & UserDetails;
+
+export type UserResponseDetails = {
+    total: number;
+    items: (EmployeeDetails | CustomerDetails)[];
+};
+
 export type User = {
     email: string;
     firstName: string;
