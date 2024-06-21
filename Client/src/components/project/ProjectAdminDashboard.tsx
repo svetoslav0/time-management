@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Project } from '../../shared/types';
 import ProjectCard from './ProjectCard';
 
-export default function ProjectDashboard() {
+export default function ProjectAdminDashboard() {
     const [projects, setProjects] = useState<Project[]>([]);
 
     useEffect(() => {
