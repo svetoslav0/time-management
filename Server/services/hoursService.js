@@ -35,19 +35,23 @@ exports.deleteHourLog = async (hourLogId, userId, isAdmin) => {
     if (!validateObjectId(hourLogId)) {
         throw new Error("Invalid hour log Id!");
     }
+    try {
+        const hourLog = await Hours.findById(hourLogId);
 
-    const hourLog = await Hours.findById(hourLogId);
+        if (!hourLog) {
+            throw new Error("Hour log does not exist!");
+        }
+        else if (hourLog.userId !== userId && !isAdmin) {
+            throw new Error("Hour log does not belong to that user!");
+        }
 
-    if (!hourLog) {
-        throw new Error("Hour log does not exist!");
+        await hourLog.deleteOne();
+
+        return hourLog;
+    } catch (error) {
+        console.error("Error in deleteHourLog:", error.message);
+        throw new Error("Failed to delete hour log.");
     }
-    else if (hourLog.userId !== userId && !isAdmin) {
-        throw new Error("Hour log does not belong to that user!");
-    }
-
-    await hourLog.deleteOne();
-
-    return hourLog;
 };
 
 exports.updateHourLog = async (hourLogId, userId, isAdmin, hoursData) => {
@@ -57,18 +61,23 @@ exports.updateHourLog = async (hourLogId, userId, isAdmin, hoursData) => {
 
     await validateHourDataOnLogHours(hoursData);
 
-    const hourLog = await Hours.findById(hourLogId);
+    try {
+        const hourLog = await Hours.findById(hourLogId);
 
-    if (!hourLog) {
-        throw new Error("Hour log does not exist!");
+        if (!hourLog) {
+            throw new Error("Hour log does not exist!");
+        }
+        else if (hourLog.userId !== userId && !isAdmin) {
+            throw new Error("Hour log does not belong to that user!");
+        }
+
+        Object.assign(hourLog, hoursData);
+
+        const updatedHours = await hourLog.save();
+
+        return updatedHours;
+    } catch (error) {
+        console.error("Error in updateHourLog:", error.message);
+        throw new Error("Failed to update hour log.");
     }
-    else if (hourLog.userId !== userId && !isAdmin) {
-        throw new Error("Hour log does not belong to that user!");
-    }
-
-    Object.assign(hourLog, hoursData);
-
-    const updatedHours = await hourLog.save();
-
-    return updatedHours;
 }; 
