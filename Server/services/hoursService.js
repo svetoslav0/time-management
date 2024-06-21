@@ -6,7 +6,9 @@ const {
     validateHourDataOnLogHours,
 } = require("../utils/validateHoursDataUtil");
 
-exports.getAllHours = () => Hours.find();
+exports.getAllHours = (filter = {}) => {
+    return Hours.find(filter);
+};
 
 exports.logHours = async (hoursData) => {
     await validateHourDataOnLogHours(hoursData);
