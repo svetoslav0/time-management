@@ -42,4 +42,21 @@ router.delete("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
     }
 });
 
+router.patch("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
+    const hourLogId = req.params.id;
+    const userId = req.userToken._id;
+    const isAdmin = req.isAdmin;
+
+    req.body.userId = userId;
+    const hoursData = req.body;
+
+    try {
+        const updatedHours =  await hoursService.updateHourLog(hourLogId, userId, isAdmin, hoursData);
+
+        res.status(200).json(updatedHours);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 module.exports = router;
