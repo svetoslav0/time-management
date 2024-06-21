@@ -83,7 +83,7 @@ export default function CreateUser() {
                                 Select experience
                             </option>
                             <option value='Junior'>Junior</option>
-                            <option value='Mid-level'>Mid-Level</option>
+                            <option value='Mid-Level'>Mid-Level</option>
                             <option value='Senior'>Senior</option>
                             <option value='Architect'>Architect</option>
                         </select>
