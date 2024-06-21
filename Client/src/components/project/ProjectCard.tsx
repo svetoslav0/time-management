@@ -1,7 +1,5 @@
 import { Project } from '../../shared/types';
-import ButtonDelete from '../../UI/formComponents/ButtonDelete';
 import ButtonEdit from '../../UI/formComponents/ButtonEdit';
-import ButtonRefund from '../../UI/formComponents/ButtonRefund';
 import ButtonReport from '../../UI/formComponents/ButtonReport';
 
 export default function ProjectCard({ project }: { project: Project }) {
@@ -28,13 +26,7 @@ export default function ProjectCard({ project }: { project: Project }) {
                     <p className={`${colorStatus} mr-5 inline-block`}>
                         Status: {project.projectStatus}.
                     </p>
-                    {project.projectStatus === 'In Progress' ? (
-                        <ButtonDelete children='Delete' />
-                    ) : (
-                        ''
-                    )}
                     {project.projectStatus === 'In Progress' ? <ButtonEdit children='Edit' /> : ''}
-                    {project.projectStatus === 'Archived' ? <ButtonRefund children='Refund' /> : ''}
                     {project.projectStatus === 'Done' ? <ButtonReport children='Report' /> : ''}
                 </div>
             </div>
