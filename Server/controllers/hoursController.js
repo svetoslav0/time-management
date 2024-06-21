@@ -28,11 +28,13 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.delete("/:id", isEmployeeOrAdmin, async (req, res) => {
+router.delete("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
     const hourLogId = req.params.id;
+    const userId = req.userToken._id;
+    const isAdmin = req.isAdmin;
 
     try {
-        const deletedHours =  await hoursService.deleteHourLog(hourLogId);
+        const deletedHours =  await hoursService.deleteHourLog(hourLogId, userId, isAdmin);
 
         res.status(200).json(deletedHours);
     } catch (error) {

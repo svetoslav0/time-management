@@ -29,15 +29,18 @@ exports.logHours = async (hoursData) => {
     }
 };
 
-exports.deleteHourLog = async (hourLogId) => {
+exports.deleteHourLog = async (hourLogId, userId, isAdmin) => {
     if (!validateObjectId(hourLogId)) {
         throw new Error("Invalid hour log Id!");
     }
 
-    const hourLog = Hours.findById(hourLogId);
+    const hourLog = await Hours.findById(hourLogId);
 
     if (!hourLog) {
         throw new Error("Hour log does not exist!");
+    }
+    else if (hourLog.userId !== userId && !isAdmin) {
+        throw new Error("Hour log does not belong to that user!");
     }
 
     const deletedHours = Hours.findByIdAndDelete(hourLogId);
