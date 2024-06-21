@@ -20,6 +20,8 @@ const isEmployeeOrAdmin = async (req, res, next) => {
             return res.status(401).json({ message: "unauthorized" });
         }
 
+        user.userRole === "admin" ? req.isAdmin = true : req.isAdmin = false;
+
         next();
     } catch (error) {
         return res.status(403).json({ message: "Invalid token!" });
