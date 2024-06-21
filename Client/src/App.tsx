@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import RootLayout from './components/layout/RootLayout';
-import ProjectDashboard from './components/project/ProjectDashboard';
+import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
 import UserPage from './components/UserPage/UserPage';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
@@ -36,15 +36,15 @@ function App() {
                             path: 'createUser',
                             element: <CreateUser />,
                         },
+                        {
+                            path: 'projectAdminDashboard',
+                            element: <ProjectAdminDashboard />,
+                        },
                     ],
                 },
                 {
                     path: 'dashboard',
                     children: [
-                        {
-                            path: 'projects',
-                            element: <ProjectDashboard />,
-                        },
                         {
                             path: 'users',
                             element: <UsersDashboard />,
