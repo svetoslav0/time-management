@@ -26,7 +26,7 @@ export default function ProjectCard({ project }: { project: Project }) {
                     <p className={`${colorStatus} mr-5 inline-block`}>
                         Status: {project.projectStatus}.
                     </p>
-                    {project.projectStatus === 'In Progress' ? <ButtonEdit children='Edit' /> : ''}
+                    <ButtonEdit children='Edit' />
                     {project.projectStatus === 'Done' ? <ButtonReport children='Report' /> : ''}
                 </div>
             </div>
