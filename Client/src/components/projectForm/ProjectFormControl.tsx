@@ -14,16 +14,9 @@ import MultiSelector from './MultiSelector';
 
 import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
+import { ProjectDataType } from '@/shared/types';
 
 dayjs.extend(customParseFormat);
-
-export type ProjectFormDataType = {
-    projectName: string;
-    pricePerHour: number;
-    employeeIds: string[];
-    customerIds: string[];
-    startingDate: string;
-};
 
 export default function ProjectFormControl() {
     const { data: employeeResponse } = useFetchUsers('employee', 'active');
@@ -49,7 +42,7 @@ export default function ProjectFormControl() {
         navigate('/admin/projectForm?action=create');
     }
 
-    const methods = useForm<ProjectFormDataType>({
+    const methods = useForm<ProjectDataType>({
         resolver: yupResolver(projectFormSchema),
     });
 
@@ -63,7 +56,7 @@ export default function ProjectFormControl() {
         clearErrors,
     } = methods;
 
-    const onSubmit: SubmitHandler<ProjectFormDataType> = async (data) => {
+    const onSubmit: SubmitHandler<ProjectDataType> = async (data) => {
         createProject(data);
         reset();
         setSelectedEmployees([]);
