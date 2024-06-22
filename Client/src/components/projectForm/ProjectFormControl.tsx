@@ -10,6 +10,7 @@ import InputComponent from '../../UI/formComponents/InputComponent';
 import cn from '../../util/cn';
 import Calendar from './Calendar';
 import useProjectCreate from './hooks/useProjectCreate';
+import useProjectUpdate from './hooks/useProjectUpdate';
 import MultiSelector from './MultiSelector';
 
 import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
@@ -30,11 +31,11 @@ export default function ProjectFormControl() {
     const [selectedDate, setSelectedDate] = useState<Dayjs | string>('');
     const [showCalendar, setShowCalendar] = useState(false);
     const [editProjectName, setEditProjectName] = useState('');
-    const { createProject } = useProjectCreate();
-    const navigate = useNavigate();
-
     const action = searchParams.get('action') === 'edit' ? 'edit' : 'create';
     const projectId = searchParams.get('projectId') || '';
+    const { createProject } = useProjectCreate();
+    const { updateProject } = useProjectUpdate(projectId);
+    const navigate = useNavigate();
 
     const { data: project, error } = useFetchProjectById(projectId);
 
@@ -57,7 +58,11 @@ export default function ProjectFormControl() {
     } = methods;
 
     const onSubmit: SubmitHandler<ProjectDataType> = async (data) => {
-        createProject(data);
+        if (project) {
+            updateProject(data);
+        } else {
+            createProject(data);
+        }
         reset();
         setSelectedEmployees([]);
         setSelectedCustomer([]);
