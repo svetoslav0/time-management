@@ -16,17 +16,16 @@ export default function useProjectUpdate(id: string) {
     const generateProjectUpdateUrl = () => `${urlKeys.projects}/${id}`;
 
     const { mutate: updateProject, isSuccess } = useMutation({
-        mutationFn: ( data: ProjectDataType) =>
+        mutationFn: (data: ProjectDataType) =>
             patch<ProjectDataType, ProjectResponseDataType>(generateProjectUpdateUrl(), data),
-        onSuccess: () => {
-            toast.success('Project created');
+        onSuccess: (data) => {
+            toast.success(`${data.projectName} updated successfully`);
             queryClient.invalidateQueries({ queryKey: [queryKeys.projects, id] });
             navigate('/');
         },
         onError: (error) => {
             toast.error(error.message);
         },
-        
     });
 
     return { updateProject, isSuccess };

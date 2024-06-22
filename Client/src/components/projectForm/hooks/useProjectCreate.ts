@@ -13,8 +13,8 @@ export default function useProjectCreate() {
     const { mutate: createProject, isSuccess } = useMutation({
         mutationFn: (data: ProjectDataType) =>
             post<ProjectDataType, ProjectResponseDataType>(urlKeys.createProject, data),
-        onSuccess: () => {
-            toast.success('Project created');
+        onSuccess: (data) => {
+            toast.success(`${data.projectName} created successfully`);
             navigate('/');
         },
         onError: (error) => {
