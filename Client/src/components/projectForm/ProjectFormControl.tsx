@@ -3,17 +3,17 @@ import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { projectFormSchema } from '../../shared/formValidations';
 import InputComponent from '../../UI/formComponents/InputComponent';
 import cn from '../../util/cn';
 import Calendar from './Calendar';
-import { PROJECTS } from './mockData';
+import useProjectCreate from './hooks/useProjectCreate';
 import MultiSelector from './MultiSelector';
 
+import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
-import useProjectCreate from './hooks/useProjectCreate';
 
 dayjs.extend(customParseFormat);
 
@@ -37,10 +37,17 @@ export default function ProjectFormControl() {
     const [selectedDate, setSelectedDate] = useState<Dayjs | string>('');
     const [showCalendar, setShowCalendar] = useState(false);
     const [editProjectName, setEditProjectName] = useState('');
-    const {createProject} = useProjectCreate()
+    const { createProject } = useProjectCreate();
+    const navigate = useNavigate();
 
     const action = searchParams.get('action') === 'edit' ? 'edit' : 'create';
-    const projectId = searchParams.get('projectId');
+    const projectId = searchParams.get('projectId') || '';
+
+    const { data: project, error } = useFetchProjectById(projectId);
+
+    if (error) {
+        navigate('/admin/projectForm?action=create');
+    }
 
     const methods = useForm<ProjectFormDataType>({
         resolver: yupResolver(projectFormSchema),
@@ -68,7 +75,6 @@ export default function ProjectFormControl() {
 
     useEffect(() => {
         if (action === 'edit' && projectId) {
-            const project = PROJECTS[projectId];
             if (project) {
                 setEditProjectName(project.projectName);
                 const date = dayjs(project.startingDate, 'YYYY-MM-DD');
@@ -85,8 +91,15 @@ export default function ProjectFormControl() {
                 setSelectedEmployees(project.employeeIds);
                 setValue('employeeIds', project.employeeIds);
             }
+        } else {
+            setSelectedEmployees([]);
+            setSelectedCustomer([]);
+            setPricePerHour('');
+            setProjectName('');
+            setSelectedDate('');
+            setEditProjectName('');
         }
-    }, [action, projectId, setValue]);
+    }, [action, project, projectId, setValue]);
 
     useEffect(() => {
         setValue('employeeIds', selectedEmployees);
