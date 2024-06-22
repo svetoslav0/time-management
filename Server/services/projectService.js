@@ -43,11 +43,18 @@ exports.createProject = async (projectData) => {
     }
 };
 
-exports.getProjects = async (status) => {
+exports.getProjects = async (queryData) => {
+    const { status, employeeId } = queryData;
+
     const query = {};
+
     if (status) {
         query.status = status;
     }
+    if (employeeId) {
+        query.employeeIds = employeeId;
+    }
+
     try {
         return await Project.find(query);
     } catch (error) {
