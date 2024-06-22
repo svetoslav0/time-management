@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const projectService = require("../services/projectService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
-
+const { validateObjectId } = require("../utils/validateObjectIdUtil");
 router.post("/", isAdmin, async (req, res) => {
     const projectData = req.body;
 
@@ -15,14 +15,25 @@ router.post("/", isAdmin, async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-    const { status } = req.query;
+    const { status, employeeId } = req.query;
 
     if (status && !["inProgress", "completed"].includes(status)) {
         return res.status(400).json({ message: "Invalid status" });
     }
 
+    const queryData = { status };
+
+    if (employeeId) {
+        if (!validateObjectId(employeeId)) {
+            return res
+                .status(400)
+                .json({ message: "Invalid employee ID format" });
+        }
+        queryData.employeeId = employeeId;
+    }
+
     try {
-        const projects = await projectService.getProjects(status);
+        const projects = await projectService.getProjects(queryData);
 
         res.status(200).json(projects);
     } catch (error) {

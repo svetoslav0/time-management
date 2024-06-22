@@ -110,3 +110,18 @@ export type Project = {
     listOfEmployees: string[];
     projectStatus: string;
 };
+
+type ProjectStatusType = 'inProgress' | 'completed';
+
+export type ProjectDataType = {
+    projectName: string;
+    pricePerHour: number;
+    employeeIds: string[];
+    customerIds: string[];
+    startingDate: string;
+};
+
+export type ProjectResponseDataType = {
+    _id: string;
+    status: ProjectStatusType;
+} & ProjectDataType;

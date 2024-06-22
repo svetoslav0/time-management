@@ -8,7 +8,7 @@ export default function UserCard({ user }: { user: User }) {
         <div
             className='w-full max-w-sm rounded-lg border border-gray-200 bg-white p-4 shadow dark:border-gray-700 dark:bg-gray-800'
             onClick={() => {
-                navigate(`/dashboard/users/${user._id}`);
+                navigate(`/admin/users/${user._id}`);
             }}
         >
             <h5 className='mb-3 text-base font-semibold text-gray-900 dark:text-white md:text-xl'>

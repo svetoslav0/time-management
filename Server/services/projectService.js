@@ -43,11 +43,18 @@ exports.createProject = async (projectData) => {
     }
 };
 
-exports.getProjects = async (status) => {
+exports.getProjects = async (queryData) => {
+    const { status, employeeId } = queryData;
+
     const query = {};
+
     if (status) {
         query.status = status;
     }
+    if (employeeId) {
+        query.employeeIds = employeeId;
+    }
+
     try {
         return await Project.find(query);
     } catch (error) {
@@ -59,6 +66,14 @@ exports.getProjects = async (status) => {
 exports.getSingleProject = (projectId) => Project.findById(projectId);
 
 exports.updateProject = async (projectId, projectData) => {
+    const {
+        customerIds,
+        projectName,
+        startingDate,
+        pricePerHour,
+        employeeIds,
+    } = projectData;
+
     await validateProjectData(
         customerIds,
         projectName,
@@ -68,7 +83,11 @@ exports.updateProject = async (projectId, projectData) => {
     );
 
     try {
-        const project = await Project.findByIdAndUpdate(projectId, projectData);
+        const project = await Project.findByIdAndUpdate(
+            projectId,
+            projectData,
+            { new: true }
+        );
 
         return {
             customerIds: project.customerIds,
