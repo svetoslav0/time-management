@@ -102,14 +102,16 @@ export interface ResetPassword {
 
 // Project Type
 
-// export type Project = {
-//     projectName: string;
-//     clientName: string;
-//     startingDate: number;
-//     pricePerHour: number;
-//     listOfEmployees: string[];
-//     projectStatus: string;
-// };
+export type Project = {
+    projectName: string;
+    clientName: string;
+    startingDate: number;
+    pricePerHour: number;
+    listOfEmployees: string[];
+    projectStatus: string;
+};
+
+type ProjectStatusType = 'inProgress' | 'completed';
 
 export type ProjectDataType = {
     projectName: string;
@@ -118,3 +120,8 @@ export type ProjectDataType = {
     customerIds: string[];
     startingDate: string;
 };
+
+export type ProjectResponseDataType = {
+    _id: string;
+    status: ProjectStatusType;
+} & ProjectDataType;
