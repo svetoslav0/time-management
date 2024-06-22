@@ -31,7 +31,10 @@ function App() {
                 {
                     path: 'admin',
                     children: [
-                        { path: 'projectForm', element: <ProjectFormControl /> },
+                        {
+                            path: 'projectForm',
+                            element: <ProjectFormControl />,
+                        },
                         {
                             path: 'createUser',
                             element: <CreateUser />,
@@ -40,11 +43,6 @@ function App() {
                             path: 'projectAdminDashboard',
                             element: <ProjectAdminDashboard />,
                         },
-                    ],
-                },
-                {
-                    path: 'dashboard',
-                    children: [
                         {
                             path: 'users',
                             element: <UsersDashboard />,
