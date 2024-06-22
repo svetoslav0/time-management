@@ -3,7 +3,8 @@ export const urlKeys = {
     createUser: '/users',
     editUser: '/users',
     getUsers: '/users',
-    createProject: '/projects'
+    createProject: '/projects',
+    projects: '/projects'
 };
 
 export const queryKeys = {
@@ -11,5 +12,6 @@ export const queryKeys = {
     employee: 'All Employees',
     active: 'Active',
     inactive: 'Inactive',
-    users: 'Users'
+    users: 'Users',
+    projects: 'Projects'
 };

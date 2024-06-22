@@ -102,11 +102,19 @@ export interface ResetPassword {
 
 // Project Type
 
-export type Project = {
+// export type Project = {
+//     projectName: string;
+//     clientName: string;
+//     startingDate: number;
+//     pricePerHour: number;
+//     listOfEmployees: string[];
+//     projectStatus: string;
+// };
+
+export type ProjectDataType = {
     projectName: string;
-    clientName: string;
-    startingDate: number;
     pricePerHour: number;
-    listOfEmployees: string[];
-    projectStatus: string;
+    employeeIds: string[];
+    customerIds: string[];
+    startingDate: string;
 };
