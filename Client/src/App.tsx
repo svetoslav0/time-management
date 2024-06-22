@@ -40,11 +40,6 @@ function App() {
                             path: 'projectAdminDashboard',
                             element: <ProjectAdminDashboard />,
                         },
-                    ],
-                },
-                {
-                    path: 'dashboard',
-                    children: [
                         {
                             path: 'users',
                             element: <UsersDashboard />,
