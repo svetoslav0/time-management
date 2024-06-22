@@ -4,8 +4,6 @@ const hoursService = require("../services/hoursService");
 const isEmployeeOrAdmin = require("../middlewares/isEmployeeOrAdmin");
 const getJwtToken = require("../middlewares/getUserTokenMiddleware");
 
-const isValidDateMoment = require("../utils/validateDateUtil");
-
 router.post("/", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
     const userId = req.userToken._id;
 
