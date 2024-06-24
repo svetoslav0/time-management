@@ -17,30 +17,23 @@ exports.createProject = async (projectData) => {
         pricePerHour,
         employeeIds
     );
-    try {
-        const project = await Project.create({
-            customerIds: customerIds,
-            projectName: projectName,
-            startingDate: startingDate,
-            pricePerHour: pricePerHour,
-            employeeIds: employeeIds,
-        });
 
-        return {
-            projectId: project._id,
-            customerIds: customerIds,
-            projectName: project.projectName,
-            startingDate: project.startingDate,
-            pricePerHour: project.pricePerHour,
-            employeeIds: project.employeeIds,
-        };
-    } catch (error) {
-        if (error.name === "ValidationError") {
-            throw new Error(error.message);
-        } else {
-            throw new Error("Trouble creating a new project!");
-        }
-    }
+    const project = await Project.create({
+        customerIds: customerIds,
+        projectName: projectName,
+        startingDate: startingDate,
+        pricePerHour: pricePerHour,
+        employeeIds: employeeIds,
+    });
+
+    return {
+        projectId: project._id,
+        customerIds: customerIds,
+        projectName: project.projectName,
+        startingDate: project.startingDate,
+        pricePerHour: project.pricePerHour,
+        employeeIds: project.employeeIds,
+    };
 };
 
 exports.getProjects = async (queryData) => {

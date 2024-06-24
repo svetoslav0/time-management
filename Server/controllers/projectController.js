@@ -10,6 +10,10 @@ router.post("/", isAdmin, async (req, res, next) => {
     try {
         const project = await projectService.createProject(projectData);
 
+        if (!project) {
+            throw new ProjectValidationErrors("Project not created", 400);
+        }
+
         res.status(201).json(project);
     } catch (error) {
         next(error);
