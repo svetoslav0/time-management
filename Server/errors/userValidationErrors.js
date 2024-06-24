@@ -1,4 +1,4 @@
-class userValidationErrors extends Error {
+class UserValidationErrors extends Error {
     constructor(message, statusCode) {
         super(message);
 
@@ -7,4 +7,4 @@ class userValidationErrors extends Error {
     }
 }
 
-module.exports = userValidationErrors;
+module.exports = UserValidationErrors;

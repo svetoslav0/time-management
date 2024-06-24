@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const initializeAdmin = require("./utils/initializeAdmin");
-const userValidationErrors = require("./errors/userValidationErrors");
+const UserValidationErrors = require("./errors/userValidationErrors");
 
 const routes = require("./routes");
 const cookieParser = require("cookie-parser");
@@ -23,7 +23,7 @@ app.use(routes);
 app.use((err, req, res, next) => {
     console.error("Error appeared in server:", err);
 
-    if (err instanceof userValidationErrors) {
+    if (err instanceof UserValidationErrors) {
         return res.status(err.statusCode).json({ message: err.message });
     }
 

@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 const userService = require("../services/userService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
-const userValidationErrors = require("../errors/userValidationErrors");
+const UserValidationErrors = require("../errors/userValidationErrors");
 
 router.get("/", async (req, res, next) => {
     try {
@@ -16,14 +16,14 @@ router.get("/", async (req, res, next) => {
         queryData.offset = parseInt(req.query.offset) || 0;
 
         if (queryData.limit > 100 || queryData.limit <= 0) {
-            throw new userValidationErrors(
+            throw new UserValidationErrors(
                 "Limit value must be greater than 0 and not greater than 100!",
                 400
             );
         }
 
         if (queryData.offset < 0) {
-            throw new userValidationErrors(
+            throw new UserValidationErrors(
                 "Offset value must not be below 0!",
                 400
             );
@@ -90,21 +90,21 @@ router.patch("/:id/password_restore", isAdmin, async (req, res, next) => {
     const { password, confirmPassword } = req.body;
 
     if (!password || !confirmPassword) {
-        throw new userValidationErrors(
+        throw new UserValidationErrors(
             "Both password and confirmPassword are required!",
             400
         );
     }
 
     if (password.length < 6) {
-        throw new userValidationErrors(
+        throw new UserValidationErrors(
             "Password must be at least 6 characters long!",
             400
         );
     }
 
     if (password !== confirmPassword) {
-        throw new userValidationErrors("Passwords do not match!", 400);
+        throw new UserValidationErrors("Passwords do not match!", 400);
     }
 
     try {
@@ -112,7 +112,7 @@ router.patch("/:id/password_restore", isAdmin, async (req, res, next) => {
         const user = await User.findById(userId);
 
         if (!user) {
-            throw new userValidationErrors("User not found!", 404);
+            throw new UserValidationErrors("User not found!", 404);
         }
         // user.password = await bcrypt.hash(password, 12);
         user.password = password;
