@@ -36,7 +36,7 @@ const validateProjectData = async (
         employees = users.filter((user) => user.userRole === "employee");
     } catch (error) {
         throw new ProjectValidationErrors(
-            "Trouble creating a new project!",
+            "Error occurred while fetching users from database!",
             500
         );
     }
