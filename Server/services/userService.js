@@ -7,22 +7,26 @@ const {
 } = require("../utils/validateUserDataUtil");
 
 const { generateToken } = require("../utils/jwt");
+const userValidationErrors = require("../errors/userValidationErrors");
 
 exports.login = async (userData) => {
     const user = await User.findOne({ email: userData.email });
 
     if (!user) {
-        throw new Error("Invalid email or password!");
+        throw new userValidationErrors("Invalid email or password!", 400);
     }
 
     if (user.status == "inactive") {
-        throw new Error("Your account is inactive. Please contact support!");
+        throw new userValidationErrors(
+            "Your account is inactive. Please contact support!",
+            400
+        );
     }
 
     const isValid = await bcrypt.compare(userData.password, user.password);
 
     if (!isValid) {
-        throw new Error("Invalid email or password!");
+        throw new userValidationErrors("Invalid email or password!", 400);
     }
 
     const token = generateToken(user);

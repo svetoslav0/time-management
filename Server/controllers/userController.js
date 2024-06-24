@@ -3,8 +3,9 @@ const User = require("../models/User");
 
 const userService = require("../services/userService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
+const userValidationErrors = require("../errors/userValidationErrors");
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
     try {
         const queryData = {
             status: req.query.status,
@@ -15,24 +16,28 @@ router.get("/", async (req, res) => {
         queryData.offset = parseInt(req.query.offset) || 0;
 
         if (queryData.limit > 100 || queryData.limit <= 0) {
-            throw new Error(
-                "Limit value must be greater than 0 and not greater than 100!"
+            throw new userValidationErrors(
+                "Limit value must be greater than 0 and not greater than 100!",
+                400
             );
         }
 
         if (queryData.offset < 0) {
-            throw new Error("Offset value must not be below 0!");
+            throw new userValidationErrors(
+                "Offset value must not be below 0!",
+                400
+            );
         }
 
         const { items, total } = await userService.getUsers(queryData);
 
         res.status(200).json({ total, items });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 });
 
-router.post("/", isAdmin, async (req, res) => {
+router.post("/", isAdmin, async (req, res, next) => {
     const userData = req.body;
 
     try {
@@ -40,22 +45,22 @@ router.post("/", isAdmin, async (req, res) => {
 
         res.status(200).json(user);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
     const userId = req.params.id;
 
     try {
         const user = await userService.getSingleUser(userId);
         res.status(200).json(user);
     } catch (error) {
-        res.status(404).json({ message: "User does not exist!" });
+        next(error);
     }
 });
 
-router.patch("/:id", isAdmin, async (req, res) => {
+router.patch("/:id", isAdmin, async (req, res, next) => {
     const userId = req.params.id;
     const userData = req.body;
 
@@ -63,11 +68,11 @@ router.patch("/:id", isAdmin, async (req, res) => {
         const user = await userService.editUser(userId, userData);
         res.status(200).json(user);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 });
 
-router.patch("/:userId/archive", isAdmin, async (req, res) => {
+router.patch("/:userId/archive", isAdmin, async (req, res, next) => {
     const userId = req.params.userId;
 
     try {
@@ -77,23 +82,29 @@ router.patch("/:userId/archive", isAdmin, async (req, res) => {
         );
         res.status(200).json(updatedUser);
     } catch (error) {
-        res.status(404).send({ message: error.message });
+        next(error);
     }
 });
 
-router.patch("/:id/password_restore", isAdmin, async (req, res) => {
+router.patch("/:id/password_restore", isAdmin, async (req, res, next) => {
     const { password, confirmPassword } = req.body;
 
     if (!password || !confirmPassword) {
-        throw new Error("Both password and confirmPassword are required!");
+        throw new userValidationErrors(
+            "Both password and confirmPassword are required!",
+            400
+        );
     }
 
     if (password.length < 6) {
-        throw new Error("Password must be at least 6 characters long!");
+        throw new userValidationErrors(
+            "Password must be at least 6 characters long!",
+            400
+        );
     }
 
     if (password !== confirmPassword) {
-        throw new Error("Passwords do not match!");
+        throw new userValidationErrors("Passwords do not match!", 400);
     }
 
     try {
@@ -101,18 +112,18 @@ router.patch("/:id/password_restore", isAdmin, async (req, res) => {
         const user = await User.findById(userId);
 
         if (!user) {
-            throw new Error("User not found!");
+            throw new userValidationErrors("User not found!", 404);
         }
         // user.password = await bcrypt.hash(password, 12);
         user.password = password;
         await user.save();
         res.status(200).send({ message: "Password restored successfully!" });
     } catch (error) {
-        res.status(500).send({ error: "Internal Server Error!" });
+        next(error);
     }
 });
 
-router.patch("/:userId/unarchive", isAdmin, async (req, res) => {
+router.patch("/:userId/unarchive", isAdmin, async (req, res, next) => {
     const userId = req.params.userId;
 
     try {
@@ -122,9 +133,8 @@ router.patch("/:userId/unarchive", isAdmin, async (req, res) => {
         );
         res.status(200).json(updatedUser);
     } catch (error) {
-        res.status(404).send({ message: error.message });
+        next(error);
     }
-
 });
 
 module.exports = router;
