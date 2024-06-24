@@ -57,12 +57,7 @@ const validateAuthUserDataParams = async (userData) => {
 const validateUserDataOnUserCreate = async (userData) => {
     let doesUserExist;
 
-    try {
-        doesUserExist = await User.findOne({ email: userData.email });
-    } catch (error) {
-        console.error("Error searching for user existence:", error);
-        throw new userValidationErrors("Trouble creating a new user!", 500);
-    }
+    doesUserExist = await User.findOne({ email: userData.email });
 
     if (doesUserExist) {
         throw new userValidationErrors("User exists!", 400);
@@ -77,12 +72,7 @@ const validateUserDataOnUserCreate = async (userData) => {
 const validateUserDataOnUserUpdate = async (id, userData) => {
     let doesUserIdExists;
 
-    try {
-        doesUserIdExists = await User.findById({ _id: id });
-    } catch (error) {
-        console.error("Error searching for user existence:", error);
-        throw new userValidationErrors("Error updating user!", 500);
-    }
+    doesUserIdExists = await User.findById({ _id: id });
 
     if (!doesUserIdExists) {
         throw new userValidationErrors(
