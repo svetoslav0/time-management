@@ -21,7 +21,7 @@ app.use(
 
 app.use(routes);
 app.use((err, req, res, next) => {
-    console.error("Error:", err.message);
+    console.error("Error appeared in server:", err);
 
     if (err instanceof userValidationErrors) {
         return res.status(err.statusCode).json({ message: err.message });
