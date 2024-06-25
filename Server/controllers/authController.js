@@ -19,7 +19,7 @@ router.post("/login", async (req, res) => {
     }
 });
 
-router.post("/logout", async (req, res, next) => {
+router.post("/logout", (req, res, next) => {
     try {
         res.clearCookie("authCookie");
         res.status(200).json({ message: "Logout successful" });
