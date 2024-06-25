@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import { ProjectResponseDataType } from '../../shared/types';
 import ButtonReport from '../../UI/formComponents/ButtonReport';
 
@@ -5,6 +7,7 @@ import ButtonDetails from '@/UI/formComponents/ButtonDetails';
 
 export default function ProjectCard({ project }: { project: ProjectResponseDataType }) {
     const colorStatus = `${project.status === 'inProgress' ? 'text-green-600' : project.status === 'completed' ? 'text-blue-600' : 'text-gray-300'}`;
+    const daysAgo = dayjs().diff(dayjs(project.startingDate), 'day');
 
     return (
         <>
@@ -20,7 +23,7 @@ export default function ProjectCard({ project }: { project: ProjectResponseDataT
                         Team: Yet to be implemented
                     </p>
                     <p className='text-black  dark:text-white'>
-                        Starting date {project.startingDate} days ago.
+                        Starting date {daysAgo} days ago.
                     </p>
                 </div>
                 <div className='border-t-2 px-6 py-3 dark:rounded-b-lg dark:bg-gray-900'>

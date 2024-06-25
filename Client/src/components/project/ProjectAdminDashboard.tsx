@@ -38,7 +38,6 @@ export default function ProjectAdminDashboard() {
         //     },
         // ];
         setProjects(fetchedProjects);
-        console.log(projects);
     }, [fetchedProjects, projects]);
 
     return (
