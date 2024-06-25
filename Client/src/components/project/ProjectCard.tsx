@@ -22,15 +22,13 @@ export default function ProjectCard({ project }: { project: ProjectResponseDataT
                     <p className='text-base text-black dark:text-white'>
                         Team: Yet to be implemented
                     </p>
-                    <p className='text-black  dark:text-white'>
-                        Starting date {daysAgo} days ago.
-                    </p>
+                    <p className='text-black  dark:text-white'>Starting date {daysAgo} days ago.</p>
                 </div>
                 <div className='border-t-2 px-6 py-3 dark:rounded-b-lg dark:bg-gray-900'>
                     <p className={`${colorStatus} mr-5 inline-block`}>
                         Status: {project.status === 'inProgress' ? 'In Progress' : 'Complete'}.
                     </p>
-                    <ButtonDetails children='Details' path={`/projects/${project._id}`} />
+                    <ButtonDetails children='Details' path={project._id} />
                     {project.status === 'completed' ? <ButtonReport children='Report' /> : ''}
                 </div>
             </div>
