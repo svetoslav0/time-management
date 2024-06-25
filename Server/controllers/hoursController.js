@@ -47,12 +47,8 @@ router.get("/", async (req, res) => {
 });
 
 router.delete("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
-    const hourLogId = req.params.id;
-    const userId = req.userToken._id;
-    const isAdmin = req.isAdmin;
-
     try {
-        const deletedHours =  await hoursService.deleteHourLog(hourLogId, userId, isAdmin);
+        const deletedHours =  await hoursService.deleteHourLog(req);
 
         res.status(200).json(deletedHours);
     } catch (error) {
@@ -61,15 +57,8 @@ router.delete("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
 });
 
 router.patch("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
-    const hourLogId = req.params.id;
-    const userId = req.userToken._id;
-    const isAdmin = req.isAdmin;
-
-    req.body.userId = userId;
-    const hoursData = req.body;
-
     try {
-        const updatedHours =  await hoursService.updateHourLog(hourLogId, userId, isAdmin, hoursData);
+        const updatedHours =  await hoursService.updateHourLog(req);
 
         res.status(200).json(updatedHours);
     } catch (error) {
