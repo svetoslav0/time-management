@@ -21,13 +21,6 @@ export default function ProjectDetails() {
         navigate('admin/projectAdminDashboard');
     }
 
-    // useEffect(() => {
-    //     httpServices()
-    //         .get<ProjectResponseDataType>(`/projects/${id}`)
-    //         .then((response) => {
-    //             setProject(response);
-    //         });
-    // }, [id]);
     return (
         <>
             <div className='relative block overflow-hidden rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8'>
