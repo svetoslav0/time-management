@@ -46,7 +46,7 @@ exports.deleteHourLog = async (hourLogId, userId, isAdmin) => {
     await hourLog.deleteOne();
 
     return hourLog;
-}; 
+};
 
 exports.updateHourLog = async (hourLogId, userId, isAdmin, hoursData) => {
     if (!validateObjectId(hourLogId)) {
@@ -59,6 +59,9 @@ exports.updateHourLog = async (hourLogId, userId, isAdmin, hoursData) => {
 
     if (!hourLog) {
         throw new Error("Hour log does not exist!");
+    }
+    else if (hourLog.userId !== userId && !isAdmin) {
+        throw new Error("Hour log does not belong to that user!");
     }
 
     Object.assign(hourLog, hoursData);
