@@ -2,15 +2,11 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
-const initializeAdmin = require("./utils/initializeAdmin");
-
-const routes = require("./routes");
 const cookieParser = require("cookie-parser");
 
-const ProjectValidationErrors = require("./errors/projectValidationErrors");
-const UserValidationErrors = require("./errors/userValidationErrors");
-const HoursValidationErrors = require("./errors/hoursValidationErrors");
+const initializeAdmin = require("./utils/initializeAdmin");
+const generalErrorHandlerMiddleware = require("./middlewares/generalErrorHandlerMiddleware");
+const routes = require("./routes");
 
 const app = express();
 app.use(express.json());
@@ -23,19 +19,7 @@ app.use(
 );
 
 app.use(routes);
-app.use((err, req, res, next) => {
-    console.error("Error appeared in server:", err);
-
-    if (err instanceof UserValidationErrors) {
-        return res.status(err.statusCode).json({ message: err.message });
-    } else if (err instanceof ProjectValidationErrors) {
-        return res.status(err.statusCode).json({ message: err.message });
-    } else if (err instanceof HoursValidationErrors) {
-        return res.status(err.statusCode).json({ message: err.message });
-    }
-
-    res.status(500).json({ message: "Internal server error!" });
-});
+app.use(generalErrorHandlerMiddleware);
 
 const mongoURI = process.env.MONGODB_URI;
 
