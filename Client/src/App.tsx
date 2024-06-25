@@ -4,6 +4,7 @@ import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import RootLayout from './components/layout/RootLayout';
 import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
+import ProjectDetails from './components/project/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
 import UserPage from './components/UserPage/UserPage';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
@@ -53,6 +54,19 @@ function App() {
                         },
                     ],
                 },
+                {
+                    path: 'projects',
+                    children: [
+                        {
+                            path: 'all',
+                            element: <ProjectAdminDashboard />,
+                        },
+                        {
+                            path: ':id',
+                            element: <ProjectDetails />,
+                        }
+                    ],
+                }
             ],
         },
     ]);
