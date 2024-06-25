@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 
 const ProjectValidationErrors = require("./errors/projectValidationErrors");
 const UserValidationErrors = require("./errors/userValidationErrors");
+const HoursValidationErrors = require("./errors/hoursValidationErrors");
 
 const app = express();
 app.use(express.json());
@@ -28,6 +29,8 @@ app.use((err, req, res, next) => {
     if (err instanceof UserValidationErrors) {
         return res.status(err.statusCode).json({ message: err.message });
     } else if (err instanceof ProjectValidationErrors) {
+        return res.status(err.statusCode).json({ message: err.message });
+    } else if (err instanceof HoursValidationErrors) {
         return res.status(err.statusCode).json({ message: err.message });
     }
 
