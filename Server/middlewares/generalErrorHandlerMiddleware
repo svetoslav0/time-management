@@ -1,4 +1,4 @@
-const ProjectValidationErrors = require("../errors/projectValidationErrors");
+const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const UserValidationErrors = require("../errors/userValidationErrors");
 const HoursValidationErrors = require("../errors/hoursValidationErrors");
 const generalErrorHandlerMiddleware = (err, req, res, next) => {

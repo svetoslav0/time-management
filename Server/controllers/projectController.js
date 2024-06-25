@@ -2,7 +2,7 @@ const router = require("express").Router();
 const projectService = require("../services/projectService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
-const ProjectValidationErrors = require("../errors/projectValidationErrors");
+const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 
 router.post("/", isAdmin, async (req, res, next) => {
     const projectData = req.body;

@@ -1,4 +1,4 @@
-const ProjectValidationErrors = require("../errors/projectValidationErrors");
+const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const User = require("../models/User");
 const isValidDateMoment = require("./validateDateUtil");
 
