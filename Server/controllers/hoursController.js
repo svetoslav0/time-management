@@ -11,7 +11,7 @@ router.post("/", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
     const hoursData = req.body;
 
     try {
-        const hours =  await hoursService.logHours(hoursData);
+        const hours = await hoursService.logHours(hoursData);
 
         res.status(200).json(hours);
     } catch (error) {
