@@ -10,9 +10,11 @@ const validateHourDataOnLogHours = async (hoursData) => {
     if (!validateObjectId(projectId)) {
         throw new HoursValidationErrors("Invalid project ID!", 400);
     }
+  
     if (!validateObjectId(userId)) {
         throw new HoursValidationErrors("Invalid user ID!", 400);
     }
+  
     if (typeof hours !== "number" || hours < 1 || hours > 8) {
         throw new HoursValidationErrors(
             "Hours must be a number between 1 and 8!",

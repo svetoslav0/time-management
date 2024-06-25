@@ -3,6 +3,7 @@ const router = require("express").Router();
 const hoursService = require("../services/hoursService");
 const isEmployeeOrAdmin = require("../middlewares/isEmployeeOrAdmin");
 const getJwtToken = require("../middlewares/getUserTokenMiddleware");
+const { validateObjectId } = require("../utils/validateObjectIdUtil");
 
 const HoursValidationErrors = require("../errors/hoursValidationErrors");
 
@@ -25,15 +26,53 @@ router.post("/", isEmployeeOrAdmin, getJwtToken, async (req, res, next) => {
 
 router.get("/", async (req, res) => {
     try {
-        const hours = await hoursService.getAllHours();
 
-        if (!hours) {
-            throw new HoursValidationErrors("Hours not found", 404);
+        const { userId, projectId } = req.query;
+        const filter = {};
+        
+        if (userId) {
+            if (!validateObjectId(userId)) {
+                throw new HoursValidationErrors("Invalid user ID!");
+            }
+            filter.userId = userId;
         }
 
+        if (projectId) {
+            if (!validateObjectId(projectId)) {
+                throw new HoursValidationErrors("Invalid project ID!");
+            }
+            filter.projectId = projectId;
+        }
+
+        const hours = await hoursService.getAllHours(filter);
+      
+         if (!hours) {
+            throw new HoursValidationErrors("Hours not found", 404);
+        }
+      
         res.status(200).json(hours);
     } catch (error) {
         next(error);
+    }
+});
+
+router.delete("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
+    try {
+        const deletedHours =  await hoursService.deleteHourLog(req);
+
+        res.status(200).json(deletedHours);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.patch("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
+    try {
+        const updatedHours =  await hoursService.updateHourLog(req);
+
+        res.status(200).json(updatedHours);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
 });
 
