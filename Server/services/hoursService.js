@@ -6,7 +6,9 @@ const {
     validateHourDataOnLogHours,
 } = require("../utils/validateHoursDataUtil");
 
-exports.getAllHours = () => Hours.find();
+exports.getAllHours = (filter = {}) => {
+    return Hours.find(filter);
+};
 
 exports.logHours = async (hoursData) => {
     await validateHourDataOnLogHours(hoursData);
@@ -29,7 +31,11 @@ exports.logHours = async (hoursData) => {
     }
 };
 
-exports.deleteHourLog = async (hourLogId, userId, isAdmin) => {
+exports.deleteHourLog = async (req) => {
+    const hourLogId = req.params.id;
+    const userId = req.userToken._id;
+    const isAdmin = req.isAdmin;
+
     if (!validateObjectId(hourLogId)) {
         throw new Error("Invalid hour log Id!");
     }
@@ -48,7 +54,12 @@ exports.deleteHourLog = async (hourLogId, userId, isAdmin) => {
     return hourLog;
 };
 
-exports.updateHourLog = async (hourLogId, userId, isAdmin, hoursData) => {
+exports.updateHourLog = async (req) => {
+    const hourLogId = req.params.id;
+    const userId = req.userToken._id;
+    const isAdmin = req.isAdmin;
+    const hoursData = req.body;
+
     if (!validateObjectId(hourLogId)) {
         throw new Error("Invalid hour log Id!");
     }
