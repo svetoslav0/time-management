@@ -26,30 +26,29 @@ router.post("/", isEmployeeOrAdmin, getJwtToken, async (req, res, next) => {
 
 router.get("/", async (req, res) => {
     try {
-
         const { userId, projectId } = req.query;
         const filter = {};
-        
+
         if (userId) {
             if (!validateObjectId(userId)) {
-                throw new HoursValidationErrors("Invalid user ID!");
+                throw new HoursValidationErrors("Invalid user ID!", 400);
             }
             filter.userId = userId;
         }
 
         if (projectId) {
             if (!validateObjectId(projectId)) {
-                throw new HoursValidationErrors("Invalid project ID!");
+                throw new HoursValidationErrors("Invalid project ID!", 400);
             }
             filter.projectId = projectId;
         }
 
         const hours = await hoursService.getAllHours(filter);
-      
-         if (!hours) {
+
+        if (!hours) {
             throw new HoursValidationErrors("Hours not found", 404);
         }
-      
+
         res.status(200).json(hours);
     } catch (error) {
         next(error);
@@ -58,7 +57,7 @@ router.get("/", async (req, res) => {
 
 router.delete("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
     try {
-        const deletedHours =  await hoursService.deleteHourLog(req);
+        const deletedHours = await hoursService.deleteHourLog(req);
 
         res.status(200).json(deletedHours);
     } catch (error) {
@@ -68,7 +67,7 @@ router.delete("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
 
 router.patch("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
     try {
-        const updatedHours =  await hoursService.updateHourLog(req);
+        const updatedHours = await hoursService.updateHourLog(req);
 
         res.status(200).json(updatedHours);
     } catch (error) {
