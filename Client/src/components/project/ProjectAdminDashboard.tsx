@@ -1,18 +1,9 @@
-import { useEffect, useState } from 'react';
-
 import ProjectCard from './ProjectCard';
 
 import useFetchAllProjects from '@/reactQuery/hooks/useFetchAllProjects';
-import { ProjectResponseDataType } from '@/shared/types';
 
 export default function ProjectAdminDashboard() {
-    const { data: fetchedProjects } = useFetchAllProjects();
-
-    const [projects, setProjects] = useState<ProjectResponseDataType[] | undefined>([]);
-
-    useEffect(() => {
-        setProjects(fetchedProjects);
-    }, [fetchedProjects, projects]);
+    const { data: projects } = useFetchAllProjects();
 
     return (
         <>
