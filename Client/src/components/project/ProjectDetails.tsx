@@ -1,29 +1,33 @@
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Table from './Table/Table';
 
+import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
-import httpServices from '@/services/httpServices';
-import { ProjectResponseDataType } from '@/shared/types';
 
 
 export default function ProjectDetails() {
-    const [project, setProject] = useState<ProjectResponseDataType | undefined>(undefined);
+    // const [project, setProject] = useState<ProjectResponseDataType | undefined>(undefined);
     const [showCustomers, setShowCustomers] = useState<boolean>(false);
     const [showEmployees, setShowEmployees] = useState<boolean>(false);
     const { data: customers } = useFetchUsers('customer', 'active');
     const { data: employees } = useFetchUsers('employee', 'active');
-
+    const navigate = useNavigate();
     const { id } = useParams<string>();
-    useEffect(() => {
-        httpServices()
-            .get<ProjectResponseDataType>(`/projects/${id}`)
-            .then((response) => {
-                setProject(response);
-            });
-    }, [id]);
+    const { data: project, error } = useFetchProjectById(id!);
+    if (error) {
+        navigate('admin/projectAdminDashboard');
+    }
+
+    // useEffect(() => {
+    //     httpServices()
+    //         .get<ProjectResponseDataType>(`/projects/${id}`)
+    //         .then((response) => {
+    //             setProject(response);
+    //         });
+    // }, [id]);
     return (
         <>
             <div className='relative block overflow-hidden rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8'>
