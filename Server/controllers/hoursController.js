@@ -28,4 +28,16 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.delete("/:id", isEmployeeOrAdmin, async (req, res) => {
+    const hourLogId = req.params.id;
+
+    try {
+        const deletedHours =  await hoursService.deleteHourLog(hourLogId);
+
+        res.status(200).json(deletedHours);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 module.exports = router;
