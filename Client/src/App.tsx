@@ -41,10 +41,6 @@ function App() {
                             element: <CreateUser />,
                         },
                         {
-                            path: 'projectAdminDashboard',
-                            element: <ProjectAdminDashboard />,
-                        },
-                        {
                             path: 'users',
                             element: <UsersDashboard />,
                         },
@@ -53,11 +49,15 @@ function App() {
                             element: <UserPage />,
                         },
                         {
+                            path: 'projects',
+                            element: <ProjectAdminDashboard />,
+                        },
+                        {
                             path: 'projects/:id',
                             element: <ProjectDetails />,
-                        }
+                        },
                     ],
-                }
+                },
             ],
         },
     ]);
