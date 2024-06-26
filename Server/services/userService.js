@@ -141,7 +141,6 @@ exports.updateUserStatus = async (userId, newStatus) => {
 };
 
 exports.getUsers = async (queryData) => {
-    t;
     const query = {};
 
     if (queryData.status) {
