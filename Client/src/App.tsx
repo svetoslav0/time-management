@@ -52,13 +52,8 @@ function App() {
                             path: 'users/:id',
                             element: <UserPage />,
                         },
-                    ],
-                },
-                {
-                    path: 'projects',
-                    children: [
                         {
-                            path: ':id',
+                            path: 'projects/:id',
                             element: <ProjectDetails />,
                         }
                     ],

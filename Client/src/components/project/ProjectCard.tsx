@@ -27,7 +27,7 @@ export default function ProjectCard({ project }: { project: ProjectResponseDataT
                     <p className={`${colorStatus} mr-5 inline-block`}>
                         Status: {project.status === 'inProgress' ? 'In Progress' : 'Complete'}.
                     </p>
-                    <ButtonDetails children='Details' path={`/projects/${project._id}`} />
+                    <ButtonDetails children='Details' path={`/admin/projects/${project._id}`} />
                     {project.status === 'completed' ? <ButtonReport children='Report' /> : ''}
                 </div>
             </div>
