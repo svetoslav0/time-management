@@ -58,10 +58,6 @@ function App() {
                     path: 'projects',
                     children: [
                         {
-                            path: 'all',
-                            element: <ProjectAdminDashboard />,
-                        },
-                        {
                             path: ':id',
                             element: <ProjectDetails />,
                         }
