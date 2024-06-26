@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import { AuthContextProvider } from './components/auth/AuthContext';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import RootLayout from './components/layout/RootLayout';
@@ -62,7 +63,11 @@ function App() {
         },
     ]);
 
-    return <RouterProvider router={router} />;
+    return (
+        <AuthContextProvider>
+            <RouterProvider router={router} />
+        </AuthContextProvider>
+    );
 }
 
 export default App;

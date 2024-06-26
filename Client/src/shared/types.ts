@@ -41,6 +41,15 @@ export type User = {
     _id: string;
 };
 
+export type LoginResponseData = {
+    email: string;
+    firstName: string;
+    lastName: string;
+    status: string;
+    userRole: string;
+    _id: string;
+};
+
 export type LoginFormDataType = {
     email: string;
     password: string;
