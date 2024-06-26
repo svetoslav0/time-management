@@ -1,3 +1,4 @@
+const HoursValidationErrors = require("../errors/hoursValidationErrors");
 const Hours = require("../models/Hours");
 
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
@@ -15,20 +16,15 @@ exports.logHours = async (hoursData) => {
 
     const { projectId, userId, date, hours, notes } = hoursData;
 
-    try {
-        const loggedHours = await Hours.create({
-            projectId,
-            userId,
-            date,
-            hours,
-            notes,
-        });
+    const loggedHours = await Hours.create({
+        projectId,
+        userId,
+        date,
+        hours,
+        notes,
+    });
 
-        return loggedHours;
-    } catch (error) {
-        console.error("Error creating new Hours entity:", error);
-        throw new Error("Trouble logging hours!");
-    }
+    return loggedHours;
 };
 
 exports.deleteHourLog = async (req) => {
