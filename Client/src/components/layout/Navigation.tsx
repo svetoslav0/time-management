@@ -22,7 +22,7 @@ export function Navigation({ mode, onChangeDarkMode }: NavigationProps) {
     const navigate = useNavigate();
     const logout = useLogout();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!loginResponseData);
-    const [user, setUser] = useState<User | undefined>(undefined);
+    const [user, setUser] = useState<User | undefined>(currentUser);
 
     useEffect(() => {
         setUser(currentUser);
