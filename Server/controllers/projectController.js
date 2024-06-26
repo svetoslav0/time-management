@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const projectService = require("../services/projectService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
+const getJwtToken = require("../middlewares/getUserTokenMiddleware");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 router.post("/", isAdmin, async (req, res) => {
     const projectData = req.body;
@@ -14,8 +15,10 @@ router.post("/", isAdmin, async (req, res) => {
     }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", getJwtToken, async (req, res) => {
     const { status, employeeId } = req.query;
+
+    const userId = req.userToken._id;
 
     if (status && !["inProgress", "completed"].includes(status)) {
         return res.status(400).json({ message: "Invalid status" });
@@ -33,7 +36,7 @@ router.get("/", async (req, res) => {
     }
 
     try {
-        const projects = await projectService.getProjects(queryData);
+        const projects = await projectService.getProjects(queryData, userId);
 
         res.status(200).json(projects);
     } catch (error) {
