@@ -19,4 +19,13 @@ router.post("/login", async (req, res) => {
     }
 });
 
+router.post("/logout", (req, res, next) => {
+    try {
+        res.clearCookie("authCookie");
+        res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+        next(error);
+    }
+});
+
 module.exports = router;

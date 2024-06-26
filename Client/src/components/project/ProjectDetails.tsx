@@ -9,7 +9,6 @@ import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
 
 
 export default function ProjectDetails() {
-    // const [project, setProject] = useState<ProjectResponseDataType | undefined>(undefined);
     const [showCustomers, setShowCustomers] = useState<boolean>(false);
     const [showEmployees, setShowEmployees] = useState<boolean>(false);
     const { data: customers } = useFetchUsers('customer', 'active');
