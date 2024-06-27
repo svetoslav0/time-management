@@ -1,9 +1,11 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import { AuthContextProvider } from './components/auth/AuthContext';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import RootLayout from './components/layout/RootLayout';
 import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
+import ProjectDetails from './components/project/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
 import UserPage from './components/UserPage/UserPage';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
@@ -40,10 +42,6 @@ function App() {
                             element: <CreateUser />,
                         },
                         {
-                            path: 'projectAdminDashboard',
-                            element: <ProjectAdminDashboard />,
-                        },
-                        {
                             path: 'users',
                             element: <UsersDashboard />,
                         },
@@ -51,13 +49,25 @@ function App() {
                             path: 'users/:id',
                             element: <UserPage />,
                         },
+                        {
+                            path: 'projects',
+                            element: <ProjectAdminDashboard />,
+                        },
+                        {
+                            path: 'projects/:id',
+                            element: <ProjectDetails />,
+                        },
                     ],
                 },
             ],
         },
     ]);
 
-    return <RouterProvider router={router} />;
+    return (
+        <AuthContextProvider>
+            <RouterProvider router={router} />
+        </AuthContextProvider>
+    );
 }
 
 export default App;

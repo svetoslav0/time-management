@@ -4,7 +4,9 @@ export const urlKeys = {
     editUser: '/users',
     getUsers: '/users',
     createProject: '/projects',
-    projects: '/projects'
+    projects: '/projects',
+    getUserById: '/users',
+    logout: '/logout',
 };
 
 export const queryKeys = {
@@ -13,5 +15,6 @@ export const queryKeys = {
     active: 'Active',
     inactive: 'Inactive',
     users: 'Users',
-    projects: 'Projects'
+    projects: 'Projects',
+    user: 'User',
 };

@@ -3,8 +3,9 @@ import { CgSun } from 'react-icons/cg';
 import { FaMoon } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
+import { useLoginData } from '../auth/AuthContext';
 import useLogout from '../auth/hooks/useLogout';
-import useUser from '../auth/hooks/useUser';
+import { useUser } from '../auth/hooks/useUser';
 import GuestLinks from './GuestLinks';
 import UserLinks from './UserLinks';
 
@@ -16,17 +17,17 @@ type NavigationProps = {
 };
 
 export function Navigation({ mode, onChangeDarkMode }: NavigationProps) {
+    const { loginResponseData } = useLoginData();
+    const { currentUser } = useUser();
     const navigate = useNavigate();
     const logout = useLogout();
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-    const [user, setUser] = useState<User | undefined>(undefined);
-    const { getUserFromCache } = useUser();
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!loginResponseData);
+    const [user, setUser] = useState<User | undefined>(currentUser);
 
     useEffect(() => {
-        const cachedUser = getUserFromCache();
-        setUser(cachedUser);
-        setIsLoggedIn(!!cachedUser);
-    }, [getUserFromCache]);
+        setUser(currentUser);
+        setIsLoggedIn(!!loginResponseData);
+    }, [currentUser, loginResponseData]);
 
     const handleLogout = () => {
         logout();

@@ -1,23 +1,30 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { clearUserData } from '@/util/util';
+import { useLoginData } from '../AuthContext';
+import { useUser } from './useUser';
 
-export default function useLogout() {
+import { urlKeys } from '@/reactQuery/constants';
+import httpServices from '@/services/httpServices';
+
+type SignOut = () => void;
+
+export default function useLogout(): SignOut {
+    const { post } = httpServices();
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
+    const { clearUser } = useUser();
+    const { clearLoginData } = useLoginData();
 
     const { mutate: logout } = useMutation({
-        mutationFn: async () => {},
+        mutationFn: async () => post(urlKeys.logout),
         onSuccess: () => {
-            queryClient.removeQueries({ queryKey: ['user'] });
-            clearUserData();
+            clearUser();
+            clearLoginData();
             navigate('/auth/login');
         },
         onError: (error) => {
-            console.error('Logout failed', error);
+            console.error('Logout failed', error.message);
         },
     });
-
     return logout;
 }
