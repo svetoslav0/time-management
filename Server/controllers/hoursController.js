@@ -24,7 +24,7 @@ router.post("/", isEmployeeOrAdmin, getJwtToken, async (req, res, next) => {
     }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
     try {
         const { userId, projectId } = req.query;
         const filter = {};
@@ -55,23 +55,28 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.delete("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
-    try {
-        const deletedHours = await hoursService.deleteHourLog(req);
+router.delete(
+    "/:id",
+    isEmployeeOrAdmin,
+    getJwtToken,
+    async (req, res, next) => {
+        try {
+            const deletedHours = await hoursService.deleteHourLog(req);
 
-        res.status(200).json(deletedHours);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+            res.status(200).json(deletedHours);
+        } catch (error) {
+            next(error);
+        }
     }
-});
+);
 
-router.patch("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
+router.patch("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res, next) => {
     try {
         const updatedHours = await hoursService.updateHourLog(req);
 
         res.status(200).json(updatedHours);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 });
 
