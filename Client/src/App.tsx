@@ -8,6 +8,7 @@ import ProjectDetails from './components/project/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
 import UserPage from './components/UserPage/UserPage';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
+import IsLoggedInGuard from './guards/IsLoggedInGuard';
 
 function App() {
     const router = createBrowserRouter([
@@ -18,7 +19,11 @@ function App() {
             children: [
                 {
                     index: true,
-                    element: <h1>Home Page</h1>,
+                    element: (
+                        <IsLoggedInGuard>
+                            <h1>Home Page</h1>
+                        </IsLoggedInGuard>
+                    ),
                 },
                 {
                     path: 'auth',
