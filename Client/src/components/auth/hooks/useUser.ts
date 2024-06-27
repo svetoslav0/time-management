@@ -1,20 +1,31 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
+import { useLoginData } from '../AuthContext';
+
+import { queryKeys, urlKeys } from '@/reactQuery/constants';
+import { queryClient } from '@/reactQuery/queryClient';
+import httpServices from '@/services/httpServices';
 import { User } from '@/shared/types';
 
-type QueryKey = 'user';
+export function useUser() {
+    const { get } = httpServices();
+    const { loginResponseData } = useLoginData();
+    const queryKey = [queryKeys.user];
 
-function useUser() {
-    const queryKey: QueryKey = 'user';
-    const queryClient = useQueryClient();
+    const { data: currentUser } = useQuery<User | undefined>({
+        enabled: !!loginResponseData?._id,
+        queryKey,
+        queryFn: () => get<User>(urlKeys.getUserById + `/${loginResponseData?._id}`),
+        staleTime: Infinity,
+    });
 
-    // Function to get user data directly from the query cache
-    const getUserFromCache = () => {
-        // return queryClient.getQueryData(['user']);
-        return queryClient.getQueryData<User>([queryKey]);
-    };
+    function updateUser(newUser: User): void {
+        queryClient.setQueryData(queryKey, newUser);
+    }
 
-    return { getUserFromCache };
+    function clearUser() {
+        queryClient.removeQueries({ queryKey: [queryKeys.user] });
+    }
+
+    return { currentUser, updateUser, clearUser };
 }
-
-export default useUser;

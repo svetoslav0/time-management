@@ -17,30 +17,23 @@ exports.createProject = async (projectData) => {
         pricePerHour,
         employeeIds
     );
-    try {
-        const project = await Project.create({
-            customerIds: customerIds,
-            projectName: projectName,
-            startingDate: startingDate,
-            pricePerHour: pricePerHour,
-            employeeIds: employeeIds,
-        });
 
-        return {
-            projectId: project._id,
-            customerIds: customerIds,
-            projectName: project.projectName,
-            startingDate: project.startingDate,
-            pricePerHour: project.pricePerHour,
-            employeeIds: project.employeeIds,
-        };
-    } catch (error) {
-        if (error.name === "ValidationError") {
-            throw new Error(error.message);
-        } else {
-            throw new Error("Trouble creating a new project!");
-        }
-    }
+    const project = await Project.create({
+        customerIds: customerIds,
+        projectName: projectName,
+        startingDate: startingDate,
+        pricePerHour: pricePerHour,
+        employeeIds: employeeIds,
+    });
+
+    return {
+        projectId: project._id,
+        customerIds: customerIds,
+        projectName: project.projectName,
+        startingDate: project.startingDate,
+        pricePerHour: project.pricePerHour,
+        employeeIds: project.employeeIds,
+    };
 };
 
 exports.getProjects = async (queryData) => {
@@ -55,12 +48,7 @@ exports.getProjects = async (queryData) => {
         query.employeeIds = employeeId;
     }
 
-    try {
-        return await Project.find(query);
-    } catch (error) {
-        console.error("Error fetching projects:", error);
-        throw new Error("Internal Server Error");
-    }
+    return await Project.find(query);
 };
 
 exports.getSingleProject = (projectId) => Project.findById(projectId);
@@ -82,26 +70,15 @@ exports.updateProject = async (projectId, projectData) => {
         employeeIds
     );
 
-    try {
-        const project = await Project.findByIdAndUpdate(
-            projectId,
-            projectData,
-            { new: true }
-        );
+    const project = await Project.findByIdAndUpdate(projectId, projectData, {
+        new: true,
+    });
 
-        return {
-            customerIds: project.customerIds,
-            projectName: project.projectName,
-            startingDate: project.startingDate,
-            pricePerHour: project.pricePerHour,
-            employeeIds: project.employeeIds,
-        };
-    } catch (error) {
-        if (error.name === "ValidationError") {
-            throw new Error(error.message);
-        } else {
-            console.error(error);
-            throw new Error("Trouble editing the project!");
-        }
-    }
+    return {
+        customerIds: project.customerIds,
+        projectName: project.projectName,
+        startingDate: project.startingDate,
+        pricePerHour: project.pricePerHour,
+        employeeIds: project.employeeIds,
+    };
 };

@@ -11,7 +11,7 @@ export default function httpServices() {
             const fullUrl = url + queryString;
             return httpRequest<null, V>({ url: fullUrl, method: 'GET' });
         },
-        post: async <T, V>(url: string, data: T, headers?: Record<string, string>): Promise<V> => {
+        post: async <T, V>(url: string, data?: T, headers?: Record<string, string>): Promise<V> => {
             return httpRequest<T, V>({ url, method: 'POST', data, headers });
         },
         put: async <T, V>(url: string, data: T, headers?: Record<string, string>): Promise<V> => {

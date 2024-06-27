@@ -7,28 +7,33 @@ const {
 } = require("../utils/validateUserDataUtil");
 
 const { generateToken } = require("../utils/jwt");
+const UserValidationErrors = require("../errors/userValidationErrors");
 
 exports.login = async (userData) => {
     const user = await User.findOne({ email: userData.email });
 
     if (!user) {
-        throw new Error("Invalid email or password!");
+        throw new UserValidationErrors("Invalid email or password!", 400);
     }
 
     if (user.status == "inactive") {
-        throw new Error("Your account is inactive. Please contact support!");
+        throw new UserValidationErrors(
+            "Your account is inactive. Please contact support!",
+            400
+        );
     }
 
     const isValid = await bcrypt.compare(userData.password, user.password);
 
     if (!isValid) {
-        throw new Error("Invalid email or password!");
+        throw new UserValidationErrors("Invalid email or password!", 400);
     }
 
     const token = generateToken(user);
 
     return {
         user: {
+            _id: user._id,
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
@@ -69,33 +74,24 @@ exports.createUser = async (userData) => {
         }),
     };
 
-    try {
-        const user = await User.create(newUser);
+    const user = await User.create(newUser);
 
-        const response = {
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            userRole: user.userRole,
-            ...(userRole === "employee" && {
-                experienceLevel: user.experienceLevel,
-            }),
-            ...(userRole === "customer" && {
-                companyName: user.companyName,
-                phoneNumber: user.phoneNumber,
-                address: user.address,
-            }),
-        };
+    const response = {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userRole: user.userRole,
+        ...(userRole === "employee" && {
+            experienceLevel: user.experienceLevel,
+        }),
+        ...(userRole === "customer" && {
+            companyName: user.companyName,
+            phoneNumber: user.phoneNumber,
+            address: user.address,
+        }),
+    };
 
-        return response;
-    } catch (error) {
-        if (error.name === "ValidationError") {
-            throw new Error(error.message);
-        } else {
-            console.error("Error searching for user existence:", error);
-            throw new Error("Trouble creating a new user!");
-        }
-    }
+    return response;
 };
 
 exports.editUser = async (id, userData) => {
@@ -104,33 +100,24 @@ exports.editUser = async (id, userData) => {
     delete userData.password;
     delete userData.email;
 
-    try {
-        const user = await User.findById(id).exec();
+    const user = await User.findById(id).exec();
 
-        Object.assign(user, userData);
-        await user.save();
+    Object.assign(user, userData);
+    await user.save();
 
-        return {
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            userRole: user.userRole,
-        };
-    } catch (error) {
-        if (error.name === "ValidationError") {
-            throw new Error(error.message);
-        } else {
-            console.error(error);
-            throw new Error("Trouble editing the user!");
-        }
-    }
+    return {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userRole: user.userRole,
+    };
 };
 
 exports.getSingleUser = (userId) => User.findById(userId).select("-password");
 
 exports.updateUserStatus = async (userId, newStatus) => {
     if (!validateObjectId(userId)) {
-        throw new Error("Invalid user ID!");
+        throw new UserValidationErrors("Invalid user ID!", 400);
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -140,7 +127,7 @@ exports.updateUserStatus = async (userId, newStatus) => {
     );
 
     if (!updatedUser) {
-        throw new Error("User does not exist!");
+        throw new UserValidationErrors("User does not exist!", 404);
     }
 
     return {
@@ -154,30 +141,25 @@ exports.updateUserStatus = async (userId, newStatus) => {
 };
 
 exports.getUsers = async (queryData) => {
-    try {
-        const query = {};
+    const query = {};
 
-        if (queryData.status) {
-            query.status = queryData.status;
-        }
-
-        if (queryData.userRole) {
-            query.userRole = queryData.userRole;
-        }
-
-        const users = await User.find(query)
-            .select("-password -updatedAt")
-            .skip(queryData.offset)
-            .limit(queryData.limit);
-
-        const total = await User.countDocuments(query);
-
-        return {
-            total: total,
-            items: users,
-        };
-    } catch (error) {
-        console.error("Error fetching users:", error);
-        throw new Error("Internal Server Error!");
+    if (queryData.status) {
+        query.status = queryData.status;
     }
+
+    if (queryData.userRole) {
+        query.userRole = queryData.userRole;
+    }
+
+    const users = await User.find(query)
+        .select("-password -updatedAt")
+        .skip(queryData.offset)
+        .limit(queryData.limit);
+
+    const total = await User.countDocuments(query);
+
+    return {
+        total: total,
+        items: users,
+    };
 };

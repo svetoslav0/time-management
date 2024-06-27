@@ -2,7 +2,11 @@ const router = require("express").Router();
 
 const userService = require("../services/userService");
 
-router.post("/login", async (req, res) => {
+router.get("/", (req, res) => {
+    res.json({ message: "It works!" });
+});
+
+router.post("/login", async (req, res, next) => {
     const userData = req.body;
 
     try {
@@ -15,7 +19,16 @@ router.post("/login", async (req, res) => {
         });
         res.status(200).json(user);
     } catch (error) {
-        res.status(401).json({ message: "Invalid email or password!" });
+        next(error);
+    }
+});
+
+router.post("/logout", (req, res, next) => {
+    try {
+        res.clearCookie("authCookie");
+        res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+        next(error);
     }
 });
 
