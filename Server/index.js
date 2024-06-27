@@ -8,12 +8,16 @@ const initializeAdmin = require("./utils/initializeAdmin");
 const generalErrorHandlerMiddleware = require("./middlewares/generalErrorHandlerMiddleware");
 const routes = require("./routes");
 
+const corsOrigin = process.env.ENV === "DEV"
+    ? process.env.DEV_ADDRESS
+    : "http://localhost:5173";
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: corsOrigin,
         credentials: true,
     })
 );
