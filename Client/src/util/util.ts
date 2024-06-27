@@ -1,22 +1,13 @@
 // UTIL/USER_DATA
-import { User } from '@/shared/types';
+import { LoginResponseData } from '@/shared/types';
 
-export const getUserData = (): User | null => {
+export const getUserData = (): LoginResponseData | undefined => {
     const data = localStorage.getItem('userData');
-    if (data) {
-        try {
-            return JSON.parse(data) as User;
-        } catch (error) {
-            console.error('Error parsing user data from localStorage', error);
-            return null;
-        }
-    }
-    return null;
+    return data ? JSON.parse(data) : undefined;
 };
 
-export function setUserData(data: User): void {
-    console.log(data);
-    // Implementation to set user data to local storage or other location
+export function setUserData(data: LoginResponseData): void {
+    localStorage.setItem('userData', JSON.stringify(data));
 }
 
 export function clearUserData(): void {

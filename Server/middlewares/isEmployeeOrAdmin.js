@@ -20,7 +20,7 @@ const isEmployeeOrAdmin = async (req, res, next) => {
             return res.status(401).json({ message: "unauthorized" });
         }
 
-        user.userRole === "admin" ? req.isAdmin = true : req.isAdmin = false;
+        req.isAdmin = user.userRole === "admin";
 
         next();
     } catch (error) {

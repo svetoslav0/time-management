@@ -1,3 +1,4 @@
+const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const User = require("../models/User");
 const isValidDateMoment = require("./validateDateUtil");
 
@@ -12,9 +13,15 @@ const validateProjectData = async (
     let employees;
 
     if (!Array.isArray(customerIds) || customerIds.length === 0) {
-        throw new Error("At least one customer ID is required!");
+        throw new ProjectValidationErrors(
+            "At least one customer ID is required!",
+            400
+        );
     } else if (!Array.isArray(employeeIds) || employeeIds.length === 0) {
-        throw new Error("At least one employee ID is required!");
+        throw new ProjectValidationErrors(
+            "At least one employee ID is required!",
+            400
+        );
     }
 
     try {
@@ -28,35 +35,49 @@ const validateProjectData = async (
         customers = users.filter((user) => user.userRole === "customer");
         employees = users.filter((user) => user.userRole === "employee");
     } catch (error) {
-        console.error("Error searching for user existence:", error);
-        throw new Error("Trouble creating a new project!");
+        throw new ProjectValidationErrors(
+            "Error occurred while fetching users from database!",
+            500
+        );
     }
 
     if (customers.length !== customerIds.length) {
-        throw new Error(
-            "All customer IDs should belong to users with the corresponding role!"
+        throw new ProjectValidationErrors(
+            "All customer IDs should belong to users with the corresponding role!",
+            400
         );
     } else if (employees.length !== employeeIds.length) {
-        throw new Error(
-            "All employee IDs should belong to users with the corresponding role!"
+        throw new ProjectValidationErrors(
+            "All employee IDs should belong to users with the corresponding role!",
+            400
         );
     } else if (!projectName) {
-        throw new Error("Project Name is missing!");
+        throw new ProjectValidationErrors("Project Name is missing!", 400);
     } else if (projectName.length < 2) {
-        throw new Error("Project Name is not long enough!");
+        throw new ProjectValidationErrors(
+            "Project Name is not long enough!",
+            400
+        );
     } else if (!startingDate) {
-        throw new Error("Starting Date is missing!");
+        throw new ProjectValidationErrors("Starting Date is missing!", 400);
     } else if (!pricePerHour) {
-        throw new Error("Price per hour is missing!");
+        throw new ProjectValidationErrors("Price per hour is missing!", 400);
     } else if (!Number(pricePerHour)) {
-        throw new Error("Price per hour has non-numeric value!");
+        throw new ProjectValidationErrors(
+            "Price per hour has non-numeric value!",
+            400
+        );
     } else if (Number(pricePerHour) <= 0) {
-        throw new Error("Price per hour has a negative numeric value!");
+        throw new ProjectValidationErrors(
+            "Price per hour has a negative numeric value!",
+            400
+        );
     }
     const isValidDate = await isValidDateMoment(startingDate);
     if (!isValidDate) {
-        throw new Error(
-            "Starting Date is in incorrect format, it must be YYYY-MM-DD!"
+        throw new ProjectValidationErrors(
+            "Starting Date is in incorrect format, it must be YYYY-MM-DD!",
+            400
         );
     }
 };
