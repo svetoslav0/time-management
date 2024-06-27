@@ -5,8 +5,8 @@ const userService = require("../services/userService");
 router.get("/", (req, res) => {
     res.json({
         message: "It works!",
-        env: process.env.ENV,
-        dev_address: process.env.DEV_ADDRESS,
+        env: `ENV: ${process.env.ENV}`,
+        dev_address: `DEV_ADDRESS: ${process.env.DEV_ADDRESS}`,
     });
 });
 
