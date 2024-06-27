@@ -33,16 +33,18 @@ exports.deleteHourLog = async (req) => {
     const isAdmin = req.isAdmin;
 
     if (!validateObjectId(hourLogId)) {
-        throw new Error("Invalid hour log Id!");
+        throw new HoursValidationErrors("Invalid hour log Id!", 400);
     }
 
     const hourLog = await Hours.findById(hourLogId);
 
     if (!hourLog) {
-        throw new Error("Hour log does not exist!");
-    }
-    else if (hourLog.userId !== userId && !isAdmin) {
-        throw new Error("Hour log does not belong to that user!");
+        throw new HoursValidationErrors("Hour log does not exist!", 400);
+    } else if (hourLog.userId !== userId && !isAdmin) {
+        throw new HoursValidationErrors(
+            "Hour log does not belong to that user!",
+            400
+        );
     }
 
     await hourLog.deleteOne();
@@ -57,7 +59,7 @@ exports.updateHourLog = async (req) => {
     const hoursData = req.body;
 
     if (!validateObjectId(hourLogId)) {
-        throw new Error("Invalid hour log Id!");
+        throw new HoursValidationErrors("Invalid hour log Id!", 400);
     }
 
     await validateHourDataOnLogHours(hoursData);
@@ -65,10 +67,12 @@ exports.updateHourLog = async (req) => {
     const hourLog = await Hours.findById(hourLogId);
 
     if (!hourLog) {
-        throw new Error("Hour log does not exist!");
-    }
-    else if (hourLog.userId !== userId && !isAdmin) {
-        throw new Error("Hour log does not belong to that user!");
+        throw new HoursValidationErrors("Hour log does not exist!", 400);
+    } else if (hourLog.userId !== userId && !isAdmin) {
+        throw new HoursValidationErrors(
+            "Hour log does not belong to that user!",
+            400
+        );
     }
 
     Object.assign(hourLog, hoursData);
@@ -76,4 +80,4 @@ exports.updateHourLog = async (req) => {
     const updatedHours = await hourLog.save();
 
     return updatedHours;
-}; 
+};
