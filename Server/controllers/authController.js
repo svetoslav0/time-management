@@ -3,7 +3,11 @@ const router = require("express").Router();
 const userService = require("../services/userService");
 
 router.get("/", (req, res) => {
-    res.json({ message: "It works!" });
+    res.json({
+        message: "It works!",
+        env: process.env.ENV,
+        dev_address: process.env.DEV_ADDRESS,
+    });
 });
 
 router.post("/login", async (req, res, next) => {
