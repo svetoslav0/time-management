@@ -9,14 +9,12 @@ type GuestLinksProps = {
 const GuestLinks = ({ handleLogin }: GuestLinksProps) => {
     return (
         <>
-            <li>
-                <Link
-                    className='mx-4 text-xl transition-colors duration-500 hover:text-gray-400'
-                    to={'/auth/login'}
-                >
-                    <ButtonLogin handleLogin={handleLogin}>Login</ButtonLogin>
-                </Link>
-            </li>
+            <Link
+                className='mx-4 text-xl transition-colors duration-500 hover:text-gray-400'
+                to={'/auth/login'}
+            >
+                <ButtonLogin handleLogin={handleLogin}>Login</ButtonLogin>
+            </Link>
         </>
     );
 };
