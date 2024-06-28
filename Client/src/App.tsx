@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthContextProvider } from './components/auth/AuthContext';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
+import { restrictIsLogin } from './components/guards/guards';
 import RootLayout from './components/layout/RootLayout';
 import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
 import ProjectDetails from './components/project/ProjectDetails';
@@ -20,6 +21,7 @@ function App() {
                 {
                     index: true,
                     element: <h1>Home Page</h1>,
+                    loader: restrictIsLogin,
                 },
                 {
                     path: 'auth',
