@@ -10,9 +10,14 @@ npm install dotenv
 
 pm2 ls
 
-echo "Restarting API service . . ."
-pm2 restart api
-# pm2 start index.js --name api
+if pm2 list | grep api; then
+    echo "The PM2 process for api exists. Restarting API service . . ."
+    pm2 restart api
+else
+    echo "No PM2 process for api found. Starting . . ."
+    pm2 start index.js --name api
+fi
+
 
 sleep 10
 
