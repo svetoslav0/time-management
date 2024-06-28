@@ -43,6 +43,10 @@ export function Navigation({ mode, onChangeDarkMode }: NavigationProps) {
         navigate('/admin/users');
     };
 
+    const redirectToProjectsPanel = () => {
+        navigate('/admin/projects');
+    };
+
     return (
         <nav className='m-auto flex max-w-6xl items-center justify-between px-4 py-3'>
             <ul className=' flex justify-end'>
@@ -57,7 +61,10 @@ export function Navigation({ mode, onChangeDarkMode }: NavigationProps) {
                 </li>
                 <li>
                     {user?.userRole === 'admin' ? (
-                        <AdminLinks redirectToUsersPanel={redirectToUsersPanel} />
+                        <AdminLinks
+                            redirectToUsersPanel={redirectToUsersPanel}
+                            redirectToProjectsPanel={redirectToProjectsPanel}
+                        />
                     ) : (
                         ''
                     )}
