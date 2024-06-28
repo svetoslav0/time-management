@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLoginData } from '../auth/AuthContext';
 import useLogout from '../auth/hooks/useLogout';
 import { useUser } from '../auth/hooks/useUser';
+import AdminLinks from './AdminLinks';
 import GuestLinks from './GuestLinks';
 import UserLinks from './UserLinks';
 
@@ -38,6 +39,14 @@ export function Navigation({ mode, onChangeDarkMode }: NavigationProps) {
         navigate('/auth/login');
     };
 
+    const redirectToUsersPanel = () => {
+        navigate('/admin/users');
+    };
+
+    const redirectToProjectsPanel = () => {
+        navigate('/admin/projects');
+    };
+
     return (
         <nav className='m-auto flex max-w-6xl items-center justify-between px-4 py-3'>
             <ul className=' flex justify-end'>
@@ -51,6 +60,17 @@ export function Navigation({ mode, onChangeDarkMode }: NavigationProps) {
                     </button>
                 </li>
                 <li>
+                    {user?.userRole === 'admin' ? (
+                        <AdminLinks
+                            redirectToUsersPanel={redirectToUsersPanel}
+                            redirectToProjectsPanel={redirectToProjectsPanel}
+                        />
+                    ) : (
+                        ''
+                    )}
+                </li>
+
+                <li>
                     {isLoggedIn ? (
                         <span className='text-1xl mx-4 text-center font-bold leading-9 tracking-tight text-gray-900'>
                             {user?.email}
@@ -59,11 +79,13 @@ export function Navigation({ mode, onChangeDarkMode }: NavigationProps) {
                         ''
                     )}
                 </li>
-                {isLoggedIn ? (
-                    <UserLinks handleLogout={handleLogout} />
-                ) : (
-                    <GuestLinks handleLogin={handleLogin} />
-                )}
+                <li>
+                    {isLoggedIn ? (
+                        <UserLinks handleLogout={handleLogout} />
+                    ) : (
+                        <GuestLinks handleLogin={handleLogin} />
+                    )}
+                </li>
             </ul>
         </nav>
     );
