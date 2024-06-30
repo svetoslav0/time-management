@@ -52,6 +52,7 @@ touch .env.stage
 echo "VITE_API_BASE_URL=$VITE_API_BASE_URL" >> .env.stage
 
 ls -sail
+pwd
 
 echo "vite build"
 vite build
