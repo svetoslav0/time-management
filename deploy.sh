@@ -1,8 +1,17 @@
-echo "Deleting error logs"
+echo "Deleting backend logs"
 true > /var/lib/jenkins/.pm2/logs/api-error.log
+true > /var/lib/jenkins/.pm2/logs/api-out.log
 
+echo "Building backend . . ."
 cd Server
 ls -sail
+
+touch .env
+echo "ENV=$ENV" >> .env
+echo "DEV_ADDRESS=$DEV_ADDRESS" >> .env
+echo "PORT=$PORT" >> .env
+echo "MONGODB_URI=$MONGODB_URI" >> .env
+echo "JWT_SECRET=$JWT_SECRET" >> .env
 
 echo "Running npm install . . ."
 npm install
@@ -24,3 +33,21 @@ sleep 10
 pm2 ls
 pm2 show api
 cat /var/lib/jenkins/.pm2/logs/api-error.log
+
+echo "Finished building the backend."
+
+cd ..
+
+echo "Building frontend . . ."
+
+cd Client
+
+mkdir -p environment
+cd environment
+touch .env.stage
+echo "VITE_API_BASE_URL=$VITE_API_BASE_URL" >> .env.stage
+
+vite build
+vite preview --host --port 5173 &
+
+echo "Finished building frontend."
