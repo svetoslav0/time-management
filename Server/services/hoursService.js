@@ -54,6 +54,7 @@ exports.updateHourLog = async (req) => {
     const userId = req.userToken._id;
     const isAdmin = req.isAdmin;
     const hoursData = req.body;
+    hoursData.userId = userId;
 
     if (!validateObjectId(hourLogId)) {
         throw new Error("Invalid hour log Id!");
