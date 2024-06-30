@@ -42,12 +42,14 @@ echo "Building frontend . . ."
 
 cd Client
 
+npm install
+
 mkdir -p environment
 cd environment
 touch .env.stage
 echo "VITE_API_BASE_URL=$VITE_API_BASE_URL" >> .env.stage
 
 vite build
-vite preview --host --port 5173 &
+vite preview --host --port 5173 --mode stage &
 
 echo "Finished building frontend."
