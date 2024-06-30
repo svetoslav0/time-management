@@ -59,8 +59,9 @@ vite build
 touch nohup.log
 
 echo "nohup vite preview --host --port 5173 --mode stage &"
-nohup vite preview --host --port 5173 --mode stage > nohup.log &
+nohup vite preview --host --port 5173 --mode stage > nohup.log
 
+echo "nohub logs:"
 cat nohup.log
 
 echo "Finished building frontend."
