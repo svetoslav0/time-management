@@ -56,9 +56,11 @@ cd ..
 echo "vite build"
 vite build
 
-echo "nohup vite preview --host --port 5173 --mode stage &"
-nohup vite preview --host --port 5173 --mode stage &
+touch nohup.log
 
-cat nohup.out
+echo "nohup vite preview --host --port 5173 --mode stage &"
+nohup vite preview --host --port 5173 --mode stage > nohup.log &
+
+cat nohup.log
 
 echo "Finished building frontend."
