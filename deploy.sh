@@ -59,4 +59,6 @@ vite build
 echo "nohup vite preview --host --port 5173 --mode stage &"
 nohup vite preview --host --port 5173 --mode stage &
 
+cat nohup.out
+
 echo "Finished building frontend."
