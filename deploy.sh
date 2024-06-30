@@ -59,7 +59,7 @@ pwd
 echo "vite build"
 vite build
 
-echo "vite preview --host --port 5173 --mode stage &"
-vite preview --host --port 5173 --mode stage &
+echo "vite preview --host --port 5173 --mode stage"
+vite preview --host --port 5173 --mode stage
 
 echo "Finished building frontend."
