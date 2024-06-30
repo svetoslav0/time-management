@@ -53,13 +53,10 @@ echo "VITE_API_BASE_URL=$VITE_API_BASE_URL" >> .env.stage
 
 cd ..
 
-ls -sail
-pwd
-
 echo "vite build"
 vite build
 
-echo "vite preview --host --port 5173 --mode stage"
-vite preview --host --port 5173 --mode stage
+echo "nohup vite preview --host --port 5173 --mode stage &"
+nohup vite preview --host --port 5173 --mode stage &
 
 echo "Finished building frontend."
