@@ -40,8 +40,7 @@ exports.deleteHourLog = async (req) => {
 
     if (!hourLog) {
         throw new Error("Hour log does not exist!");
-    }
-    else if (hourLog.userId !== userId && !isAdmin) {
+    } else if (hourLog.userId !== userId && !isAdmin) {
         throw new Error("Hour log does not belong to that user!");
     }
 
@@ -63,11 +62,9 @@ exports.updateHourLog = async (req) => {
     await validateHourDataOnLogHours(hoursData);
 
     const hourLog = await Hours.findById(hourLogId);
-
     if (!hourLog) {
         throw new Error("Hour log does not exist!");
-    }
-    else if (hourLog.userId !== userId && !isAdmin) {
+    } else if (hourLog.userId.toString() !== userId && !isAdmin) {
         throw new Error("Hour log does not belong to that user!");
     }
 
@@ -76,4 +73,4 @@ exports.updateHourLog = async (req) => {
     const updatedHours = await hourLog.save();
 
     return updatedHours;
-}; 
+};
