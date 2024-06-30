@@ -44,12 +44,17 @@ cd Client
 
 npm install
 
+echo "mkdir -p environment"
 mkdir -p environment
+
 cd environment
 touch .env.stage
 echo "VITE_API_BASE_URL=$VITE_API_BASE_URL" >> .env.stage
 
+echo "vite build"
 vite build
+
+echo "vite preview --host --port 5173 --mode stage &"
 vite preview --host --port 5173 --mode stage &
 
 echo "Finished building frontend."
