@@ -54,6 +54,7 @@ exports.updateHourLog = async (req) => {
     const userId = req.userToken._id;
     const isAdmin = req.isAdmin;
     const hoursData = req.body;
+
     hoursData.userId = userId;
 
     if (!validateObjectId(hourLogId)) {
@@ -67,6 +68,10 @@ exports.updateHourLog = async (req) => {
         throw new Error("Hour log does not exist!");
     } else if (hourLog.userId.toString() !== userId && !isAdmin) {
         throw new Error("Hour log does not belong to that user!");
+    }
+
+    if (isAdmin) {
+        hoursData.userId = hourLog.userId;
     }
 
     Object.assign(hourLog, hoursData);
