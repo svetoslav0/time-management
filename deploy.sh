@@ -59,7 +59,7 @@ vite build
 touch nohup.log
 
 echo "nohup vite preview --host --port 5173 --mode stage &"
-nohup vite preview --host --port 5173 --mode stage > nohup.log
+nohup vite preview --host --port 5173 --mode stage > nohup.log 2>&1 &
 
 echo "nohub logs:"
 cat nohup.log
