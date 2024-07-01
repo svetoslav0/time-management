@@ -20,7 +20,7 @@ function App() {
             children: [
                 {
                     index: true,
-                    element: <h1>Home Page :)</h1>,
+                    element: <h1>Home Page</h1>,
                     loader: restrictIsLogin,
                 },
                 {
