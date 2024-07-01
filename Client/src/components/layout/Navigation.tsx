@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { CgSun } from 'react-icons/cg';
-import { FaMoon } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 import { useLoginData } from '../auth/AuthContext';
@@ -12,12 +10,7 @@ import UserLinks from './UserLinks';
 
 import { User } from '@/shared/types';
 
-type NavigationProps = {
-    mode: boolean;
-    onChangeDarkMode: () => void;
-};
-
-export function Navigation({ mode, onChangeDarkMode }: NavigationProps) {
+export function Navigation() {
     const { loginResponseData } = useLoginData();
     const { currentUser } = useUser();
     const navigate = useNavigate();
@@ -50,15 +43,6 @@ export function Navigation({ mode, onChangeDarkMode }: NavigationProps) {
     return (
         <nav className='m-auto flex max-w-6xl items-center justify-between px-4 py-3'>
             <ul className=' flex justify-end'>
-                <li>
-                    <button className='mx-4 h-8 w-8' onClick={onChangeDarkMode}>
-                        {mode ? (
-                            <FaMoon className='h-full w-full' />
-                        ) : (
-                            <CgSun className='h-full w-full' />
-                        )}
-                    </button>
-                </li>
                 <li>
                     {user?.userRole === 'admin' ? (
                         <AdminLinks

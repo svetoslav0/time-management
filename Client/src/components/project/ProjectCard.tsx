@@ -4,6 +4,7 @@ import { ProjectResponseDataType } from '../../shared/types';
 import ButtonReport from '../../UI/formComponents/ButtonReport';
 
 import ButtonDetails from '@/UI/formComponents/ButtonDetails';
+import ButtonEdit from '@/UI/formComponents/ButtonEdit';
 
 export default function ProjectCard({ project }: { project: ProjectResponseDataType }) {
     const colorStatus = `${project.status === 'inProgress' ? 'text-green-600' : project.status === 'completed' ? 'text-blue-600' : 'text-gray-300'}`;
@@ -29,6 +30,10 @@ export default function ProjectCard({ project }: { project: ProjectResponseDataT
                         Status: {project.status === 'inProgress' ? 'In Progress' : 'Complete'}.
                     </p>
                     <ButtonDetails children='Details' path={`/admin/projects/${project._id}`} />
+                    <ButtonEdit
+                        children='Edit'
+                        path={`/admin/projectForm?action=edit&projectId=${project._id}`}
+                    />
                     {project.status === 'completed' ? <ButtonReport children='Report' /> : ''}
                 </div>
             </div>
