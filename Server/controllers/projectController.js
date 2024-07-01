@@ -21,7 +21,6 @@ router.post("/", isAdmin, async (req, res, next) => {
     }
 });
 
-
 router.get("/", getJwtToken, async (req, res, next) => {
     const { status, employeeId } = req.query;
 

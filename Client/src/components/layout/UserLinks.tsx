@@ -9,14 +9,12 @@ type UserLinksProps = {
 const UserLinks = ({ handleLogout }: UserLinksProps) => {
     return (
         <>
-            <li>
-                <Link
-                    className='mx-4 text-xl transition-colors duration-500 hover:text-gray-400'
-                    to={'/auth/login'}
-                >
-                    <ButtonLogout handleLogout={handleLogout}>Logout</ButtonLogout>
-                </Link>
-            </li>
+            <Link
+                className='mx-4 text-xl transition-colors duration-500 hover:text-gray-400'
+                to={'/auth/login'}
+            >
+                <ButtonLogout handleLogout={handleLogout}>Logout</ButtonLogout>
+            </Link>
         </>
     );
 };

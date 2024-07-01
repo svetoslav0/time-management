@@ -2,6 +2,14 @@ const router = require("express").Router();
 
 const userService = require("../services/userService");
 
+router.get("/", (req, res) => {
+    res.json({
+        message: "It works!",
+        env: `ENV: ${process.env.ENV}`,
+        dev_address: `DEV_ADDRESS: ${process.env.DEV_ADDRESS}`,
+    });
+});
+
 router.post("/login", async (req, res, next) => {
     const userData = req.body;
 
@@ -10,7 +18,7 @@ router.post("/login", async (req, res, next) => {
 
         res.cookie("authCookie", token, {
             httpOnly: true,
-            secure: true,
+            // secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         res.status(200).json(user);
