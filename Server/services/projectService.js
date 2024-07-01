@@ -1,4 +1,5 @@
 const Project = require("../models/Project");
+const userService = require('../services/userService')
 const validateProjectData = require("../utils/validateProjectDataUtil");
 
 exports.createProject = async (projectData) => {
@@ -36,7 +37,7 @@ exports.createProject = async (projectData) => {
     };
 };
 
-exports.getProjects = async (queryData) => {
+exports.getProjects = async (queryData, userId) => {
     const { status, employeeId } = queryData;
 
     const query = {};
@@ -48,7 +49,22 @@ exports.getProjects = async (queryData) => {
         query.employeeIds = employeeId;
     }
 
-    return await Project.find(query);
+    try {
+        const projects = await Project.find(query);
+        const user = await userService.getSingleUser(userId)
+        console.log(user)
+        
+        if(user.userRole === 'admin'){
+            return projects
+        }else if(user.userRole === 'employee'){
+            return projects.filter(project => project.employeeIds.includes(user._id));
+        }else if(user.userRole === 'customer'){
+            return projects.filter(project => project.customerIds.includes(user._id));
+        }
+    } catch (error) {
+        console.error("Error fetching projects:", error);
+        throw new Error("Internal Server Error");
+    }
 };
 
 exports.getSingleProject = (projectId) => Project.findById(projectId);
