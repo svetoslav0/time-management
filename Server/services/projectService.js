@@ -49,22 +49,18 @@ exports.getProjects = async (queryData, userId) => {
         query.employeeIds = employeeId;
     }
 
-    try {
-        const projects = await Project.find(query);
-        const user = await userService.getSingleUser(userId)
-        console.log(user)
-        
-        if(user.userRole === 'admin'){
-            return projects
-        }else if(user.userRole === 'employee'){
-            return projects.filter(project => project.employeeIds.includes(user._id));
-        }else if(user.userRole === 'customer'){
-            return projects.filter(project => project.customerIds.includes(user._id));
-        }
-    } catch (error) {
-        console.error("Error fetching projects:", error);
-        throw new Error("Internal Server Error");
+
+    const user = await userService.getSingleUser(userId);
+
+    if (user.userRole === "employee") {
+        query.employeeIds = user._id;
+    } else if (user.userRole === "customer") {
+        query.customerIds = user._id;
     }
+
+    const projects = await Project.find(query);
+
+    return projects;
 };
 
 exports.getSingleProject = (projectId) => Project.findById(projectId);
