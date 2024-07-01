@@ -57,8 +57,8 @@ echo "VITE_API_BASE_URL=$VITE_API_BASE_URL" >> .env.stage
 
 cd ..
 
-echo "vite build"
-vite build
+echo "vite build --mode stage"
+vite build --mode stage
 
 
 if pm2 list | grep client; then
