@@ -2,6 +2,10 @@ echo "Deleting backend logs"
 true > /var/lib/jenkins/.pm2/logs/api-error.log
 true > /var/lib/jenkins/.pm2/logs/api-out.log
 
+echo "Deleting frontend logs"
+true > /var/lib/jenkins/.pm2/logs/client-error.log
+true > /var/lib/jenkins/.pm2/logs/client-out.log
+
 echo "Building backend . . ."
 cd Server
 ls -sail
@@ -56,12 +60,22 @@ cd ..
 echo "vite build"
 vite build
 
-touch nohup.log
 
-echo "nohup vite preview --host --port 5173 --mode stage &"
-nohup vite preview --host --port 5173 --mode stage > nohup.log 2>&1 &
+if pm2 list | grep client; then
+    echo "The PM2 process for client exists. Restarting client service . . ."
+    pm2 restart client
+else
+    echo "No PM2 process for client found. Starting . . ."
+    pm2 start "vite preview --host --port 5173 --mode stage" --name client
+fi
 
-echo "nohub logs:"
-cat nohup.log
+sleep 10
+
+pm2 ls
+pm2 show client
+cat /var/lib/jenkins/.pm2/logs/client-error.log
+cat /var/lib/jenkins/.pm2/logs/client-out.log
+
 
 echo "Finished building frontend."
+echo "Deployment completed."
