@@ -1,4 +1,5 @@
 const Project = require("../models/Project");
+const userService = require('../services/userService')
 const validateProjectData = require("../utils/validateProjectDataUtil");
 
 exports.createProject = async (projectData) => {
@@ -36,7 +37,7 @@ exports.createProject = async (projectData) => {
     };
 };
 
-exports.getProjects = async (queryData) => {
+exports.getProjects = async (queryData, userId) => {
     const { status, employeeId } = queryData;
 
     const query = {};
@@ -48,7 +49,18 @@ exports.getProjects = async (queryData) => {
         query.employeeIds = employeeId;
     }
 
-    return await Project.find(query);
+
+    const user = await userService.getSingleUser(userId);
+
+    if (user.userRole === "employee") {
+        query.employeeIds = user._id;
+    } else if (user.userRole === "customer") {
+        query.customerIds = user._id;
+    }
+
+    const projects = await Project.find(query);
+
+    return projects;
 };
 
 exports.getSingleProject = (projectId) => Project.findById(projectId);
