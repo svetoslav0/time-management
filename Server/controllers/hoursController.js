@@ -65,6 +65,18 @@ router.delete("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
     }
 });
 
+router.get("/:id", async (req, res) => {
+    const hourId = req.params.id;
+
+    try {
+        const hour = await hoursService.getSingleHour(hourId);
+
+        res.status(200).json(hour);
+    } catch (error) {
+        res.status(404).json({ message: "Hour does not exist!" });
+    }
+});
+
 router.patch("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res) => {
     try {
         const updatedHours = await hoursService.updateHourLog(req);

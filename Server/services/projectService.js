@@ -49,7 +49,6 @@ exports.getProjects = async (queryData, userId) => {
         query.employeeIds = employeeId;
     }
 
-
     const user = await userService.getSingleUser(userId);
 
     if (user.userRole === "employee") {
