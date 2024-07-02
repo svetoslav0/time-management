@@ -10,7 +10,7 @@ import ProjectDetails from './components/project/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
 import UserPage from './components/UserPage/UserPage';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
-import IsLoggedInGuard from './guards/IsLoggedInGuard';
+
 
 function App() {
     const router = createBrowserRouter([
