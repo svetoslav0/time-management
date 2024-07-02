@@ -7,8 +7,6 @@ const {
     validateHourDataOnLogHours,
 } = require("../utils/validateHoursDataUtil");
 
-
-exports.getAllHours = () => Hours.find();
 exports.getSingleHour = (hourId) => Hours.findById(hourId)
 exports.getAllHours = (filter = {}) => {
     return Hours.find(filter);
