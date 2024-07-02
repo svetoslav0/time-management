@@ -59,6 +59,8 @@ exports.updateHourLog = async (req) => {
     const isAdmin = req.isAdmin;
     const hoursData = req.body;
 
+    hoursData.userId = userId;
+
     if (!validateObjectId(hourLogId)) {
         throw new HoursValidationErrors("Invalid hour log Id!", 400);
     }
@@ -66,14 +68,17 @@ exports.updateHourLog = async (req) => {
     await validateHourDataOnLogHours(hoursData);
 
     const hourLog = await Hours.findById(hourLogId);
-
     if (!hourLog) {
         throw new HoursValidationErrors("Hour log does not exist!", 400);
-    } else if (hourLog.userId !== userId && !isAdmin) {
+    } else if (hourLog.userId.toString() !== userId && !isAdmin) {
         throw new HoursValidationErrors(
             "Hour log does not belong to that user!",
             400
         );
+    }
+
+    if (isAdmin) {
+        hoursData.userId = hourLog.userId;
     }
 
     Object.assign(hourLog, hoursData);
