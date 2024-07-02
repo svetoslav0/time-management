@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const projectService = require("../services/projectService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
+const getJwtToken = require("../middlewares/getUserTokenMiddleware");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 
@@ -20,8 +21,10 @@ router.post("/", isAdmin, async (req, res, next) => {
     }
 });
 
-router.get("/", async (req, res, next) => {
+router.get("/", getJwtToken, async (req, res, next) => {
     const { status, employeeId } = req.query;
+
+    const userId = req.userToken._id;
 
     if (status && !["inProgress", "completed"].includes(status)) {
         throw new ProjectValidationErrors(
@@ -43,7 +46,7 @@ router.get("/", async (req, res, next) => {
     }
 
     try {
-        const projects = await projectService.getProjects(queryData);
+        const projects = await projectService.getProjects(queryData, userId);
 
         if (!projects) {
             throw new ProjectValidationErrors("No projects found", 404);

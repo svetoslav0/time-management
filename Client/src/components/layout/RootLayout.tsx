@@ -1,22 +1,12 @@
-import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Outlet } from 'react-router-dom';
 
 import { Navigation } from './Navigation';
 
 export default function RootLayout() {
-    const [darkMode, setDarkMode] = useState(() => {
-        return localStorage.getItem('theme') === 'dark';
-    });
-
-    function handleDarkMode() {
-        setDarkMode((prevMode) => !prevMode);
-        localStorage.setItem('theme', darkMode ? 'light' : 'dark');
-    }
-
     return (
-        <div className={`flex min-h-screen flex-col ${darkMode ? 'dark' : ''}`}>
-            <Navigation onChangeDarkMode={handleDarkMode} mode={darkMode} />
+        <div className={`flex min-h-screen flex-col`}>
+            <Navigation />
             <main className='flex-grow'>
                 <Toaster
                     position='top-center'
@@ -29,12 +19,6 @@ export default function RootLayout() {
                         error: {
                             duration: 5000,
                         },
-                        style: darkMode
-                            ? {
-                                  backgroundColor: '#374151',
-                                  color: '#f3f3f5',
-                              }
-                            : {},
                     }}
                 />
                 <Outlet />
