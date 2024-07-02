@@ -27,7 +27,7 @@ export default function InputComponent<T extends FieldValues>({
     ...props
 }: InputComponentProps<T>) {
     return (
-        <div className='mb-5'>
+        <div className={error? 'mt-0' : 'mt-5'}>
             <label
                 htmlFor={field}
                 className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
@@ -36,7 +36,7 @@ export default function InputComponent<T extends FieldValues>({
                 <input
                     type={type}
                     id={field}
-                    className={`block w-full rounded-lg border ${
+                    className={`block w-full rounded-xl border border-inputFieldBorderColor ${
                         error ? 'border-red-500' : 'border-gray-300'
                     } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
                     placeholder={capitalizeAndFormat(field)}
