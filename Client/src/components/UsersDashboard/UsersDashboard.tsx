@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
 
 import httpServices from '../../services/httpServices';
-import { User } from '../../shared/types';
+import { LoginResponseData, User } from '../../shared/types';
 import UserCard from './UserCard';
+
+import ButtonCreateUser from '@/UI/formComponents/ButtonCreateUser';
+import ButtonShowActiveOrInactiveUsers from '@/UI/formComponents/ButtonShowActiveOrInactiveUsers';
+import { getUserData } from '@/util/util';
 
 export default function UsersDashboard() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [active, setActive] = useState<boolean>(true);
+    const currentUser: LoginResponseData | undefined = getUserData();
 
     useEffect(() => {
         httpServices()
@@ -22,6 +27,10 @@ export default function UsersDashboard() {
 
     return (
         <div className='mx-auto flex flex-col gap-6 p-5'>
+            <div className='flex gap-5'>
+                <ButtonShowActiveOrInactiveUsers active={active} setActive={setActive} />
+                {currentUser?.userRole === 'admin' && <ButtonCreateUser />}
+            </div>
             <h2 className='self-center font-bold'>{active ? 'Active' : 'Inactive'} Users</h2>
             {loading ? (
                 <div className='self-center'>Loading...</div>
@@ -35,14 +44,6 @@ export default function UsersDashboard() {
                     )}
                 </div>
             )}
-            <button
-                className='self-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700'
-                onClick={() => {
-                    setActive(!active);
-                }}
-            >
-                {active ? 'Show Inactive users' : 'Show Active users'}
-            </button>
         </div>
     );
 }
