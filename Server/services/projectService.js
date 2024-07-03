@@ -1,6 +1,6 @@
 const Project = require("../models/Project");
 const userService = require('../services/userService')
-const validateProjectData = require("../utils/validateProjectDataUtil");
+const { validateProjectData, validateProjectStatus } = require("../utils/validateProjectDataUtil");
 
 exports.createProject = async (projectData) => {
     const {
@@ -40,6 +40,8 @@ exports.createProject = async (projectData) => {
 exports.getProjects = async (queryData, userId) => {
     const { status, employeeId } = queryData;
 
+    await validateProjectStatus(status);
+
     const query = {};
 
     if (status) {
@@ -72,6 +74,8 @@ exports.updateProject = async (projectId, projectData, status) => {
         pricePerHour,
         employeeIds,
     } = projectData;
+
+    await validateProjectStatus(status);
 
     await validateProjectData(
         customerIds,

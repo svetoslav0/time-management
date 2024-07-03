@@ -82,4 +82,16 @@ const validateProjectData = async (
     }
 };
 
-module.exports = validateProjectData;
+const validateProjectStatus = async (status) => {
+    if (status && !["inProgress", "completed"].includes(status)) {
+        throw new ProjectValidationErrors(
+            "Invalid status. Valid options are: inProgress, completed",
+            400
+        );
+    }    
+};
+
+module.exports = {
+    validateProjectData,
+    validateProjectStatus
+};

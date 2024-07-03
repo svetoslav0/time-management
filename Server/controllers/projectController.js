@@ -23,15 +23,8 @@ router.post("/", isAdmin, async (req, res, next) => {
 
 router.get("/", getJwtToken, async (req, res, next) => {
     const { status, employeeId } = req.query;
-
+    
     const userId = req.userToken._id;
-
-    if (status && !["inProgress", "completed"].includes(status)) {
-        throw new ProjectValidationErrors(
-            "Invalid status. Valid options are: inProgress, completed",
-            400
-        );
-    }
 
     const queryData = { status };
 
@@ -78,13 +71,6 @@ router.patch("/:id", isAdmin, async (req, res, next) => {
     const { status } = req.query;
 
     try {
-        if (status && !["inProgress", "completed"].includes(status)) {
-            throw new ProjectValidationErrors(
-                "Invalid status. Valid options are: inProgress, completed",
-                400
-            );
-        }    
-
         const project = await projectService.updateProject(projectId, req.body, status);
 
         if (!project) {
