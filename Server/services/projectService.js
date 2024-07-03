@@ -1,6 +1,6 @@
 const Project = require("../models/Project");
 const userService = require('../services/userService')
-const validateProjectData = require("../utils/validateProjectDataUtil");
+const { validateProjectData, validateProjectStatus } = require("../utils/validateProjectDataUtil");
 
 exports.createProject = async (projectData) => {
     const {
@@ -40,6 +40,8 @@ exports.createProject = async (projectData) => {
 exports.getProjects = async (queryData, userId) => {
     const { status, employeeId } = queryData;
 
+    await validateProjectStatus(status);
+
     const query = {};
 
     if (status) {
@@ -64,7 +66,7 @@ exports.getProjects = async (queryData, userId) => {
 
 exports.getSingleProject = (projectId) => Project.findById(projectId);
 
-exports.updateProject = async (projectId, projectData) => {
+exports.updateProject = async (projectId, projectData, status) => {
     const {
         customerIds,
         projectName,
@@ -72,6 +74,8 @@ exports.updateProject = async (projectId, projectData) => {
         pricePerHour,
         employeeIds,
     } = projectData;
+
+    await validateProjectStatus(status);
 
     await validateProjectData(
         customerIds,
@@ -81,7 +85,15 @@ exports.updateProject = async (projectId, projectData) => {
         employeeIds
     );
 
-    const project = await Project.findByIdAndUpdate(projectId, projectData, {
+    const query = {
+        ...projectData
+    };
+
+    if (status) {
+        query.status = status;
+    }
+
+    const project = await Project.findByIdAndUpdate(projectId, query, {
         new: true,
     });
 
