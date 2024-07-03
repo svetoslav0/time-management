@@ -1,7 +1,8 @@
 import ButtonCreateProject from '@/UI/formComponents/ButtonCreateProject';
 import ProjectCard from './ProjectCard';
 import { getUserData } from '@/util/util';
-import { LoginResponseData, User } from '../../shared/types';
+import { LoginResponseData } from '../../shared/types';
+import SearchBar from '../../UI/formComponents/SearchBar';
 
 import useFetchAllProjects from '@/reactQuery/hooks/useFetchAllProjects';
 
@@ -18,7 +19,7 @@ export default function ProjectAdminDashboard() {
                     path={'/admin/projectForm?action=create'}
                 />
             )}
-
+            <SearchBar />
             {isLoading ? (
                 <h1>Loading...</h1>
             ) : (
