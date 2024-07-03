@@ -138,7 +138,7 @@ exports.restorePassword = async (req) => {
     if (!user) {
         throw new UserValidationErrors("User not found!", 404);
     }
-    // user.password = await bcrypt.hash(password, 12);
+    
     user.password = password;
     await user.save();
 };
