@@ -15,9 +15,9 @@ const validateHourDataOnLogHours = async (hoursData) => {
         throw new HoursValidationErrors("Invalid user ID!", 400);
     }
 
-    if (typeof hours !== "number" || hours < 1 || hours > 8) {
+    if (typeof hours !== "number" || hours < 0.5 || hours > 8) {
         throw new HoursValidationErrors(
-            "Hours must be a number between 1 and 8!",
+            "Hours must be a number between 0.5 and 8!",
             400
         );
     }
