@@ -23,7 +23,7 @@ router.post("/", isAdmin, async (req, res, next) => {
 
 router.get("/", getJwtToken, async (req, res, next) => {
     const { status, employeeId } = req.query;
-    
+
     const userId = req.userToken._id;
 
     const queryData = { status };
@@ -68,10 +68,9 @@ router.get("/:id", async (req, res, next) => {
 
 router.patch("/:id", isAdmin, async (req, res, next) => {
     const projectId = req.params.id;
-    const { status } = req.query;
 
     try {
-        const project = await projectService.updateProject(projectId, req.body, status);
+        const project = await projectService.updateProject(projectId, req.body);
 
         if (!project) {
             throw new ProjectValidationErrors("Project not found", 404);
@@ -81,6 +80,5 @@ router.patch("/:id", isAdmin, async (req, res, next) => {
         next(error);
     }
 
-    
 });
 module.exports = router;
