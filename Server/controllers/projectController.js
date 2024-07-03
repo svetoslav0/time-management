@@ -77,14 +77,14 @@ router.patch("/:id", isAdmin, async (req, res, next) => {
     const projectId = req.params.id;
     const { status } = req.query;
 
-    if (status && !["inProgress", "completed"].includes(status)) {
-        throw new ProjectValidationErrors(
-            "Invalid status. Valid options are: inProgress, completed",
-            400
-        );
-    }
-
     try {
+        if (status && !["inProgress", "completed"].includes(status)) {
+            throw new ProjectValidationErrors(
+                "Invalid status. Valid options are: inProgress, completed",
+                400
+            );
+        }    
+
         const project = await projectService.updateProject(projectId, req.body, status);
 
         if (!project) {
