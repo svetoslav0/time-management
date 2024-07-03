@@ -1,9 +1,7 @@
 const router = require("express").Router();
-const User = require("../models/User");
 
 const userService = require("../services/userService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
-const UserValidationErrors = require("../errors/userValidationErrors");
 
 router.get("/", async (req, res, next) => {
     try {
