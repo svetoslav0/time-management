@@ -27,7 +27,7 @@ export default function InputComponent<T extends FieldValues>({
     ...props
 }: InputComponentProps<T>) {
     return (
-        <div className={error? 'mt-0' : 'mt-5'}>
+        <div className='mt-5'>
             <label
                 htmlFor={field}
                 className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
