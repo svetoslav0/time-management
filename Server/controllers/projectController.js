@@ -75,9 +75,17 @@ router.get("/:id", async (req, res, next) => {
 
 router.patch("/:id", isAdmin, async (req, res, next) => {
     const projectId = req.params.id;
+    const { status } = req.query;
+
+    if (status && !["inProgress", "completed"].includes(status)) {
+        throw new ProjectValidationErrors(
+            "Invalid status. Valid options are: inProgress, completed",
+            400
+        );
+    }
 
     try {
-        const project = await projectService.updateProject(projectId, req.body);
+        const project = await projectService.updateProject(projectId, req.body, status);
 
         if (!project) {
             throw new ProjectValidationErrors("Project not found", 404);
@@ -86,5 +94,7 @@ router.patch("/:id", isAdmin, async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+
+    
 });
 module.exports = router;

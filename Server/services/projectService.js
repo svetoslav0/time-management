@@ -64,7 +64,7 @@ exports.getProjects = async (queryData, userId) => {
 
 exports.getSingleProject = (projectId) => Project.findById(projectId);
 
-exports.updateProject = async (projectId, projectData) => {
+exports.updateProject = async (projectId, projectData, status) => {
     const {
         customerIds,
         projectName,
@@ -81,7 +81,15 @@ exports.updateProject = async (projectId, projectData) => {
         employeeIds
     );
 
-    const project = await Project.findByIdAndUpdate(projectId, projectData, {
+    const query = {
+        ...projectData
+    };
+
+    if (status) {
+        query.status = status;
+    }
+
+    const project = await Project.findByIdAndUpdate(projectId, query, {
         new: true,
     });
 
