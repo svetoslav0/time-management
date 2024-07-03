@@ -41,7 +41,7 @@ export function Navigation() {
     };
 
     return (
-        <nav className='items-center justify-between'>
+        <nav className='m-auto flex max-w-6xl items-center justify-between px-4 py-3'>
             <ul className=' flex justify-end'>
                 <li>
                     {user?.userRole === 'admin' ? (
