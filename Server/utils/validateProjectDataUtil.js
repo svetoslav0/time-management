@@ -2,13 +2,7 @@ const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const User = require("../models/User");
 const isValidDateMoment = require("./validateDateUtil");
 
-const validateProjectData = async (
-    customerIds,
-    projectName,
-    startingDate,
-    pricePerHour,
-    employeeIds
-) => {
+const validateProjectData = async ({ customerIds, projectName, startingDate, pricePerHour, employeeIds }) => {
     let customers;
     let employees;
 
@@ -88,7 +82,7 @@ const validateProjectStatus = async (status) => {
             "Invalid status. Valid options are: inProgress, completed",
             400
         );
-    }    
+    }
 };
 
 module.exports = {

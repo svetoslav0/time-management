@@ -2,14 +2,11 @@ const router = require("express").Router();
 const projectService = require("../services/projectService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
 const getJwtToken = require("../middlewares/getUserTokenMiddleware");
-const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 
 router.post("/", isAdmin, async (req, res, next) => {
-    const projectData = req.body;
-
     try {
-        const project = await projectService.createProject(projectData);
+        const project = await projectService.createProject(req);
 
         if (!project) {
             throw new ProjectValidationErrors("Project not created", 400);
@@ -22,24 +19,8 @@ router.post("/", isAdmin, async (req, res, next) => {
 });
 
 router.get("/", getJwtToken, async (req, res, next) => {
-    const { status, employeeId } = req.query;
-
-    const userId = req.userToken._id;
-
-    const queryData = { status };
-
-    if (employeeId) {
-        if (!validateObjectId(employeeId)) {
-            throw new ProjectValidationErrors(
-                "Invalid employee ID format",
-                400
-            );
-        }
-        queryData.employeeId = employeeId;
-    }
-
     try {
-        const projects = await projectService.getProjects(queryData, userId);
+        const projects = await projectService.getProjects(req);
 
         if (!projects) {
             throw new ProjectValidationErrors("No projects found", 404);
@@ -52,10 +33,8 @@ router.get("/", getJwtToken, async (req, res, next) => {
 });
 
 router.get("/:id", async (req, res, next) => {
-    const projectId = req.params.id;
-
     try {
-        const project = await projectService.getSingleProject(projectId);
+        const project = await projectService.getSingleProject(req);
 
         if (!project) {
             throw new ProjectValidationErrors("Project not found", 404);
@@ -67,10 +46,8 @@ router.get("/:id", async (req, res, next) => {
 });
 
 router.patch("/:id", isAdmin, async (req, res, next) => {
-    const projectId = req.params.id;
-
     try {
-        const project = await projectService.updateProject(projectId, req.body);
+        const project = await projectService.updateProject(req);
 
         if (!project) {
             throw new ProjectValidationErrors("Project not found", 404);

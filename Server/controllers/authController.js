@@ -11,10 +11,8 @@ router.get("/", (req, res) => {
 });
 
 router.post("/login", async (req, res, next) => {
-    const userData = req.body;
-
     try {
-        const { user, token } = await userService.login(userData);
+        const { user, token } = await userService.login(req);
 
         res.cookie("authCookie", token, {
             httpOnly: true,
