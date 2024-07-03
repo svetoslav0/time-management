@@ -40,7 +40,6 @@ exports.createProject = async (projectData) => {
 
 exports.getProjects = async (queryData, userId) => {
     const { status, employeeId } = queryData;
-    console.log(status);
     if (status) {
         await validateProjectStatus(status);
     }
