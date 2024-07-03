@@ -55,36 +55,10 @@ router.patch("/:userId/archive", isAdmin, async (req, res, next) => {
 });
 
 router.patch("/:id/password_restore", isAdmin, async (req, res, next) => {
-    const { password, confirmPassword } = req.body;
-
-    if (!password || !confirmPassword) {
-        throw new UserValidationErrors(
-            "Both password and confirmPassword are required!",
-            400
-        );
-    }
-
-    if (password.length < 6) {
-        throw new UserValidationErrors(
-            "Password must be at least 6 characters long!",
-            400
-        );
-    }
-
-    if (password !== confirmPassword) {
-        throw new UserValidationErrors("Passwords do not match!", 400);
-    }
-
+    
     try {
-        const userId = req.params.id;
-        const user = await User.findById(userId);
+        await userService.restorePassword(req);
 
-        if (!user) {
-            throw new UserValidationErrors("User not found!", 404);
-        }
-        // user.password = await bcrypt.hash(password, 12);
-        user.password = password;
-        await user.save();
         res.status(200).send({ message: "Password restored successfully!" });
     } catch (error) {
         next(error);

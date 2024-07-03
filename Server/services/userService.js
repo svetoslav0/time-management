@@ -111,6 +111,38 @@ exports.editUser = async (req) => {
 
 exports.getSingleUser = (userId) => User.findById(userId).select("-password");
 
+exports.restorePassword = async (req) => {
+    const { password, confirmPassword } = req.body;
+    const userId = req.params.id;
+
+    if (!password || !confirmPassword) {
+        throw new UserValidationErrors(
+            "Both password and confirmPassword are required!",
+            400
+        );
+    }
+
+    if (password.length < 6) {
+        throw new UserValidationErrors(
+            "Password must be at least 6 characters long!",
+            400
+        );
+    }
+
+    if (password !== confirmPassword) {
+        throw new UserValidationErrors("Passwords do not match!", 400);
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new UserValidationErrors("User not found!", 404);
+    }
+    // user.password = await bcrypt.hash(password, 12);
+    user.password = password;
+    await user.save();
+};
+
 exports.updateUserStatus = async (req, newStatus) => {
     const userId = req.params.userId;
 
