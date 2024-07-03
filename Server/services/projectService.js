@@ -1,6 +1,7 @@
 const Project = require("../models/Project");
 const userService = require('../services/userService')
 const { validateProjectData, validateProjectStatus } = require("../utils/validateProjectDataUtil");
+const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 
 exports.createProject = async (projectData) => {
     const {
@@ -39,8 +40,10 @@ exports.createProject = async (projectData) => {
 
 exports.getProjects = async (queryData, userId) => {
     const { status, employeeId } = queryData;
-
-    await validateProjectStatus(status);
+    console.log(status);
+    if (status) {
+        await validateProjectStatus(status);
+    }
 
     const query = {};
 
@@ -66,17 +69,24 @@ exports.getProjects = async (queryData, userId) => {
 
 exports.getSingleProject = (projectId) => Project.findById(projectId);
 
-exports.updateProject = async (projectId, projectData, status) => {
+exports.updateProject = async (projectId, projectData) => {
     const {
         customerIds,
         projectName,
         startingDate,
         pricePerHour,
         employeeIds,
+        status
     } = projectData;
 
-    await validateProjectStatus(status);
+    if (!status) {
+        throw new ProjectValidationErrors(
+            "No status provided!",
+            400
+        );
+    }
 
+    await validateProjectStatus(status);
     await validateProjectData(
         customerIds,
         projectName,

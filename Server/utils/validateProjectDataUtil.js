@@ -83,7 +83,7 @@ const validateProjectData = async (
 };
 
 const validateProjectStatus = async (status) => {
-    if (status && !["inProgress", "completed"].includes(status)) {
+    if (!["inProgress", "completed"].includes(status)) {
         throw new ProjectValidationErrors(
             "Invalid status. Valid options are: inProgress, completed",
             400
