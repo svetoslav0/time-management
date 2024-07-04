@@ -23,7 +23,6 @@ export default function RootLayout() {
                 />
                 <Outlet />
             </main>
-            <footer className='m-auto h-10 w-3/4 text-center'>footer</footer>
         </div>
     );
 }
