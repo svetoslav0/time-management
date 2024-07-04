@@ -2,35 +2,24 @@ const Project = require("../models/Project");
 const userService = require('../services/userService')
 const { validateProjectData, validateProjectStatus } = require("../utils/validateProjectDataUtil");
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
+const { validateObjectId } = require("../utils/validateObjectIdUtil");
 
-exports.createProject = async (projectData) => {
-    const {
-        customerIds,
-        projectName,
-        startingDate,
-        pricePerHour,
-        employeeIds,
-    } = projectData;
+exports.createProject = async (req) => {
+    const projectData = req.body;
 
-    await validateProjectData(
-        customerIds,
-        projectName,
-        startingDate,
-        pricePerHour,
-        employeeIds
-    );
+    await validateProjectData(projectData);
 
     const project = await Project.create({
-        customerIds: customerIds,
-        projectName: projectName,
-        startingDate: startingDate,
-        pricePerHour: pricePerHour,
-        employeeIds: employeeIds,
+        customerIds: projectData.customerIds,
+        projectName: projectData.projectName,
+        startingDate: projectData.startingDate,
+        pricePerHour: projectData.pricePerHour,
+        employeeIds: projectData.employeeIds,
     });
 
     return {
         projectId: project._id,
-        customerIds: customerIds,
+        customerIds: project.customerIds,
         projectName: project.projectName,
         startingDate: project.startingDate,
         pricePerHour: project.pricePerHour,
@@ -38,8 +27,19 @@ exports.createProject = async (projectData) => {
     };
 };
 
-exports.getProjects = async (queryData, userId) => {
-    const { status, employeeId } = queryData;
+exports.getProjects = async (req) => {
+    const { status, employeeId } = req.query;
+    const userId = req.userToken._id;
+
+    if (employeeId) {
+        if (!validateObjectId(employeeId)) {
+            throw new ProjectValidationErrors(
+                "Invalid employee ID format",
+                400
+            );
+        }
+    }
+
     if (status) {
         await validateProjectStatus(status);
     }
@@ -66,40 +66,39 @@ exports.getProjects = async (queryData, userId) => {
     return projects;
 };
 
-exports.getSingleProject = (projectId) => Project.findById(projectId);
+exports.getSingleProject = (req) => {
+    const projectId = req.params.id;
 
-exports.updateProject = async (projectId, projectData) => {
-    const {
-        customerIds,
-        projectName,
-        startingDate,
-        pricePerHour,
-        employeeIds,
-        status
-    } = projectData;
+    if (!validateObjectId(projectId)) {
+        throw new ProjectValidationErrors(
+            "Invalid project ID format",
+            400
+        );
+    }
 
-    if (!status) {
+    return Project.findById(projectId);
+}
+
+exports.updateProject = async (req) => {
+    const projectData = req.body;
+    const projectId = req.params.id;
+
+    if (!projectData.status) {
         throw new ProjectValidationErrors(
             "No status provided!",
             400
         );
     }
 
-    await validateProjectStatus(status);
-    await validateProjectData(
-        customerIds,
-        projectName,
-        startingDate,
-        pricePerHour,
-        employeeIds
-    );
+    await validateProjectStatus(projectData.status);
+    await validateProjectData(projectData);
 
     const query = {
         ...projectData
     };
 
-    if (status) {
-        query.status = status;
+    if (projectData.status) {
+        query.status = projectData.status;
     }
 
     const project = await Project.findByIdAndUpdate(projectId, query, {

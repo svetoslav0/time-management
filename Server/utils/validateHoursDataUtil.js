@@ -4,9 +4,7 @@ const { validateObjectId } = require("./validateObjectIdUtil");
 const isValidDateMoment = require("./validateDateUtil");
 const HoursValidationErrors = require("../errors/hoursValidationErrors");
 
-const validateHourDataOnLogHours = async (hoursData) => {
-    const { projectId, date, hours, notes, userId } = hoursData;
-
+const validateHourDataOnLogHours = async ({projectId, date, hours, notes, userId}) => {
     if (!validateObjectId(projectId)) {
         throw new HoursValidationErrors("Invalid project ID!", 400);
     }

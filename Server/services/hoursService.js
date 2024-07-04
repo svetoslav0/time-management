@@ -7,15 +7,36 @@ const {
     validateHourDataOnLogHours,
 } = require("../utils/validateHoursDataUtil");
 
-exports.getSingleHour = (hourId) => Hours.findById(hourId)
-exports.getAllHours = (filter = {}) => {
+exports.getSingleHour = (req) => Hours.findById(req.params.id)
+exports.getAllHours = (req) => {
+    const { userId, projectId } = req.query;
+    const filter = {};
+
+    if (userId) {
+        if (!validateObjectId(userId)) {
+            throw new HoursValidationErrors("Invalid user ID!", 400);
+        }
+        filter.userId = userId;
+    }
+
+    if (projectId) {
+        if (!validateObjectId(projectId)) {
+            throw new HoursValidationErrors("Invalid project ID!", 400);
+        }
+        filter.projectId = projectId;
+    }
+
     return Hours.find(filter);
 };
 
-exports.logHours = async (hoursData) => {
-    await validateHourDataOnLogHours(hoursData);
+exports.logHours = async (req) => {
+    req.body.userId = req.userToken._id;
+    
+    const hourData = req.body;
 
-    const { projectId, userId, date, hours, notes } = hoursData;
+    await validateHourDataOnLogHours(hourData);
+
+    const { projectId, userId, date, hours, notes } = hourData;
 
     const loggedHours = await Hours.create({
         projectId,

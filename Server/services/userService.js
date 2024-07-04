@@ -9,8 +9,10 @@ const {
 const { generateToken } = require("../utils/jwt");
 const UserValidationErrors = require("../errors/userValidationErrors");
 
-exports.login = async (userData) => {
-    const user = await User.findOne({ email: userData.email });
+exports.login = async (req) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email: email });
 
     if (!user) {
         throw new UserValidationErrors("Invalid email or password!", 400);
@@ -23,7 +25,7 @@ exports.login = async (userData) => {
         );
     }
 
-    const isValid = await bcrypt.compare(userData.password, user.password);
+    const isValid = await bcrypt.compare(password, user.password);
 
     if (!isValid) {
         throw new UserValidationErrors("Invalid email or password!", 400);
@@ -44,18 +46,23 @@ exports.login = async (userData) => {
     };
 };
 
-exports.createUser = async (userData) => {
+exports.createUser = async (req) => {
+    const userData = req.body;
+
+    await validateUserDataOnUserCreate(userData);
+
     const {
         email,
         firstName,
         lastName,
         password,
-        confirmPassword,
         userRole,
         description,
+        experienceLevel,
+        companyName,
+        phoneNumber,
+        address
     } = userData;
-
-    await validateUserDataOnUserCreate(userData);
 
     const newUser = {
         email,
@@ -64,43 +71,32 @@ exports.createUser = async (userData) => {
         password,
         userRole,
         ...(description && { description }),
-        ...(userRole === "employee" && {
-            experienceLevel: userData.experienceLevel,
-        }),
-        ...(userRole === "customer" && {
-            companyName: userData.companyName,
-            phoneNumber: userData.phoneNumber,
-            address: userData.address,
-        }),
+        ...(userRole === "employee" && { experienceLevel }),
+        ...(userRole === "customer" && { companyName, phoneNumber, address }),
     };
 
     const user = await User.create(newUser);
 
-    const response = {
+    return {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
         userRole: user.userRole,
-        ...(userRole === "employee" && {
-            experienceLevel: user.experienceLevel,
-        }),
-        ...(userRole === "customer" && {
-            companyName: user.companyName,
-            phoneNumber: user.phoneNumber,
-            address: user.address,
-        }),
+        ...(userRole === "employee" && { experienceLevel: user.experienceLevel }),
+        ...(userRole === "customer" && { companyName: user.companyName, phoneNumber: user.phoneNumber, address: user.address }),
     };
-
-    return response;
 };
 
-exports.editUser = async (id, userData) => {
-    await validateUserDataOnUserUpdate(id, userData);
+exports.editUser = async (req) => {
+    const userId = req.params.id;
+    const userData = req.body;
+
+    await validateUserDataOnUserUpdate(userId, userData);
 
     delete userData.password;
     delete userData.email;
 
-    const user = await User.findById(id).exec();
+    const user = await User.findById(userId).exec();
 
     Object.assign(user, userData);
     await user.save();
@@ -115,7 +111,41 @@ exports.editUser = async (id, userData) => {
 
 exports.getSingleUser = (userId) => User.findById(userId).select("-password");
 
-exports.updateUserStatus = async (userId, newStatus) => {
+exports.restorePassword = async (req) => {
+    const { password, confirmPassword } = req.body;
+    const userId = req.params.id;
+
+    if (!password || !confirmPassword) {
+        throw new UserValidationErrors(
+            "Both password and confirmPassword are required!",
+            400
+        );
+    }
+
+    if (password.length < 6) {
+        throw new UserValidationErrors(
+            "Password must be at least 6 characters long!",
+            400
+        );
+    }
+
+    if (password !== confirmPassword) {
+        throw new UserValidationErrors("Passwords do not match!", 400);
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new UserValidationErrors("User not found!", 404);
+    }
+    
+    user.password = password;
+    await user.save();
+};
+
+exports.updateUserStatus = async (req, newStatus) => {
+    const userId = req.params.userId;
+
     if (!validateObjectId(userId)) {
         throw new UserValidationErrors("Invalid user ID!", 400);
     }
@@ -140,26 +170,58 @@ exports.updateUserStatus = async (userId, newStatus) => {
     };
 };
 
-exports.getUsers = async (queryData) => {
-    const query = {};
+exports.getUsers = async (req) => {
+    const { status, userRole, limit = 100, offset = 0 } = req.query;
 
-    if (queryData.status) {
-        query.status = queryData.status;
+    const query = {};
+    const parsedLimit = parseInt(limit, 10);
+    const parsedOffset = parseInt(offset, 10);
+
+    if (isNaN(parsedLimit) || parsedLimit <= 0 || parsedLimit > 100) {
+        throw new UserValidationErrors(
+            "Limit value must be greater than 0 and not greater than 100!",
+            400
+        );
     }
 
-    if (queryData.userRole) {
-        query.userRole = queryData.userRole;
+    if (isNaN(parsedOffset) || parsedOffset < 0) {
+        throw new UserValidationErrors(
+            "Offset value must not be below 0!",
+            400
+        );
+    }
+
+    if (status && !["active", "inactive"].includes(status)) {
+        throw new UserValidationErrors(
+            "Invalid status. Status can only be 'active' or 'inactive'.",
+            400
+        );
+    }
+
+    if (userRole && !["admin", "employee", "customer"].includes(userRole)) {
+        throw new UserValidationErrors(
+            "Invalid user role. Roles can only be either 'employee', or 'customer'.",
+            400
+        );
+    }
+
+    if (status) {
+        query.status = status;
+    }
+
+    if (userRole) {
+        query.userRole = userRole;
     }
 
     const users = await User.find(query)
         .select("-password -updatedAt")
-        .skip(queryData.offset)
-        .limit(queryData.limit);
+        .skip(parsedOffset)
+        .limit(parsedLimit);
 
     const total = await User.countDocuments(query);
 
     return {
-        total: total,
+        total,
         items: users,
     };
 };
