@@ -65,7 +65,7 @@ exports.deleteHourLog = async (req) => {
 
     if (!hourLog) {
         throw new HoursValidationErrors("Hour log does not exist!", 400);
-    } else if (hourLog.userId !== userId && !isAdmin) {
+    } else if (hourLog.userId.toString() !== userId && !isAdmin) {
         throw new HoursValidationErrors(
             "Hour log does not belong to that user!",
             400
