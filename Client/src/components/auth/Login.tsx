@@ -5,6 +5,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import LoginError from '../errors/LoginError';
 import useLogin from './hooks/useLogin';
 
+import mainLogo from '@/assets/timeManagementLogo.png';
 import { loginSchema } from '@/shared/formValidations';
 import { LoginFormDataType } from '@/shared/types';
 import InputComponent from '@/UI/formComponents/InputComponent';
@@ -34,10 +35,7 @@ export default function Login() {
     return (
         <div className='flex flex-col items-center justify-center'>
             <div>
-                <img
-                    src='https://s3-alpha-sig.figma.com/img/cd27/0381/580874d8cf3f91f84122428db1903a3d?Expires=1721001600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=flkgghvVvfoBBI5M~KO9ubE3fdeRSJ10GHvKnZfjw5QQaeQdXo41K~rDKhJ55O3aYZyRgCJbUWMfaGFd58Pmhrspc2uOsD-~z7bt7QEg3O6g95pfWuk9Rxb1qfpwXJjf89plFPWjLAvvDg83j7WoxkpOOhmUotijpgjWmk0XeJqiKCZ7hkjmQLNLOKUyYrjqwUHNOHSsiwOIbKFQ0bS8uk5-veCU86YXRThpS9w3R1dEW4GiRLUFPKG96bW8SbsYxzqmbqNcv17aLQ435j6P8EAjAJNltZRPwtkdZrLGUNiaNIhVVYhp-Se2NOgS3sMk8YhiEo6cQmlWKXEWXhGRHA__'
-                    className='mx-auto mb-12 mt-20 scale-50'
-                />
+                <img src={mainLogo} className='mx-auto mb-12 mt-20 scale-50' />
                 <p className='scale-75 self-center font-mavenPro text-xl font-bold text-welcomeMsgColor'>
                     Welcome to your time management hero.
                 </p>
