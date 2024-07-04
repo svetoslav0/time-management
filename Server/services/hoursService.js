@@ -7,7 +7,7 @@ const {
     validateHourDataOnLogHours,
 } = require("../utils/validateHoursDataUtil");
 
-exports.getSingleHour = (req) => Hours.findById(req.params.id)
+exports.getSingleHour = (req) => Hours.findById(req.params.id);
 exports.getAllHours = (req) => {
     const { userId, projectId } = req.query;
     const filter = {};
@@ -31,7 +31,7 @@ exports.getAllHours = (req) => {
 
 exports.logHours = async (req) => {
     req.body.userId = req.userToken._id;
-    
+
     const hourData = req.body;
 
     await validateHourDataOnLogHours(hourData);
@@ -46,6 +46,9 @@ exports.logHours = async (req) => {
         notes,
     });
 
+    if (!loggedHours) {
+        throw new HoursValidationErrors("Hours not logged", 400);
+    }
     return loggedHours;
 };
 
@@ -105,6 +108,10 @@ exports.updateHourLog = async (req) => {
     Object.assign(hourLog, hoursData);
 
     const updatedHours = await hourLog.save();
+
+    if (!updatedHours) {
+        throw new HoursValidationErrors("Hours not updated", 400);
+    }
 
     return updatedHours;
 };
