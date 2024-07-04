@@ -1,13 +1,25 @@
+import ButtonCreateProject from '@/UI/formComponents/ButtonCreateProject';
 import ProjectCard from './ProjectCard';
+import { getUserData } from '@/util/util';
+import { LoginResponseData } from '../../shared/types';
+import SearchBar from '../../UI/formComponents/SearchBar';
 
 import useFetchAllProjects from '@/reactQuery/hooks/useFetchAllProjects';
 
 export default function ProjectAdminDashboard() {
     const { data: projects, isLoading } = useFetchAllProjects();
+    const currentUser: LoginResponseData | undefined = getUserData();
 
     return (
-        <>
-            <h2 className='text-center'>Projects</h2>
+        <div className=' flex flex-col items-center justify-center'>
+            <h2 className='my-3 text-3xl font-bold'>Projects</h2>
+            {currentUser?.userRole === 'admin' && (
+                <ButtonCreateProject
+                    children='Create Project'
+                    path={'/admin/projectForm?action=create'}
+                />
+            )}
+            <SearchBar />
             {isLoading ? (
                 <h1>Loading...</h1>
             ) : (
@@ -17,6 +29,6 @@ export default function ProjectAdminDashboard() {
                     ))}
                 </div>
             )}
-        </>
+        </div>
     );
 }
