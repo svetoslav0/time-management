@@ -34,24 +34,28 @@ router.get("/", async (req, res, next) => {
     }
 });
 
-router.delete("/:id", isEmployeeOrAdmin, getJwtToken, async (req, res, next) => {
-    try {
-        const deletedHours = await hoursService.deleteHourLog(req);
+router.delete(
+    "/:id",
+    isEmployeeOrAdmin,
+    getJwtToken,
+    async (req, res, next) => {
+        try {
+            const deletedHours = await hoursService.deleteHourLog(req);
 
-        res.status(200).json(deletedHours);
-    } catch (error) {
-        next(error);
+            res.status(200).json(deletedHours);
+        } catch (error) {
+            next(error);
+        }
     }
-}
 );
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
     try {
         const hour = await hoursService.getSingleHour(req);
 
         res.status(200).json(hour);
     } catch (error) {
-        res.status(404).json({ message: "Hour does not exist!" });
+        next(error);
     }
 });
 
