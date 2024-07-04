@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import LoginError from '../errors/LoginError';
@@ -11,9 +11,10 @@ import { LoginFormDataType } from '@/shared/types';
 import InputComponent from '@/UI/formComponents/InputComponent';
 
 export default function Login() {
-    const login = useLogin();
+    const { mutate: login, loginResponseErr } = useLogin();
 
     const [isVisible, setIsVisible] = useState(false);
+    const [isLoginError, setIsLoginError] = useState<string | null>(null);
 
     const {
         register,
@@ -32,6 +33,12 @@ export default function Login() {
         setIsVisible((prevVisibility) => !prevVisibility);
     };
 
+    useEffect(() => {
+        if (loginResponseErr) {
+            setIsLoginError(loginResponseErr);
+        }
+    }, [loginResponseErr]);
+
     return (
         <div className='flex flex-col items-center justify-center'>
             <div>
@@ -48,12 +55,14 @@ export default function Login() {
                     <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col'>
                         <InputComponent
                             error={errors.email?.message}
+                            responseError={isLoginError}
                             register={register}
                             trigger={trigger}
                             field='email'
                         />
                         <InputComponent
                             error={errors.password?.message}
+                            responseError={isLoginError}
                             register={register}
                             trigger={trigger}
                             field='password'
@@ -62,7 +71,7 @@ export default function Login() {
                             toggleVisibility={toggleVisibility}
                             isVisible={isVisible}
                         />
-                        <LoginError {...errors} />
+                        <LoginError errors={errors} loginResponseErr={isLoginError} />
                         <button
                             type='submit'
                             className='mt-12 w-2/3 self-center rounded-lg bg-loginBtnColor px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
