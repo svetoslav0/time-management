@@ -115,18 +115,41 @@ exports.updateProject = async (req) => {
 
 exports.getReport = async (req) => {
     const projectId = req.params.id;
+    const userId = req.userToken._id;
+    const userRole = req.userToken.userRole;
+
+    console.log(userRole, userId);
+
     if (!validateObjectId(projectId)) {
         throw new ProjectValidationErrors("Invalid project ID format", 400);
     }
 
-    const project = await Project.findById(projectId).populate(
-        "customerIds employeeIds",
-        "firstName"
-    );
+    let project;
+
+    if (userRole === "admin") {
+        project = await Project.findById(projectId).populate(
+            "customerIds employeeIds",
+            "firstName"
+        );
+    } else if (userRole === "customer") {
+        project = await Project.findOne({
+            _id: projectId,
+            customerIds: userId,
+        }).populate("customerIds employeeIds", "firstName");
+    } else if (userRole === "employee") {
+        project = await Project.findOne({
+            _id: projectId,
+            employeeIds: userId,
+        }).populate("customerIds employeeIds", "firstName");
+    }
 
     if (!project) {
-        throw new ProjectValidationErrors("Project not found", 404);
+        throw new ProjectValidationErrors(
+            "Project not found or access denied",
+            404
+        );
     }
+
     const hours = await Hours.find({ projectId }).populate(
         "userId",
         "firstName"

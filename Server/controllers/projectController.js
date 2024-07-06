@@ -58,7 +58,7 @@ router.patch("/:id", isAdmin, async (req, res, next) => {
     }
 });
 
-router.get("/:id/report", async (req, res, next) => {
+router.get("/:id/report", getJwtToken, async (req, res, next) => {
     try {
         const report = await projectService.getReport(req);
         res.status(200).json(report);
