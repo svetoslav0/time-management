@@ -7,6 +7,7 @@ const {
 } = require("../utils/validateProjectDataUtil");
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
+const formatDate = require("../utils/formatDateUtil");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
@@ -152,10 +153,18 @@ exports.getReport = async (req) => {
                 (customer) => customer.firstName
             ),
             projectName: project.projectName,
-            startingDate: project.startingDate,
+            startingDate: formatDate(project.startingDate),
             pricePerHours: project.pricePerHour,
         },
-        hours: hours,
+        hours: hours.map((hour) => {
+            return {
+                id: hour._id,
+                employeeName: hour.userId.firstName,
+                date: formatDate(hour.date),
+                hours: hour.hours,
+                notes: hour.notes,
+            };
+        }),
         totalPrice: totalPrice,
     };
 };
