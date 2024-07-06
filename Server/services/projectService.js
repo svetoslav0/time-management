@@ -8,6 +8,7 @@ const {
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const formatDate = require("../utils/formatDateUtil");
+const getProjectByRole = require("../utils/getProjectByRole");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
@@ -131,16 +132,8 @@ exports.getReport = async (req) => {
             "customerIds employeeIds",
             "firstName"
         );
-    } else if (userRole === "customer") {
-        project = await Project.findOne({
-            _id: projectId,
-            customerIds: userId,
-        }).populate("customerIds employeeIds", "firstName");
-    } else if (userRole === "employee") {
-        project = await Project.findOne({
-            _id: projectId,
-            employeeIds: userId,
-        }).populate("customerIds employeeIds", "firstName");
+    } else {
+        project = await getProjectByRole(projectId, userId, userRole);
     }
 
     if (!project) {
@@ -162,10 +155,10 @@ exports.getReport = async (req) => {
         );
     }
 
-    let totalPrice = 0;
-    hours.forEach((hour) => {
-        totalPrice += hour.hours * project.pricePerHour;
-    });
+    const totalPrice = hours.reduce(
+        (total, hour) => total + hour.hours * project.pricePerHour,
+        0
+    );
 
     return {
         projectData: {
