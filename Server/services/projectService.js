@@ -169,15 +169,13 @@ exports.getReport = async (req) => {
             startingDate: formatDate(project.startingDate),
             pricePerHours: project.pricePerHour,
         },
-        hours: hours.map((hour) => {
-            return {
-                id: hour._id,
-                employeeName: hour.userId.firstName,
-                date: formatDate(hour.date),
-                hours: hour.hours,
-                notes: hour.notes,
-            };
-        }),
+        hours: hours.map((hour) => ({
+            id: hour._id,
+            employeeName: hour.userId.firstName,
+            date: formatDate(hour.date),
+            hours: hour.hours,
+            notes: hour.notes,
+        })),
         totalPrice: totalPrice,
     };
 };
