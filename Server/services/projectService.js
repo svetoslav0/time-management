@@ -119,14 +119,11 @@ exports.getReport = async (req) => {
     const userId = req.userToken._id;
     const userRole = req.userToken.userRole;
 
-    console.log(userRole, userId);
-
     if (!validateObjectId(projectId)) {
         throw new ProjectValidationErrors("Invalid project ID format", 400);
     }
 
     let project;
-
     if (userRole === "admin") {
         project = await Project.findById(projectId).populate(
             "customerIds employeeIds",
