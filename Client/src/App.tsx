@@ -4,6 +4,7 @@ import { AuthContextProvider } from './components/auth/AuthContext';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import { restrictHomePage } from './components/guards/guards';
+import Dashboard from './components/dashboard/Dashboard';
 import RootLayout from './components/layout/RootLayout';
 import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
 import ProjectDetails from './components/project/ProjectDetails';
@@ -60,6 +61,10 @@ function App() {
                             element: <ProjectDetails />,
                         },
                     ],
+                },
+                {
+                    path: '/dashboard',
+                    element: <Dashboard />,
                 },
             ],
         },
