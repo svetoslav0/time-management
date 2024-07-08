@@ -7,6 +7,7 @@ export const urlKeys = {
     projects: '/projects',
     getUserById: '/users',
     logout: '/logout',
+    hours: '/hours',
 };
 
 export const queryKeys = {
@@ -17,4 +18,5 @@ export const queryKeys = {
     users: 'Users',
     projects: 'Projects',
     user: 'User',
+    hours: 'Hours',
 };
