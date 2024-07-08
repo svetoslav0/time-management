@@ -98,3 +98,15 @@ export const resetPasswordSchema = yup.object().shape({
         .oneOf([yup.ref('password'), undefined], 'Passwords must match')
         .required('Please confirm your password'),
 });
+
+export const hoursFormSchema = yup.object().shape({
+    date: yup.string().required('Please select date'),
+    hours: yup
+        .number()
+        .typeError('Please add time')
+        .min(0.5, 'Time must be more than or equal to 0.5')
+        .max(8, 'Time must be less than or equal to 8')
+        .required('Please add time')
+        .transform((value, originalValue) => (originalValue === '' ? undefined : value)),
+    notes: yup.string().required('Please add note'),
+});
