@@ -120,7 +120,7 @@ export type Project = {
     projectStatus: string;
 };
 
-type ProjectStatusType = 'inProgress' | 'completed';
+export type ProjectStatusType = 'inProgress' | 'completed';
 
 export type ProjectDataType = {
     projectName: string;
