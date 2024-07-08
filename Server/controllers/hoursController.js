@@ -45,13 +45,13 @@ router.delete(
     }
 );
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
     try {
         const hour = await hoursService.getSingleHour(req);
 
         res.status(200).json(hour);
     } catch (error) {
-        res.status(404).json({ message: "Hour does not exist!" });
+        next(error);
     }
 });
 

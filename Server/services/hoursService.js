@@ -7,7 +7,18 @@ const {
     validateHourDataOnLogHours,
 } = require("../utils/validateHoursDataUtil");
 
-exports.getSingleHour = (req) => Hours.findById(req.params.id);
+exports.getSingleHour = async (req) => {
+    if (!validateObjectId(req.params.id)) {
+        throw new HoursValidationErrors("Invalid hour Id!", 400);
+    }
+
+    const hour = await Hours.findById(req.params.id);
+    if (!hour) {
+        throw new HoursValidationErrors("Hour does not exist!", 404);
+    }
+    return hour;
+};
+
 exports.getAllHours = (req) => {
     const { userId, projectId } = req.query;
     const filter = {};
