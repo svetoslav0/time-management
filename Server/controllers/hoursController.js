@@ -10,10 +10,6 @@ router.post("/", isEmployeeOrAdmin, getJwtToken, async (req, res, next) => {
     try {
         const hours = await hoursService.logHours(req);
 
-        if (!hours) {
-            throw new HoursValidationErrors("Hours not logged", 400);
-        }
-
         res.status(200).json(hours);
     } catch (error) {
         next(error);

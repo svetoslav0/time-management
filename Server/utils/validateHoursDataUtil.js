@@ -4,7 +4,13 @@ const { validateObjectId } = require("./validateObjectIdUtil");
 const isValidDateMoment = require("./validateDateUtil");
 const HoursValidationErrors = require("../errors/hoursValidationErrors");
 
-const validateHourDataOnLogHours = async ({projectId, date, hours, notes, userId}) => {
+const validateHourDataOnLogHours = async ({
+    projectId,
+    date,
+    hours,
+    notes,
+    userId,
+}) => {
     if (!validateObjectId(projectId)) {
         throw new HoursValidationErrors("Invalid project ID!", 400);
     }
@@ -26,6 +32,10 @@ const validateHourDataOnLogHours = async ({projectId, date, hours, notes, userId
             "Invalid date format! Date must be YYYY-MM-DD!",
             400
         );
+    }
+
+    if (!notes || notes.trim() === "") {
+        throw new HoursValidationErrors("Notes cannot be empty!", 400);
     }
 
     let project;

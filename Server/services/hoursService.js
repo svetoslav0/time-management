@@ -57,6 +57,9 @@ exports.logHours = async (req) => {
         notes,
     });
 
+    if (!loggedHours) {
+        throw new HoursValidationErrors("Hours not logged", 400);
+    }
     return loggedHours;
 };
 
@@ -73,7 +76,7 @@ exports.deleteHourLog = async (req) => {
 
     if (!hourLog) {
         throw new HoursValidationErrors("Hour log does not exist!", 400);
-    } else if (hourLog.userId !== userId && !isAdmin) {
+    } else if (hourLog.userId.toString() !== userId && !isAdmin) {
         throw new HoursValidationErrors(
             "Hour log does not belong to that user!",
             400
@@ -116,6 +119,10 @@ exports.updateHourLog = async (req) => {
     Object.assign(hourLog, hoursData);
 
     const updatedHours = await hourLog.save();
+
+    if (!updatedHours) {
+        throw new HoursValidationErrors("Hours not updated", 400);
+    }
 
     return updatedHours;
 };
