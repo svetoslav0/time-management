@@ -1,13 +1,14 @@
-import ButtonCreateProject from '@/UI/formComponents/ButtonCreateProject';
-import ProjectCard from './ProjectCard';
-import { getUserData } from '@/util/util';
 import { LoginResponseData } from '../../shared/types';
-import SearchBar from '../../UI/formComponents/SearchBar';
+// import SearchBar from '../../UI/formComponents/SearchBar';
+import ProjectCard from './ProjectCard';
 
 import useFetchAllProjects from '@/reactQuery/hooks/useFetchAllProjects';
+import ActionSearchFiled from '@/UI/formComponents/ActionSearchFiled';
+import ButtonCreateProject from '@/UI/formComponents/ButtonCreateProject';
+import { getUserData } from '@/util/util';
 
 export default function ProjectAdminDashboard() {
-    const { data: projects, isLoading } = useFetchAllProjects();
+    const { data: projects, isLoading, filter, handleChangeFilter } = useFetchAllProjects();
     const currentUser: LoginResponseData | undefined = getUserData();
 
     return (
@@ -19,13 +20,13 @@ export default function ProjectAdminDashboard() {
                     path={'/admin/projectForm?action=create'}
                 />
             )}
-            <SearchBar />
+            <ActionSearchFiled value={filter} handleChangeFilter={handleChangeFilter}/>
             {isLoading ? (
                 <h1>Loading...</h1>
             ) : (
                 <div className='mx-10 mt-4 grid gap-10 pb-10 md:grid-cols-2 lg:grid-cols-4'>
                     {projects?.map((project) => (
-                        <ProjectCard key={project.projectName} project={project} />
+                        <ProjectCard key={project._id} project={project} />
                     ))}
                 </div>
             )}
