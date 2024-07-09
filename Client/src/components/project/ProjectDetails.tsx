@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import useCompleteProject from './hooks/useCompleteProject';
 import Table from './Table/Table';
 
 import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
-
+import { ProjectResponseDataType } from '@/shared/types';
 
 export default function ProjectDetails() {
     const [showCustomers, setShowCustomers] = useState<boolean>(false);
@@ -15,7 +16,28 @@ export default function ProjectDetails() {
     const { data: employees } = useFetchUsers('employee', 'active');
     const navigate = useNavigate();
     const { id } = useParams<string>();
-    const { data: project, error } = useFetchProjectById(id!);
+    const { data: project, error, refetch } = useFetchProjectById(id!);
+    const { completeProject } = useCompleteProject(id);
+
+    const onCompleteProject = async () => {
+        if (project && project.status == 'inProgress') {
+            const date = dayjs(project.startingDate, 'YYYY-MM-DD');
+            const projectData: ProjectResponseDataType = {
+                ...project,
+                status: 'completed',
+                startingDate: date.format('YYYY-MM-DD'),
+            };
+
+            completeProject(projectData);
+        }
+    };
+
+    useEffect(() => {
+        if (project?.status) {
+            refetch();
+        }
+    }, [project?.status, refetch]);
+
     if (error) {
         navigate('admin/projectAdminDashboard');
     }
@@ -63,20 +85,39 @@ export default function ProjectDetails() {
                 {/* BUTTONS */}
                 {
                     <div className='mt-5 flex justify-center gap-2 align-middle'>
+                        {project?.status === 'inProgress' && (
+                            <button
+                                onClick={() => {
+                                    onCompleteProject();
+                                }}
+                                className='rounded-full border-2 border-blue-500 bg-blue-400 px-6 font-semibold text-white hover:bg-blue-500'
+                            >
+                                Complete Project
+                            </button>
+                        )}
                         <button
-                            onClick={() => {setShowCustomers(true); setShowEmployees(false)}}
+                            onClick={() => {
+                                setShowCustomers(true);
+                                setShowEmployees(false);
+                            }}
                             className='rounded-full border-2 border-yellow-500 bg-yellow-400 px-6 font-semibold text-white hover:bg-yellow-500'
                         >
                             Show Customers
                         </button>
                         <button
-                            onClick={() => {setShowEmployees(true); setShowCustomers(false)}}
+                            onClick={() => {
+                                setShowEmployees(true);
+                                setShowCustomers(false);
+                            }}
                             className='rounded-full border-2 border-indigo-500 bg-indigo-400 px-6 font-semibold text-white hover:bg-indigo-500'
                         >
                             Show Employees
                         </button>
                         <button
-                            onClick={() => {setShowEmployees(false); setShowCustomers(false)}}
+                            onClick={() => {
+                                setShowEmployees(false);
+                                setShowCustomers(false);
+                            }}
                             className='rounded-full border-2 border-indigo-500 bg-indigo-400 px-6 font-semibold text-white hover:bg-indigo-500'
                         >
                             Close All
@@ -85,16 +126,8 @@ export default function ProjectDetails() {
                     </div>
                 }
             </div>
-            {
-                showEmployees && (
-                    <Table users={employees?.items} />
-                )
-            }
-            {
-                showCustomers && (
-                    <Table users={customers?.items} />
-                )
-            }
+            {showEmployees && <Table users={employees?.items} />}
+            {showCustomers && <Table users={customers?.items} />}
         </>
     );
 }
