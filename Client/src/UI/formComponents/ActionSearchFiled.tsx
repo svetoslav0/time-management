@@ -13,7 +13,7 @@ export default function ActionSearchFiled({ value, handleChangeFilter }: ActionS
                 placeholder='Search...'
                 className=' border-gray-300 mx-2 outline-none'
                 value={value}
-                onChange={(e) => handleChangeFilter(e.currentTarget.value)}
+                onChange={(e) => handleChangeFilter(e.currentTarget.value.trim())}
             />
             <div className='absolute top-1 right-1'>
                 <CiSearch />

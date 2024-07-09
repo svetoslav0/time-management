@@ -1,29 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import httpServices from '../../services/httpServices';
-import { LoginResponseData, User } from '../../shared/types';
+import { LoginResponseData } from '../../shared/types';
 import UserCard from './UserCard';
 
+import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
+import ActionSearchFiled from '@/UI/formComponents/ActionSearchFiled';
 import ButtonCreateUser from '@/UI/formComponents/ButtonCreateUser';
 import ButtonShowActiveOrInactiveUsers from '@/UI/formComponents/ButtonShowActiveOrInactiveUsers';
 import { getUserData } from '@/util/util';
 
 export default function UsersDashboard() {
-    const [users, setUsers] = useState<User[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
     const [active, setActive] = useState<boolean>(true);
     const currentUser: LoginResponseData | undefined = getUserData();
-
-    useEffect(() => {
-        httpServices()
-            .get<{ total: number; items: User[] }>(
-                `/users?status=${active ? 'active' : 'inactive'}`
-            )
-            .then((response) => {
-                setUsers(response.items);
-                setLoading(false);
-            });
-    }, [active]);
+    const {
+        data: users,
+        isLoading,
+        filter,
+        handleChangeFilter,
+    } = useFetchUsers({ status: active ? 'active' : 'inactive' });
 
     return (
         <div className='mx-auto flex flex-col gap-6 p-5'>
@@ -31,17 +25,21 @@ export default function UsersDashboard() {
                 <ButtonShowActiveOrInactiveUsers active={active} setActive={setActive} />
                 {currentUser?.userRole === 'admin' && <ButtonCreateUser />}
             </div>
+            <div className='flex justify-center'>
+                <ActionSearchFiled value={filter} handleChangeFilter={handleChangeFilter} />
+            </div>
             <h2 className='self-center font-bold'>{active ? 'Active' : 'Inactive'} Users</h2>
-            {loading ? (
+            {isLoading ? (
                 <div className='self-center'>Loading...</div>
             ) : (
                 <div className='flex flex-wrap gap-4'>
-                    {users.map(
-                        (user) => (
-                            active ? (user.status = 'Active') : (user.status = 'Inactive'),
-                            (<UserCard key={user._id} user={user} />)
-                        )
-                    )}
+                    {users &&
+                        users.items.map(
+                            (user) => (
+                                active ? (user.status = 'Active') : (user.status = 'Inactive'),
+                                (<UserCard key={user._id} user={user} />)
+                            )
+                        )}
                 </div>
             )}
         </div>

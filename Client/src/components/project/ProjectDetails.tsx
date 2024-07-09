@@ -7,12 +7,11 @@ import Table from './Table/Table';
 import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
 
-
 export default function ProjectDetails() {
     const [showCustomers, setShowCustomers] = useState<boolean>(false);
     const [showEmployees, setShowEmployees] = useState<boolean>(false);
-    const { data: customers } = useFetchUsers('customer', 'active');
-    const { data: employees } = useFetchUsers('employee', 'active');
+    const { data: customers } = useFetchUsers({ userRole: 'customer', status: 'active' });
+    const { data: employees } = useFetchUsers({ userRole: 'employee', status: 'active' });
     const navigate = useNavigate();
     const { id } = useParams<string>();
     const { data: project, error } = useFetchProjectById(id!);
@@ -64,19 +63,28 @@ export default function ProjectDetails() {
                 {
                     <div className='mt-5 flex justify-center gap-2 align-middle'>
                         <button
-                            onClick={() => {setShowCustomers(true); setShowEmployees(false)}}
+                            onClick={() => {
+                                setShowCustomers(true);
+                                setShowEmployees(false);
+                            }}
                             className='rounded-full border-2 border-yellow-500 bg-yellow-400 px-6 font-semibold text-white hover:bg-yellow-500'
                         >
                             Show Customers
                         </button>
                         <button
-                            onClick={() => {setShowEmployees(true); setShowCustomers(false)}}
+                            onClick={() => {
+                                setShowEmployees(true);
+                                setShowCustomers(false);
+                            }}
                             className='rounded-full border-2 border-indigo-500 bg-indigo-400 px-6 font-semibold text-white hover:bg-indigo-500'
                         >
                             Show Employees
                         </button>
                         <button
-                            onClick={() => {setShowEmployees(false); setShowCustomers(false)}}
+                            onClick={() => {
+                                setShowEmployees(false);
+                                setShowCustomers(false);
+                            }}
                             className='rounded-full border-2 border-indigo-500 bg-indigo-400 px-6 font-semibold text-white hover:bg-indigo-500'
                         >
                             Close All
@@ -85,16 +93,8 @@ export default function ProjectDetails() {
                     </div>
                 }
             </div>
-            {
-                showEmployees && (
-                    <Table users={employees?.items} />
-                )
-            }
-            {
-                showCustomers && (
-                    <Table users={customers?.items} />
-                )
-            }
+            {showEmployees && employees && <Table users={employees.items} />}
+            {showCustomers && <Table users={customers?.items} />}
         </>
     );
 }
