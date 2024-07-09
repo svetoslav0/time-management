@@ -22,8 +22,11 @@ export default function useFetchUsers({ userRole, status }: useFetchUsersProps) 
 
     const selectFn = useCallback((data: UserResponseDetails, filter: string) => {
         if (filter) {
-            const filteredData = data.items.filter((users) =>
-                users.email.toLowerCase().includes(filter.toLowerCase())
+            const filteredData = data.items.filter(
+                (users) =>
+                    users.email.toLowerCase().includes(filter.toLowerCase()) ||
+                    users.firstName.toLowerCase().includes(filter.toLowerCase()) ||
+                    users.lastName.toLowerCase().includes(filter.toLowerCase())
             );
             return { total: filteredData.length, items: filteredData };
         }
