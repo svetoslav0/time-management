@@ -7,7 +7,18 @@ const {
     validateHourDataOnLogHours,
 } = require("../utils/validateHoursDataUtil");
 
-exports.getSingleHour = (req) => Hours.findById(req.params.id)
+exports.getSingleHour = async (req) => {
+    if (!validateObjectId(req.params.id)) {
+        throw new HoursValidationErrors("Invalid hour Id!", 400);
+    }
+
+    const hour = await Hours.findById(req.params.id);
+    if (!hour) {
+        throw new HoursValidationErrors("Hour does not exist!", 404);
+    }
+    return hour;
+};
+
 exports.getAllHours = (req) => {
     const { userId, projectId } = req.query;
     const filter = {};
@@ -31,7 +42,7 @@ exports.getAllHours = (req) => {
 
 exports.logHours = async (req) => {
     req.body.userId = req.userToken._id;
-    
+
     const hourData = req.body;
 
     await validateHourDataOnLogHours(hourData);
@@ -46,6 +57,9 @@ exports.logHours = async (req) => {
         notes,
     });
 
+    if (!loggedHours) {
+        throw new HoursValidationErrors("Hours not logged", 400);
+    }
     return loggedHours;
 };
 
@@ -62,7 +76,7 @@ exports.deleteHourLog = async (req) => {
 
     if (!hourLog) {
         throw new HoursValidationErrors("Hour log does not exist!", 400);
-    } else if (hourLog.userId !== userId && !isAdmin) {
+    } else if (hourLog.userId.toString() !== userId && !isAdmin) {
         throw new HoursValidationErrors(
             "Hour log does not belong to that user!",
             400
@@ -105,6 +119,10 @@ exports.updateHourLog = async (req) => {
     Object.assign(hourLog, hoursData);
 
     const updatedHours = await hourLog.save();
+
+    if (!updatedHours) {
+        throw new HoursValidationErrors("Hours not updated", 400);
+    }
 
     return updatedHours;
 };

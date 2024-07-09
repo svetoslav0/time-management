@@ -3,14 +3,14 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthContextProvider } from './components/auth/AuthContext';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
-import { restrictIsLogin } from './components/guards/guards';
+import { restrictHomePage } from './components/guards/guards';
+import Dashboard from './components/dashboard/Dashboard';
 import RootLayout from './components/layout/RootLayout';
 import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
 import ProjectDetails from './components/project/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
 import UserPage from './components/UserPage/UserPage';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
-
 
 function App() {
     const router = createBrowserRouter([
@@ -22,7 +22,7 @@ function App() {
                 {
                     index: true,
                     element: <h1>Home Page</h1>,
-                    loader: restrictIsLogin,
+                    loader: restrictHomePage,
                 },
                 {
                     path: 'auth',
@@ -61,6 +61,10 @@ function App() {
                             element: <ProjectDetails />,
                         },
                     ],
+                },
+                {
+                    path: '/dashboard',
+                    element: <Dashboard />,
                 },
             ],
         },

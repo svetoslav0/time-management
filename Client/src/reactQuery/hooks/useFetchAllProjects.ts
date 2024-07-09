@@ -4,11 +4,11 @@ import { useCallback, useState } from 'react';
 import { queryKeys, urlKeys } from '../constants';
 
 import httpServices from '@/services/httpServices';
-import { ProjectResponseDataType } from '@/shared/types';
+import { ProjectResponseDataType, ProjectStatusType } from '@/shared/types';
 
 const { get } = httpServices();
 
-export default function useFetchAllProjects() {
+export default function useFetchAllProjects(status?: ProjectStatusType) {
     const [filter, setFilter] = useState('');
 
     const handleChangeFilter = useCallback((data: string) => {
@@ -25,11 +25,15 @@ export default function useFetchAllProjects() {
     }, []);
 
     const queryKey = [queryKeys.projects];
-    const generatedUrl = `${urlKeys.projects}`;
+    const generatedUrl = urlKeys.projects;
+
+    if (status) {
+        queryKey.push(status);
+    }
 
     const { data, error, isLoading, refetch } = useQuery({
         queryKey,
-        queryFn: () => get<ProjectResponseDataType[]>(generatedUrl),
+        queryFn: () => get<ProjectResponseDataType[]>(generatedUrl, status && { status }),
         select: (data) => selectFn(data, filter),
         staleTime: 1000 * 60 * 5,
         gcTime: 1000 * 60 * 10,

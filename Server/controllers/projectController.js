@@ -56,6 +56,14 @@ router.patch("/:id", isAdmin, async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+});
 
+router.get("/:id/report", getJwtToken, async (req, res, next) => {
+    try {
+        const report = await projectService.getReport(req);
+        res.status(200).json(report);
+    } catch (error) {
+        next(error);
+    }
 });
 module.exports = router;

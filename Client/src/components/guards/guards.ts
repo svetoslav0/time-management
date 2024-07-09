@@ -5,11 +5,15 @@ import { getUserData } from '@/util/util';
 
 type UserData = LoginResponseData | undefined;
 
-export function restrictIsLogin() {
+export function restrictHomePage() {
     const userData: UserData = getUserData();
+    const isNotLoggedIn = !userData;
+    const isAdmin = userData?.userRole === 'admin';
 
-    if (!userData) {
+    if (isNotLoggedIn) {
         return redirect('/auth/login');
+    } else if (isAdmin) {
+        return redirect('/admin/projects');
     }
 
     return null;
