@@ -5,22 +5,30 @@ import { queryKeys, urlKeys } from '../constants';
 import httpServices from '@/services/httpServices';
 import { UserResponseDetails } from '@/shared/types';
 
-
 const { get } = httpServices();
 
-type UserRole = 'customer' | 'employee';
-type StatusType = 'active' | 'inactive';
+type useFetchUsersProps = {
+    userRole?: 'customer' | 'employee';
+    status?: 'active' | 'inactive';
+};
 
-export default function useFetchUsers(userRole: UserRole, status: StatusType) {
-
-    const queryKey = [queryKeys.users, queryKeys[status], queryKeys[userRole]];
+export default function useFetchUsers({ userRole, status }: useFetchUsersProps) {
+    const queryKey = [queryKeys.users];
+    const params: { userRole?: string; status?: string } = {};
+    if (status) {
+        queryKey.push(status);
+        params.status = status
+    }
+    if (userRole) {
+        queryKey.push(userRole);
+        params.userRole = userRole
+    }
 
     const { data, error, isLoading, refetch } = useQuery<UserResponseDetails>({
         queryKey,
-        queryFn: () => get<UserResponseDetails>(urlKeys.getUsers, { userRole, status }),
+        queryFn: () => get<UserResponseDetails>(urlKeys.getUsers, params),
         staleTime: 1000 * 60 * 5,
-        gcTime: 1000 * 60 * 10
-        
+        gcTime: 1000 * 60 * 10,
     });
 
     return { data, error, isLoading, refetch };
