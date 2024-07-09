@@ -22,7 +22,6 @@ exports.getSingleHour = async (req) => {
 exports.getAllHours = (req) => {
     const { projectId } = req.query;
     const userId = req.userToken._id;
-    console.log(userId);
     const filter = {};
 
     if (userId) {
