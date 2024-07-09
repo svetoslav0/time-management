@@ -20,8 +20,8 @@ import { ProjectDataType } from '@/shared/types';
 dayjs.extend(customParseFormat);
 
 export default function ProjectFormControl() {
-    const { data: employeeResponse } = useFetchUsers('employee', 'active');
-    const { data: customerResponse } = useFetchUsers('customer', 'active');
+    const { data: employeeResponse } = useFetchUsers({ userRole: 'employee', status: 'active' });
+    const { data: customerResponse } = useFetchUsers({ userRole: 'customer', status: 'active' });
     const [searchParams] = useSearchParams();
     const [projectName, setProjectName] = useState('');
     const [pricePerHour, setPricePerHour] = useState<number | string>('');
