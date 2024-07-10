@@ -1,6 +1,6 @@
 const HoursValidationErrors = require("../errors/hoursValidationErrors");
 const Hours = require("../models/Hours");
-
+const userService = require("./userService")
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 
 const {
@@ -19,7 +19,7 @@ exports.getSingleHour = async (req) => {
     return hour;
 };
 
-exports.getAllHours = (req) => {
+exports.getAllHours = async (req) => {
     const { projectId } = req.query;
     const userId = req.userToken._id;
     const filter = {};
@@ -37,7 +37,14 @@ exports.getAllHours = (req) => {
         }
         filter.projectId = projectId;
     }
+    const user = await userService.getSingleUser(userId)
 
+    if (user.userRole === "employee") {
+        filter.employeeIds = user._id;
+    } else if (user.userRole === "customer") {
+        filter.customerIds = user._id;
+    }
+    
     return Hours.find(filter);
 };
 
