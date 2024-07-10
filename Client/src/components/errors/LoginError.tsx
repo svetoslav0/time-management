@@ -5,7 +5,7 @@ interface LoginErrorProps {
         email: string;
         password: string;
     }>;
-    loginResponseErr: string | null;
+    loginResponseErr: Error | null;
 }
 
 export default function LoginError({ errors, loginResponseErr }: LoginErrorProps) {
@@ -33,7 +33,7 @@ export default function LoginError({ errors, loginResponseErr }: LoginErrorProps
     if (loginResponseErr) {
         return (
             <p className='mt-4 self-start text-sm text-red-500 dark:text-red-400'>
-                {loginResponseErr}
+                {loginResponseErr.message}
             </p>
         );
     }
