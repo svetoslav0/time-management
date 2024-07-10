@@ -1,27 +1,57 @@
 import { useQuery } from '@tanstack/react-query';
+import { useCallback, useState } from 'react';
 
 import { queryKeys, urlKeys } from '../constants';
 
 import httpServices from '@/services/httpServices';
 import { UserResponseDetails } from '@/shared/types';
 
-
 const { get } = httpServices();
 
-type UserRole = 'customer' | 'employee';
-type StatusType = 'active' | 'inactive';
+type useFetchUsersProps = {
+    userRole?: 'customer' | 'employee';
+    status?: 'active' | 'inactive';
+};
 
-export default function useFetchUsers(userRole: UserRole, status: StatusType) {
+export default function useFetchUsers({ userRole, status }: useFetchUsersProps) {
+    const [filter, setFilter] = useState('');
 
-    const queryKey = [queryKeys.users, queryKeys[status], queryKeys[userRole]];
+    const handleChangeFilter = useCallback((data: string) => {
+        setFilter(data);
+    }, []);
 
-    const { data, error, isLoading, refetch } = useQuery<UserResponseDetails>({
+    const selectFn = useCallback((data: UserResponseDetails, filter: string) => {
+        if (filter) {
+            const filterData = filter.toLowerCase().trim();
+            const filteredData = data.items.filter(
+                (users) =>
+                    users.email.toLowerCase().includes(filterData) ||
+                    users.firstName.toLowerCase().includes(filterData) ||
+                    users.lastName.toLowerCase().includes(filterData)
+            );
+            return { total: filteredData.length, items: filteredData };
+        }
+        return data;
+    }, []);
+
+    const queryKey = [queryKeys.users];
+    const params: { userRole?: string; status?: string } = {};
+    if (status) {
+        queryKey.push(status);
+        params.status = status;
+    }
+    if (userRole) {
+        queryKey.push(userRole);
+        params.userRole = userRole;
+    }
+
+    const { data, error, isLoading, refetch } = useQuery({
         queryKey,
-        queryFn: () => get<UserResponseDetails>(urlKeys.getUsers, { userRole, status }),
+        queryFn: () => get<UserResponseDetails>(urlKeys.getUsers, params),
+        select: (data) => selectFn(data, filter),
         staleTime: 1000 * 60 * 5,
-        gcTime: 1000 * 60 * 10
-        
+        gcTime: 1000 * 60 * 10,
     });
 
-    return { data, error, isLoading, refetch };
+    return { data, error, isLoading, refetch, filter, handleChangeFilter };
 }

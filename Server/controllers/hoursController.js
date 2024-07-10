@@ -16,7 +16,7 @@ router.post("/", isEmployeeOrAdmin, getJwtToken, async (req, res, next) => {
     }
 });
 
-router.get("/", async (req, res, next) => {
+router.get("/", getJwtToken, async (req, res, next) => {
     try {
         const hours = await hoursService.getAllHours(req);
 

@@ -20,7 +20,8 @@ exports.getSingleHour = async (req) => {
 };
 
 exports.getAllHours = (req) => {
-    const { userId, projectId } = req.query;
+    const { projectId } = req.query;
+    const userId = req.userToken._id;
     const filter = {};
 
     if (userId) {

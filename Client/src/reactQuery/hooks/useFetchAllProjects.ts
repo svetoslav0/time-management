@@ -18,7 +18,7 @@ export default function useFetchAllProjects(status?: ProjectStatusType) {
     const selectFn = useCallback((data: ProjectResponseDataType[], filter: string) => {
         if (filter) {
             return data.filter((project) =>
-                project.projectName.toLowerCase().includes(filter.toLowerCase())
+                project.projectName.toLowerCase().includes(filter.toLowerCase().trim())
             );
         }
         return data;

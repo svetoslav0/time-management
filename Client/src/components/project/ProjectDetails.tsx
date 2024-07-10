@@ -7,13 +7,14 @@ import Table from './Table/Table';
 
 import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
+
 import { ProjectResponseDataType } from '@/shared/types';
 
 export default function ProjectDetails() {
     const [showCustomers, setShowCustomers] = useState<boolean>(false);
     const [showEmployees, setShowEmployees] = useState<boolean>(false);
-    const { data: customers } = useFetchUsers('customer', 'active');
-    const { data: employees } = useFetchUsers('employee', 'active');
+    const { data: customers } = useFetchUsers({ userRole: 'customer', status: 'active' });
+    const { data: employees } = useFetchUsers({ userRole: 'employee', status: 'active' });
     const navigate = useNavigate();
     const { id } = useParams<string>();
     const { data: project, error, refetch } = useFetchProjectById(id!);
@@ -126,7 +127,8 @@ export default function ProjectDetails() {
                     </div>
                 }
             </div>
-            {showEmployees && <Table users={employees?.items} />}
+            {showEmployees && employees && <Table users={employees?.items} />}
+
             {showCustomers && <Table users={customers?.items} />}
         </>
     );
