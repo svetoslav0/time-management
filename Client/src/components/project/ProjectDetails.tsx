@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import useCompleteProject from './hooks/useCompleteProject';
@@ -7,7 +7,6 @@ import Table from './Table/Table';
 
 import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
-
 import { ProjectResponseDataType } from '@/shared/types';
 
 export default function ProjectDetails() {
@@ -17,7 +16,7 @@ export default function ProjectDetails() {
     const { data: employees } = useFetchUsers({ userRole: 'employee', status: 'active' });
     const navigate = useNavigate();
     const { id } = useParams<string>();
-    const { data: project, error, refetch } = useFetchProjectById(id!);
+    const { data: project, error } = useFetchProjectById(id!);
     const { completeProject } = useCompleteProject(id);
 
     const onCompleteProject = async () => {
@@ -32,12 +31,6 @@ export default function ProjectDetails() {
             completeProject(projectData);
         }
     };
-
-    useEffect(() => {
-        if (project?.status) {
-            refetch();
-        }
-    }, [project?.status, refetch]);
 
     if (error) {
         navigate('admin/projectAdminDashboard');
