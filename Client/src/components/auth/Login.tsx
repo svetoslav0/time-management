@@ -12,7 +12,7 @@ import InputComponent from '@/UI/formComponents/InputComponent';
 import Loader from '@/UI/Loader';
 
 export default function Login() {
-    const { login, isPending } = useLogin();
+    const { login, error, isError, isPending } = useLogin();
 
     const [isVisible, setIsVisible] = useState(false);
 
@@ -51,6 +51,7 @@ export default function Login() {
                         <InputComponent
                             disabled={isPending}
                             error={errors.email?.message}
+                            isResponseError={isError}
                             register={register}
                             trigger={trigger}
                             field='email'
@@ -58,6 +59,7 @@ export default function Login() {
                         <InputComponent
                             disabled={isPending}
                             error={errors.password?.message}
+                            isResponseError={isError}
                             register={register}
                             trigger={trigger}
                             field='password'
@@ -66,7 +68,7 @@ export default function Login() {
                             toggleVisibility={toggleVisibility}
                             isVisible={isVisible}
                         />
-                        <LoginError {...errors} />
+                        <LoginError errors={errors} loginResponseErr={error} />
                         <button
                             disabled={isPending}
                             type='submit'
