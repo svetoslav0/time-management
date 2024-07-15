@@ -15,7 +15,13 @@ export default function useLogin() {
     const { updateUser } = useUser();
     const { setLoginData } = useLoginData();
 
-    const { mutate, error, isError } = useMutation<User, Error, LoginFormDataType>({
+    const {
+        mutate: login,
+        error,
+        isError,
+        isPending,
+    } = useMutation<User, Error, LoginFormDataType>({
+
         mutationFn: (data) => post<LoginFormDataType, User>(urlKeys.login, data),
         onSuccess: (response) => {
             updateUser(response);
@@ -27,5 +33,5 @@ export default function useLogin() {
         },
     });
 
-    return { mutate, error, isError };
+    return { login, error, isError, isPending };
 }
