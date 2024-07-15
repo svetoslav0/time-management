@@ -7,6 +7,7 @@ import { capitalizeAndFormat } from '../../shared/utils';
 
 type InputComponentProps<T extends FieldValues> = {
     error: string | undefined;
+    isResponseError?: boolean;
     register: UseFormRegister<T>;
     trigger: UseFormTrigger<T>;
     field: Path<T>;
@@ -18,6 +19,7 @@ type InputComponentProps<T extends FieldValues> = {
 
 export default function InputComponent<T extends FieldValues>({
     error,
+    isResponseError,
     register,
     trigger,
     field,
@@ -38,7 +40,7 @@ export default function InputComponent<T extends FieldValues>({
                     type={type}
                     id={field}
                     className={`block w-full rounded-xl border border-inputFieldBorderColor ${
-                        error ? 'border-red-500' : 'border-gray-300'
+                        error || isResponseError ? 'border-red-500' : 'border-gray-300'
                     } ${password || field === 'email' ? 'pl-10' : ''} bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
                     placeholder={capitalizeAndFormat(field)}
                     {...register(field)}

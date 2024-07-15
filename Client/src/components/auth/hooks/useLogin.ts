@@ -15,15 +15,17 @@ export default function useLogin() {
     const { updateUser } = useUser();
     const { setLoginData } = useLoginData();
 
-    const { mutate } = useMutation<User, Error, LoginFormDataType>({
+    const { mutate, error, isError } = useMutation<User, Error, LoginFormDataType>({
         mutationFn: (data) => post<LoginFormDataType, User>(urlKeys.login, data),
         onSuccess: (response) => {
             updateUser(response);
             setLoginData(response);
             navigate('/');
         },
-        onError: (error) => toast.error(error.message),
+        onError: (error) => {
+            toast.error(error.message);
+        },
     });
 
-    return mutate;
+    return { mutate, error, isError };
 }
