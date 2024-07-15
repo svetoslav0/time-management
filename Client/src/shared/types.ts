@@ -97,6 +97,7 @@ export interface HttpService {
     post<T, V>(url: string, data: T, headers?: Record<string, string>): Promise<V>;
     put<T, V>(url: string, data: T, headers?: Record<string, string>): Promise<V>;
     delete<V>(url: string, headers?: Record<string, string>): Promise<V>;
+    patch<T, V>(url: string, data: T, headers?: Record<string, string>): Promise<V>;
 }
 
 export type FormProps<T extends FieldValues> = UseFormReturn<T> & { onSubmit: SubmitHandler<T> };
@@ -113,13 +114,13 @@ export interface ResetPassword {
 
 export type Project = {
     projectName: string;
-    clientName: string;
-    startingDate: number;
     pricePerHour: number;
-    listOfEmployees: string[];
-    projectStatus: string;
+    employeeIds: string[];
+    customerIds: string[];
+    startingDate: string;
+    _id: string | undefined;
+    status: string;
 };
-
 export type ProjectStatusType = 'inProgress' | 'completed';
 
 export type ProjectDataType = {

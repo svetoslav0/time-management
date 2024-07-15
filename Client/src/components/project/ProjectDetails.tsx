@@ -2,10 +2,12 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import useCompleteProject from './hooks/useCompleteProject';
 import Table from './Table/Table';
 
 import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
+import { ProjectResponseDataType } from '@/shared/types';
 
 export default function ProjectDetails() {
     const [showCustomers, setShowCustomers] = useState<boolean>(false);
@@ -15,6 +17,21 @@ export default function ProjectDetails() {
     const navigate = useNavigate();
     const { id } = useParams<string>();
     const { data: project, error } = useFetchProjectById(id!);
+    const { completeProject } = useCompleteProject(id);
+
+    const onCompleteProject = async () => {
+        if (project && project.status == 'inProgress') {
+            const date = dayjs(project.startingDate, 'YYYY-MM-DD');
+            const projectData: ProjectResponseDataType = {
+                ...project,
+                status: 'completed',
+                startingDate: date.format('YYYY-MM-DD'),
+            };
+
+            completeProject(projectData);
+        }
+    };
+
     if (error) {
         navigate('admin/projectAdminDashboard');
     }
@@ -62,6 +79,16 @@ export default function ProjectDetails() {
                 {/* BUTTONS */}
                 {
                     <div className='mt-5 flex justify-center gap-2 align-middle'>
+                        {project?.status === 'inProgress' && (
+                            <button
+                                onClick={() => {
+                                    onCompleteProject();
+                                }}
+                                className='rounded-full border-2 border-blue-500 bg-blue-400 px-6 font-semibold text-white hover:bg-blue-500'
+                            >
+                                Complete Project
+                            </button>
+                        )}
                         <button
                             onClick={() => {
                                 setShowCustomers(true);
@@ -93,7 +120,8 @@ export default function ProjectDetails() {
                     </div>
                 }
             </div>
-            {showEmployees && employees && <Table users={employees.items} />}
+            {showEmployees && employees && <Table users={employees?.items} />}
+
             {showCustomers && <Table users={customers?.items} />}
         </>
     );
