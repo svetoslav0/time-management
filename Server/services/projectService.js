@@ -17,10 +17,6 @@ exports.createProject = async (req) => {
 
     await validateProjectData(projectData);
 
-    if (areInviteEmailsValid(projectData.inviteEmails)) {
-        createInvites(projectData.inviteEmails);
-    }
-
     const project = await Project.create({
         customerIds: projectData.customerIds,
         projectName: projectData.projectName,
@@ -28,6 +24,10 @@ exports.createProject = async (req) => {
         pricePerHour: projectData.pricePerHour,
         employeeIds: projectData.employeeIds,
     });
+    
+    if (areInviteEmailsValid(projectData.inviteEmails)) {
+        createInvites(projectData.inviteEmails);
+    }
 
     return {
         projectId: project._id,
