@@ -9,11 +9,17 @@ const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const formatDate = require("../utils/formatDateUtil");
 const getProjectByRole = require("../utils/getProjectByRole");
+const createInvites = require("../utils/createInvitesUtil");
+const { areInviteEmailsValid } = require("../utils/validateEmailUtil");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
 
     await validateProjectData(projectData);
+
+    if (areInviteEmailsValid(projectData.inviteEmails)) {
+        createInvites(projectData.inviteEmails);
+    }
 
     const project = await Project.create({
         customerIds: projectData.customerIds,
@@ -92,6 +98,10 @@ exports.updateProject = async (req) => {
 
     await validateProjectStatus(projectData.status);
     await validateProjectData(projectData);
+
+    if (areInviteEmailsValid(projectData.inviteEmails)) {
+        createInvites(projectData.inviteEmails);
+    }
 
     const query = {
         ...projectData,
