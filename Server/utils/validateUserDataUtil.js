@@ -1,6 +1,6 @@
 const userValidationErrors = require("../errors/userValidationErrors");
 const User = require("../models/User");
-const validateEmail = require("./validateEmailUtil");
+const { validateEmail } = require("./validateEmailUtil");
 
 const checkUserDataFieldsExistence = async (userData, isUpdate = false) => {
     const requiredFields = Object.keys(User.schema.paths).filter(
