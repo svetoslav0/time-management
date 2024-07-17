@@ -1,7 +1,26 @@
 const validator = require("validator");
 
-const validateEmail = async (email) => {
+const validateEmail = (email) => {
     return validator.isEmail(email);
 }
 
-module.exports = validateEmail;
+const areInviteEmailsValid = async (inviteEmails) => {
+    if (inviteEmails && inviteEmails.length > 0) {
+        const invalidEmails = inviteEmails.filter(email => !validateEmail(email));
+        if (invalidEmails.length > 0) {
+            throw new ProjectValidationErrors(
+                `Invalid email(s) found: ${invalidEmails.join(', ')}`,
+                400
+            );
+        }
+        else
+        {
+            return true;
+        }
+    }
+};
+
+module.exports = {
+    validateEmail,
+    areInviteEmailsValid
+};
