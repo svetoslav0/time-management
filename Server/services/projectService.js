@@ -99,10 +99,6 @@ exports.updateProject = async (req) => {
     await validateProjectStatus(projectData.status);
     await validateProjectData(projectData);
 
-    if (areInviteEmailsValid(projectData.inviteEmails)) {
-        createInvites(projectData.inviteEmails);
-    }
-
     const query = {
         ...projectData,
     };
@@ -114,6 +110,10 @@ exports.updateProject = async (req) => {
     const project = await Project.findByIdAndUpdate(projectId, query, {
         new: true,
     });
+
+    if (areInviteEmailsValid(projectData.inviteEmails)) {
+        createInvites(projectData.inviteEmails);
+    }
 
     return {
         customerIds: project.customerIds,
