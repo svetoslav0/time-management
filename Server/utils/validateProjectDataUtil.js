@@ -2,18 +2,20 @@ const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const User = require("../models/User");
 const isValidDateMoment = require("./validateDateUtil");
 
-const validateProjectData = async ({ customerIds, projectName, startingDate, pricePerHour, employeeIds }) => {
+const validateProjectData = async ({ customerIds, projectName, startingDate, pricePerHour, employeeIds, inviteEmails }) => {
     let customers;
     let employees;
 
-    if (!Array.isArray(customerIds) || customerIds.length === 0) {
-        throw new ProjectValidationErrors(
-            "At least one customer ID is required!",
-            400
-        );
-    } else if (!Array.isArray(employeeIds) || employeeIds.length === 0) {
+    if (!Array.isArray(employeeIds) || employeeIds.length === 0) {
         throw new ProjectValidationErrors(
             "At least one employee ID is required!",
+            400
+        );
+    }
+
+    if ((!Array.isArray(customerIds) || customerIds.length === 0) && (!Array.isArray(inviteEmails) || inviteEmails.length === 0)) {
+        throw new ProjectValidationErrors(
+            "At least one customer ID or invite email is required!",
             400
         );
     }
@@ -40,7 +42,8 @@ const validateProjectData = async ({ customerIds, projectName, startingDate, pri
             "All customer IDs should belong to users with the corresponding role!",
             400
         );
-    } else if (employees.length !== employeeIds.length) {
+    }
+    else if (employees.length !== employeeIds.length) {
         throw new ProjectValidationErrors(
             "All employee IDs should belong to users with the corresponding role!",
             400
