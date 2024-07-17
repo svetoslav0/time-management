@@ -6,7 +6,6 @@ const projectSchema = new Schema({
   customerIds: [{
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true
   }],
   projectName: {
     type: String,
