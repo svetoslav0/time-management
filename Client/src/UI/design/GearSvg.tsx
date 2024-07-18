@@ -1,8 +1,10 @@
-export default function GearSvg() {
+type GearSvgProps = { width?: number; height?: number };
+
+export default function GearSvg({ width=158, height=158 }: GearSvgProps) {
     return (
         <svg
-            width='158'
-            height='158'
+            width={width}
+            height={height}
             viewBox='0 0 158 158'
             fill='none'
             xmlns='http://www.w3.org/2000/svg'

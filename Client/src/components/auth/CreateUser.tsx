@@ -6,6 +6,7 @@ import { createUserSchema } from '../../shared/formValidations';
 import { CreateUserDataType } from '../../shared/types';
 import InputComponent from '../../UI/formComponents/InputComponent';
 import useCreateUser from './hooks/useCreateUser';
+import GearSvg from '@/UI/design/GearSvg';
 
 //TODO: Implement Route Guard so this page will only be available to Admin users
 
@@ -43,6 +44,12 @@ export default function CreateUser() {
     return (
         <div className='mx-auto flex max-w-sm flex-col gap-6 p-5'>
             <h2 className='self-center'>Create user</h2>
+            <div className='absolute left-[700px] top-[45rem]'>
+                    <GearSvg width={100} height={100}/>
+                </div>
+            <div className='absolute right-[200px] bot-[45rem]'>
+                    <GearSvg />
+                </div>
             <form className='' onSubmit={handleSubmit(onSubmit)}>
                 <div className='mb-5'>
                     <select
