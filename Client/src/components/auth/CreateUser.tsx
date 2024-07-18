@@ -6,8 +6,9 @@ import { createUserSchema } from '../../shared/formValidations';
 import { CreateUserDataType } from '../../shared/types';
 import InputComponent from '../../UI/formComponents/InputComponent';
 import useCreateUser from './hooks/useCreateUser';
-import GearSvg from '@/UI/design/GearSvg';
 
+import mainLogo from '@/assets/timeManagementLogo.png';
+import GearSvg from '@/UI/design/GearSvg';
 //TODO: Implement Route Guard so this page will only be available to Admin users
 
 export default function CreateUser() {
@@ -42,15 +43,27 @@ export default function CreateUser() {
     }, [isSuccess, reset]);
 
     return (
-        <div className='mx-auto flex max-w-sm flex-col gap-6 p-5'>
-            <h2 className='self-center'>Create user</h2>
-            <div className='absolute left-[700px] top-[45rem]'>
-                    <GearSvg width={100} height={100}/>
-                </div>
-            <div className='absolute right-[200px] bot-[45rem]'>
-                    <GearSvg />
-                </div>
-            <form className='' onSubmit={handleSubmit(onSubmit)}>
+        <div className='mx-auto flex max-w-xl flex-col gap-6 p-5'>
+            <div className='flex flex-col items-center'>
+                <img src={mainLogo} className='mt-15 mx-auto mb-12 scale-50' />
+                <p className='scale-75 font-mavenPro text-xl font-bold text-welcomeMsgColor'>
+                    Welcome to your time management hero.
+                </p>
+            </div>
+            <div className='absolute left-[20rem] top-[51rem] -z-10'>
+                <GearSvg />
+            </div>
+            <div className='bot-[45rem] absolute right-[3rem] -z-10'>
+                <GearSvg />
+            </div>
+            <div className='bot-[45rem] absolute left-[-1rem] -z-10 scale-150'>
+                <GearSvg />
+            </div>
+            <form
+                className='rounded-3xl border p-9 shadow-loginFormShadow'
+                onSubmit={handleSubmit(onSubmit)}
+            >
+                <h2 className='self-center'>Create user</h2>
                 <div className='mb-5'>
                     <select
                         id='userRole'
