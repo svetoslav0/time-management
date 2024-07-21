@@ -2,6 +2,8 @@ import httpServices from '@/services/httpServices';
 import { User } from '@/shared/types';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { queryClient } from '@/reactQuery/queryClient';
+import { queryKeys } from '@/reactQuery/constants';
 
 type UseMutationProps = {
     state: string;
@@ -15,6 +17,7 @@ export default function useUserMutate() {
         mutationFn: (data) => patch<null, User>(generateUrl(data), null),
         onSuccess: () => {
             toast.success('Succesfuly status changed');
+            queryClient.invalidateQueries({ queryKey: [queryKeys.users] });
         },
         onError: (error) => {
             toast.error(error.message);
