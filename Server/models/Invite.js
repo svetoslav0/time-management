@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const InviteChema = new Schema({
+const InviteSchema = new Schema({
     email: {
         type: String,
         required: true,
@@ -21,5 +21,5 @@ const InviteChema = new Schema({
     },
 });
 
-const Invite = mongoose.model("Invite", InviteChema);
+const Invite = mongoose.model("Invite", InviteSchema);
 module.exports = Invite;
