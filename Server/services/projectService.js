@@ -24,9 +24,9 @@ exports.createProject = async (req) => {
         pricePerHour: projectData.pricePerHour,
         employeeIds: projectData.employeeIds,
     });
-    
+
     if (areInviteEmailsValid(projectData.inviteEmails)) {
-        createInvites(projectData.inviteEmails);
+        createInvites(projectData.inviteEmails, project._id);
     }
 
     return {
@@ -112,7 +112,7 @@ exports.updateProject = async (req) => {
     });
 
     if (areInviteEmailsValid(projectData.inviteEmails)) {
-        createInvites(projectData.inviteEmails);
+        createInvites(projectData.inviteEmails, project._id);
     }
 
     return {
