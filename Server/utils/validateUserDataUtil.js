@@ -1,6 +1,6 @@
 const userValidationErrors = require("../errors/userValidationErrors");
 const User = require("../models/User");
-const validator = require("validator");
+const { validateEmail } = require("./validateEmailUtil");
 
 const checkUserDataFieldsExistence = async (userData, isUpdate = false) => {
     const requiredFields = Object.keys(User.schema.paths).filter(
@@ -9,8 +9,8 @@ const checkUserDataFieldsExistence = async (userData, isUpdate = false) => {
 
     const fieldsToCheck = isUpdate
         ? requiredFields.filter(
-              (field) => !["password", "email"].includes(field)
-          )
+            (field) => !["password", "email"].includes(field)
+        )
         : requiredFields;
 
     const missingFields = fieldsToCheck.filter((field) => !(field in userData));
@@ -137,9 +137,6 @@ const roleBasedUserValidation = async (userData) => {
     }
 };
 
-function validateEmail(email) {
-    return validator.isEmail(email);
-}
 
 module.exports = {
     validateUserDataOnUserCreate,

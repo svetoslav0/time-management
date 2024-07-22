@@ -9,6 +9,8 @@ const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const formatDate = require("../utils/formatDateUtil");
 const getProjectByRole = require("../utils/getProjectByRole");
+const createInvites = require("../utils/createInvitesUtil");
+const { areInviteEmailsValid } = require("../utils/validateEmailUtil");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
@@ -22,6 +24,10 @@ exports.createProject = async (req) => {
         pricePerHour: projectData.pricePerHour,
         employeeIds: projectData.employeeIds,
     });
+    
+    if (areInviteEmailsValid(projectData.inviteEmails)) {
+        createInvites(projectData.inviteEmails);
+    }
 
     return {
         projectId: project._id,
@@ -104,6 +110,10 @@ exports.updateProject = async (req) => {
     const project = await Project.findByIdAndUpdate(projectId, query, {
         new: true,
     });
+
+    if (areInviteEmailsValid(projectData.inviteEmails)) {
+        createInvites(projectData.inviteEmails);
+    }
 
     return {
         customerIds: project.customerIds,
