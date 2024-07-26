@@ -12,7 +12,7 @@ const ButtonLogout = ({ children, handleLogout }: ChildrenProps) => {
             xmlns='http://www.w3.org/2000/svg'
             width='22'
             height='24'
-            viewBox='0 0 22 22'
+            viewBox='0 0 26 26'
             fill='none'
         >
             <path
@@ -26,7 +26,7 @@ const ButtonLogout = ({ children, handleLogout }: ChildrenProps) => {
         <button
             onClick={handleLogout}
             type='button'
-            className=' mb-1 me-2 flex w-28 justify-center self-center rounded-[8px] bg-white px-5 py-1 text-center text-sm font-medium text-[#008CFF] shadow-xl hover:bg-[#DEE5EC] focus:outline-none focus:ring-4'
+            className=' mb-1 me-2 flex w-28 justify-center self-center rounded-[8px] bg-white px-5 py-0.5 text-center text-sm font-medium text-[#008CFF] shadow-xl hover:bg-[#DEE5EC] focus:outline-none focus:ring-4'
         >
             <LogoutSvg />
             {children}
