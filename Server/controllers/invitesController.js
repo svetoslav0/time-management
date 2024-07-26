@@ -12,4 +12,14 @@ router.get("/validate/:id", async (req, res, next) => {
     }
 });
 
+router.post("/register", async (req, res, next) => {
+    try {
+        const customer = await invitesService.createCustomerOnInvite(req);
+
+        res.status(200).json(customer);
+    } catch (error) {
+        next(error);
+    }
+});
+
 module.exports = router;

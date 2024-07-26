@@ -1,24 +1,65 @@
-const Invite = require("../models/Invite");
+const User = require("../models/User");
 
 const InvitesValidationErrors = require("../errors/invitesValidationErrors");
-const isValidUUID = require("../utils/validationUtils/validateUUID");
+const UserValidationErrors = require("../errors/userValidationErrors");
+const {
+    validateUserDataOnUserCreate
+} = require("../utils/validateUserDataUtil");
+const IsInviteValid = require("../utils/validationUtils/validateInviteUtil");
 
 exports.validateInvite = async (req) => {
     const inviteUUID = req.params.id;
 
-    if (!isValidUUID(inviteUUID)) {
-        throw new InvitesValidationErrors("Invalid UUID provided!", 400);
-    }
-
-    const invite = await Invite.findOne({ uuid: inviteUUID });
-
-    if (!invite) {
-        throw new InvitesValidationErrors("Invite not found!", 404);
-    }
-
-    if (invite.expiresOn < new Date()) {
-        throw new InvitesValidationErrors("Invite has expired!", 410);
-    }
+    const invite = IsInviteValid(inviteUUID);
 
     return invite;
+};
+
+exports.createCustomerOnInvite = async (req) => {
+    const userData = req.body;
+    userData.userRole = "customer";
+
+    if (!userData.inviteId) {
+        throw new UserValidationErrors("Invite id is required!", 400);
+    }
+
+    await IsInviteValid(userData.inviteId);
+
+    await validateUserDataOnUserCreate(userData);
+
+    const {
+        email,
+        firstName,
+        lastName,
+        password,
+        userRole,
+        description,
+        companyName,
+        phoneNumber,
+        address
+    } = userData;
+
+    const newUser = {
+        email,
+        firstName,
+        lastName,
+        password,
+        userRole,
+        ...(description && { description }),
+        companyName,
+        phoneNumber,
+        address,
+    };
+
+    const user = await User.create(newUser);
+
+    return {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userRole: user.userRole,
+        companyName: user.companyName,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+    };
 };
