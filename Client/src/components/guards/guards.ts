@@ -4,9 +4,9 @@ import { LoginResponseData } from '@/shared/types';
 import { getUserData } from '@/util/util';
 
 type UserData = LoginResponseData | undefined;
+const userData: UserData = getUserData();
 
 export function restrictHomePage() {
-    const userData: UserData = getUserData();
     const isNotLoggedIn = !userData;
     const isAdmin = userData?.userRole === 'admin';
     const isEmployee = userData?.userRole === 'employee';
@@ -22,8 +22,7 @@ export function restrictHomePage() {
     return null;
 }
 
-export function restrictUsers() {
-    const userData: UserData = getUserData();
+export function restrictLoginPage() {
     const isLoggedIn = userData;
 
     if (isLoggedIn) {
