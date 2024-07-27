@@ -49,6 +49,7 @@ function App() {
                         {
                             path: 'users',
                             element: <UsersDashboard />,
+                            loader: restrictAdminPages,
                         },
                         {
                             path: 'users/:id',
