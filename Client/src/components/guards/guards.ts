@@ -11,7 +11,6 @@ export function restrictHomePage() {
     const isAdmin = userData?.userRole === 'admin';
     const isEmployee = userData?.userRole === 'employee';
     const isCustomer = userData?.userRole === 'customer';
-    console.log(userData);
 
     if (isNotLoggedIn) {
         return redirect('/auth/login');
