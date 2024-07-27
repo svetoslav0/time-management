@@ -60,10 +60,12 @@ function App() {
                         {
                             path: 'projects',
                             element: <ProjectAdminDashboard />,
+                            loader: restrictAdminPages,
                         },
                         {
                             path: 'projects/:id',
                             element: <ProjectDetails />,
+                            loader: restrictAdminPages,
                         },
                     ],
                 },
