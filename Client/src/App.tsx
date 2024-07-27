@@ -4,7 +4,7 @@ import { AuthContextProvider } from './components/auth/AuthContext';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import Dashboard from './components/dashboard/Dashboard';
-import { restrictHomePage } from './components/guards/guards';
+import { restrictHomePage, restrictLoginPage } from './components/guards/guards';
 import RootLayout from './components/layout/RootLayout';
 import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
 import ProjectDetails from './components/project/ProjectDetails';
@@ -30,6 +30,7 @@ function App() {
                         {
                             path: 'login',
                             element: <Login />,
+                            loader: restrictLoginPage,
                         },
                     ],
                 },
