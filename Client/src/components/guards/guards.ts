@@ -25,7 +25,7 @@ export function restrictHomePage() {
     return null;
 }
 
-export function restrictProjectFormPage() {
+export function restrictAdminPages() {
     const userData: UserData = getUserData();
     const isAdmin = userData?.userRole === 'admin';
 
