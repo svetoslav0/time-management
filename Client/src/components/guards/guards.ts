@@ -35,3 +35,15 @@ export function restrictAdminPages() {
 
     return null;
 }
+
+export function restrictLoginPage() {
+    const userData: UserData = getUserData();
+
+    const isLoggedIn = userData;
+
+    if (isLoggedIn) {
+        return redirect('/');
+    }
+
+    return null;
+}
