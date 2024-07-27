@@ -54,6 +54,7 @@ function App() {
                         {
                             path: 'users/:id',
                             element: <UserPage />,
+                            loader: restrictAdminPages,
                         },
                         {
                             path: 'projects',
