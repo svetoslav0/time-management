@@ -1,6 +1,5 @@
 const HoursValidationErrors = require("../errors/hoursValidationErrors");
 const Hours = require("../models/Hours");
-const userService = require("./userService")
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 
 const {
@@ -21,14 +20,14 @@ exports.getSingleHour = async (req) => {
 
 exports.getAllHours = async (req) => {
     const { projectId } = req.query;
-    const userId = req.userToken._id;
+    const { userRole, _id } = req.userToken._id;
     const filter = {};
 
-    if (userId) {
-        if (!validateObjectId(userId)) {
+    if (_id) {
+        if (!validateObjectId(_id)) {
             throw new HoursValidationErrors("Invalid user ID!", 400);
         }
-        filter.userId = userId;
+        filter.userId = _id;
     }
 
     if (projectId) {
@@ -37,14 +36,17 @@ exports.getAllHours = async (req) => {
         }
         filter.projectId = projectId;
     }
-    const user = await userService.getSingleUser(userId)
 
-    if (user.userRole === "employee") {
-        filter.employeeIds = user._id;
-    } else if (user.userRole === "customer") {
-        filter.customerIds = user._id;
+    if (userRole === "admin") {
+        return Hours.find(filter);
     }
-    
+
+    if (userRole === "employee") {
+        filter.employeeIds = userId;
+    } else if (userRole === "customer") {
+        filter.customerIds = userId;
+    }
+
     return Hours.find(filter);
 };
 
