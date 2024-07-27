@@ -36,7 +36,7 @@ export function Navigation() {
     };
 
     return (
-        <nav className='justify- flex w-full items-center justify-between px-4 py-3'>
+        <nav className='flex w-full items-center justify-between px-4 py-3'>
             {isLoggedIn ? (
                 <span className='text-1xl mx-8 text-center font-bold leading-9 tracking-tight text-gray-900'>
                     Welcome, {user?.email}
@@ -44,8 +44,8 @@ export function Navigation() {
             ) : (
                 ''
             )}
-            <div className='mt-2 flex'>
-                <div className='pr-24'>
+            <div className='mt-2 flex w-5/12 justify-between'>
+                <div className='flex'>
                     {user?.userRole === 'admin' ? (
                         <AdminLinks
                             redirectToUsersPanel={redirectToUsersPanel}
