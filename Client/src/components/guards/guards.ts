@@ -21,3 +21,14 @@ export function restrictHomePage() {
 
     return null;
 }
+
+export function restrictUsers() {
+    const userData: UserData = getUserData();
+    const isLoggedIn = userData;
+
+    if (isLoggedIn) {
+        return redirect('/');
+    }
+
+    return null;
+}
