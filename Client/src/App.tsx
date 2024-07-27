@@ -45,6 +45,7 @@ function App() {
                         {
                             path: 'createUser',
                             element: <CreateUser />,
+                            loader: restrictAdminPages,
                         },
                         {
                             path: 'users',
