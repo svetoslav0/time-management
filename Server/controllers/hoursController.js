@@ -20,7 +20,7 @@ router.get("/", getJwtToken, async (req, res, next) => {
     try {
         const hours = await hoursService.getAllHours(req);
 
-        if (!hours) {
+        if (!hours || hours.length === 0) {
             throw new HoursValidationErrors("Hours not found", 404);
         }
 

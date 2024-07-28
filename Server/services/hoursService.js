@@ -5,6 +5,7 @@ const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const {
     validateHourDataOnLogHours,
 } = require("../utils/validateHoursDataUtil");
+const Project = require("../models/Project");
 
 exports.getSingleHour = async (req) => {
     if (!validateObjectId(req.params.id)) {
@@ -20,7 +21,7 @@ exports.getSingleHour = async (req) => {
 
 exports.getAllHours = async (req) => {
     const { projectId } = req.query;
-    const { userRole, _id } = req.userToken._id;
+    const { userRole, _id } = req.userToken;
     const filter = {};
 
     if (_id) {
@@ -38,16 +39,24 @@ exports.getAllHours = async (req) => {
     }
 
     if (userRole === "admin") {
-        return Hours.find(filter);
+        return Hours.find(filter)
+            .populate({ path: "projectId", select: "projectName" })
+            .populate({ path: "userId", select: "email" });
     }
 
     if (userRole === "employee") {
-        filter.employeeIds = userId;
+        const projects = await Project.find({ employeeIds: _id });
+        const projectIds = projects.map((project) => project._id);
+        filter.projectId = { $in: projectIds };
     } else if (userRole === "customer") {
-        filter.customerIds = userId;
+        const projects = await Project.find({ customerIds: _id });
+        const projectIds = projects.map((project) => project._id);
+        filter.projectId = { $in: projectIds };
     }
 
-    return Hours.find(filter);
+    return await Hours.find(filter)
+        .populate({ path: "projectId", select: "projectName" })
+        .populate({ path: "userId", select: "email" });
 };
 
 exports.logHours = async (req) => {
