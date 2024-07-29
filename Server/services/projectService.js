@@ -1,3 +1,5 @@
+const path = require("path");
+
 const Project = require("../models/Project");
 const Hours = require("../models/Hours");
 const userService = require("../services/userService");
@@ -11,6 +13,7 @@ const formatDate = require("../utils/formatDateUtil");
 const getProjectByRole = require("../utils/getProjectByRole");
 const createInvites = require("../utils/createInvitesUtil");
 const { areInviteEmailsValid } = require("../utils/validateEmailUtil");
+const generateReportPdf = require("../utils/generatePdfReportUtil");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
@@ -25,7 +28,7 @@ exports.createProject = async (req) => {
         employeeIds: projectData.employeeIds,
     });
 
-    if (areInviteEmailsValid(projectData.inviteEmails)) {
+    if (projectData.inviteEmails && areInviteEmailsValid(projectData.inviteEmails)) {
         createInvites(projectData.inviteEmails, project._id);
     }
 
@@ -130,7 +133,7 @@ exports.getReport = async (req) => {
     const userRole = req.userToken.userRole;
 
     if (!validateObjectId(projectId)) {
-        throw new ProjectValidationErrors("Invalid project ID format", 400);
+        throw new ProjectValidationErrors("Invalid project ID format!", 400);
     }
 
     let project;
@@ -141,15 +144,15 @@ exports.getReport = async (req) => {
         );
     } else {
         project = await getProjectByRole(projectId, userId, userRole);
+        if (!project) {
+            throw new ProjectValidationErrors("Access denied!", 403);
+        }
     }
 
     if (!project) {
-        throw new ProjectValidationErrors(
-            "Project not found or access denied",
-            404
-        );
+        throw new ProjectValidationErrors("Project not found!", 404);
     }
-
+    
     const hours = await Hours.find({ projectId }).populate(
         "userId",
         "firstName"
@@ -166,7 +169,7 @@ exports.getReport = async (req) => {
         (total, hour) => total + hour.hours * project.pricePerHour,
         0
     );
-
+    
     return {
         projectData: {
             employeeNames: project.employeeIds.map(
@@ -188,4 +191,14 @@ exports.getReport = async (req) => {
         })),
         totalPrice: totalPrice,
     };
+};
+
+exports.getReportPdf = async (req) => {
+    const reportData = await this.getReport(req);
+
+    const templatePath = path.join(__dirname, '../templates/projectReport.html');
+
+    const pdfBuffer = await generateReportPdf(reportData, templatePath);
+
+    return pdfBuffer;
 };
