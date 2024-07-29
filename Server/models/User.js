@@ -46,6 +46,10 @@ const userSchema = new mongoose.Schema(
         address: {
             type: String,
         },
+        isGoogleLogin: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,
