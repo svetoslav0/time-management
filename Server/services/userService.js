@@ -61,7 +61,7 @@ exports.createUser = async (req) => {
         experienceLevel,
         companyName,
         phoneNumber,
-        address
+        address,
     } = userData;
 
     const newUser = {
@@ -82,8 +82,14 @@ exports.createUser = async (req) => {
         firstName: user.firstName,
         lastName: user.lastName,
         userRole: user.userRole,
-        ...(userRole === "employee" && { experienceLevel: user.experienceLevel }),
-        ...(userRole === "customer" && { companyName: user.companyName, phoneNumber: user.phoneNumber, address: user.address }),
+        ...(userRole === "employee" && {
+            experienceLevel: user.experienceLevel,
+        }),
+        ...(userRole === "customer" && {
+            companyName: user.companyName,
+            phoneNumber: user.phoneNumber,
+            address: user.address,
+        }),
     };
 };
 
@@ -109,8 +115,19 @@ exports.editUser = async (req) => {
     };
 };
 
-exports.getSingleUser = (userId) => User.findById(userId).select("-password");
+exports.getSingleUser = async (userId) => {
+    if (!validateObjectId(userId)) {
+        throw new UserValidationErrors("Invalid user ID!", 400);
+    }
 
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+        throw new UserValidationErrors("User not found!", 404);
+    }
+
+    return user;
+};
 exports.restorePassword = async (req) => {
     const { password, confirmPassword } = req.body;
     const userId = req.params.id;
@@ -138,7 +155,7 @@ exports.restorePassword = async (req) => {
     if (!user) {
         throw new UserValidationErrors("User not found!", 404);
     }
-    
+
     user.password = password;
     await user.save();
 };
