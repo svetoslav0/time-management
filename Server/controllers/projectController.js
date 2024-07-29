@@ -66,4 +66,13 @@ router.get("/:id/report", getJwtToken, async (req, res, next) => {
         next(error);
     }
 });
+
+router.get("/:id/report/pdf", getJwtToken, async (req, res, next) => {
+    try {
+        const pdfBuffer = await projectService.getReportPdf(req);
+        res.status(200).contentType('application/pdf').send(pdfBuffer);
+    } catch (error) {
+        next(error);
+    }
+});
 module.exports = router;
