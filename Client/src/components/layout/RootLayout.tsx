@@ -5,7 +5,7 @@ import { Navigation } from './Navigation';
 
 export default function RootLayout() {
     return (
-        <div className={`flex min-h-screen flex-col`}>
+        <div className='mx-auto flex min-h-screen max-w-screen-xl flex-col'>
             <Navigation />
             <main className='flex-grow'>
                 <Toaster

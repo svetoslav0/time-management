@@ -32,7 +32,7 @@ export default function UsersDashboard() {
             {isLoading ? (
                 <div className='self-center'>Loading...</div>
             ) : (
-                <div className='flex flex-wrap gap-4'>
+                <div className='mx-10 mt-4 grid gap-10 pb-10 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4'>
                     {users &&
                         users.items.map(
                             (user) => (
