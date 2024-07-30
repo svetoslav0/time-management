@@ -13,7 +13,7 @@ const formatDate = require("../utils/formatDateUtil");
 const getProjectByRole = require("../utils/getProjectByRole");
 const createInvites = require("../utils/createInvitesUtil");
 const { areInviteEmailsValid } = require("../utils/validateEmailUtil");
-const generatePdf = require("../utils/generatePdfReportUtil");
+const generatePdf = require("../utils/generatePdfUtil");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
