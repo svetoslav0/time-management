@@ -196,7 +196,7 @@ exports.getReport = async (req) => {
 exports.getReportPdf = async (req) => {
     const reportData = await this.getReport(req);
 
-    const templatePath = path.join(__dirname, '../templates/projectReport/projectReport.hbs');
+    const templatePath = path.join(__dirname, '../templates/projectReport/projectReportTemplate.hbs');
 
     const pdfBuffer = await generatePdf(reportData, templatePath);
 
