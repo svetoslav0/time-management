@@ -36,7 +36,8 @@ exports.createCustomerOnInvite = async (req) => {
         description,
         companyName,
         phoneNumber,
-        address
+        address,
+        isGoogleLogin
     } = userData;
 
     const newUser = {
@@ -49,6 +50,7 @@ exports.createCustomerOnInvite = async (req) => {
         companyName,
         phoneNumber,
         address,
+        ...(isGoogleLogin === true && { isGoogleLogin })
     };
 
     const user = await User.create(newUser);
