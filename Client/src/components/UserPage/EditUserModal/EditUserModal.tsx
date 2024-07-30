@@ -24,6 +24,7 @@ interface EditUser {
     companyName?: string | undefined;
     phoneNumber?: string | undefined;
     address?: string | undefined;
+    ref?: string;
 }
 
 export default function EditUserModal({ isOpen, onClose, user, userState }: ModalProps) {

@@ -5,6 +5,7 @@ import { CiLock, CiMail } from 'react-icons/ci';
 
 import { capitalizeAndFormat } from '../../shared/utils';
 
+
 type InputComponentProps<T extends FieldValues> = {
     error: string | undefined;
     isResponseError?: boolean;
@@ -13,6 +14,7 @@ type InputComponentProps<T extends FieldValues> = {
     field: Path<T>;
     type?: string;
     password?: boolean;
+    ref?: string;
     toggleVisibility?: () => void;
     isVisible?: boolean;
 } & ComponentPropsWithoutRef<'input'>;
@@ -30,7 +32,7 @@ export default function InputComponent<T extends FieldValues>({
     ...props
 }: InputComponentProps<T>) {
     return (
-        <div className='mt-5'>
+        <div className='mt-3 w-full'>
             <label
                 htmlFor={field}
                 className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
@@ -39,9 +41,9 @@ export default function InputComponent<T extends FieldValues>({
                 <input
                     type={type}
                     id={field}
-                    className={`block w-full rounded-xl border border-inputFieldBorderColor ${
+                    className={`block w-full ${field === 'description' ? 'h-20 mb-5 placeholder-custom': ''} rounded-xl border border-inputFieldBorderColor border-opacity-50 ${
                         error || isResponseError ? 'border-red-500' : 'border-gray-300'
-                    } ${password || field === 'email' ? 'pl-10' : ''} bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
+                    } ${password || field === 'email' ? 'pl-10' : ''} bg-gray-100 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500`}
                     placeholder={capitalizeAndFormat(field)}
                     {...register(field)}
                     onBlur={() => trigger(field)}
