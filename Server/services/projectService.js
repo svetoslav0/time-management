@@ -13,7 +13,7 @@ const formatDate = require("../utils/formatDateUtil");
 const getProjectByRole = require("../utils/getProjectByRole");
 const createInvites = require("../utils/createInvitesUtil");
 const { areInviteEmailsValid } = require("../utils/validateEmailUtil");
-const generateReportPdf = require("../utils/generatePdfReportUtil");
+const generatePdf = require("../utils/generatePdfReportUtil");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
@@ -196,9 +196,9 @@ exports.getReport = async (req) => {
 exports.getReportPdf = async (req) => {
     const reportData = await this.getReport(req);
 
-    const templatePath = path.join(__dirname, '../templates/projectReport.html');
+    const templatePath = path.join(__dirname, '../templates/projectReport/projectReport.hbs');
 
-    const pdfBuffer = await generateReportPdf(reportData, templatePath);
+    const pdfBuffer = await generatePdf(reportData, templatePath);
 
     return pdfBuffer;
 };
