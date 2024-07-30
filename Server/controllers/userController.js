@@ -23,7 +23,7 @@ router.post("/", isAdmin, async (req, res, next) => {
     }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", isAdmin, async (req, res, next) => {
     try {
         const user = await userService.getSingleUser(req.params.id);
 
@@ -53,7 +53,7 @@ router.patch("/:userId/archive", isAdmin, async (req, res, next) => {
 });
 
 router.patch("/:id/password_restore", isAdmin, async (req, res, next) => {
-    
+
     try {
         await userService.restorePassword(req);
 
