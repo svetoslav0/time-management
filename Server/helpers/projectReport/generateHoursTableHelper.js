@@ -1,4 +1,11 @@
-const handlebars = require('handlebars');
+const path = require("path");
+const fs = require("fs");
+
+const handlebars = require("handlebars");
+
+const tableTemplatePath = path.join(__dirname, '../../templates/projectReport/hoursTableTemplate.hbs');
+const tableTemplateSource = fs.readFileSync(tableTemplatePath, 'utf8');
+const tableTemplate = handlebars.compile(tableTemplateSource);
 
 handlebars.registerHelper('generateHoursTable', (hours) => {
     const sortedHours = hours.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -15,13 +22,13 @@ handlebars.registerHelper('generateHoursTable', (hours) => {
 
     const hoursTableRows = dateRange.map(date => {
         const hour = hoursMap.get(date) || {};
-        return `<tr>
-            <td>${date}</td>
-            <td>${hour.employeeName || ''}</td>
-            <td>${(hour.hours || 0).toString()}</td>
-            <td>${hour.notes || ''}</td>
-        </tr>`;
-    }).join('');
+        return tableTemplate({
+          date,
+          employeeName: hour.employeeName || '',
+          hours: (hour.hours || 0).toString(),
+          notes: hour.notes || ''
+        });
+      }).join('');
 
     return new handlebars.SafeString(hoursTableRows);
 });
