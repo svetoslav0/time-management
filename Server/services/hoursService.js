@@ -22,7 +22,7 @@ exports.getSingleHour = async (req) => {
 exports.getAllHours = async (req) => {
     const { projectId } = req.query;
     const { userRole, _id } = req.userToken;
-    const filter = {};
+    let filter = {};
 
     if (_id) {
         if (!validateObjectId(_id)) {
@@ -39,19 +39,33 @@ exports.getAllHours = async (req) => {
     }
 
     if (userRole === "admin") {
+        filter = { projectId };
         return Hours.find(filter)
             .populate({ path: "projectId", select: "projectName" })
             .populate({ path: "userId", select: "email" });
     }
 
+    let userProjects = [];
     if (userRole === "employee") {
-        const projects = await Project.find({ employeeIds: _id });
-        const projectIds = projects.map((project) => project._id);
-        filter.projectId = { $in: projectIds };
+        userProjects = await Project.find({ employeeIds: _id }).select("_id");
     } else if (userRole === "customer") {
-        const projects = await Project.find({ customerIds: _id });
-        const projectIds = projects.map((project) => project._id);
-        filter.projectId = { $in: projectIds };
+        userProjects = await Project.find({ customerIds: _id }).select("_id");
+    }
+
+    const userProjectIds = userProjects.map((project) =>
+        project._id.toString()
+    );
+
+    if (projectId) {
+        if (!userProjectIds.includes(projectId)) {
+            throw new HoursValidationErrors(
+                "Project not found or not associated with this user.",
+                404
+            );
+        }
+        filter = { projectId, userId: _id };
+    } else {
+        filter = { userId: _id };
     }
 
     return await Hours.find(filter)
