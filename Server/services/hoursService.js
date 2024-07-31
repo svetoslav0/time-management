@@ -40,7 +40,7 @@ exports.getAllHours = async (req) => {
 
     if (userRole === "admin") {
         const adminFilter = projectId ? { projectId } : {};
-        return Hours.find(filter)
+        return Hours.find(adminFilter)
             .populate({ path: "projectId", select: "projectName" })
             .populate({ path: "userId", select: "email" });
     }
