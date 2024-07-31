@@ -3,7 +3,7 @@ const router = require("express").Router();
 const userService = require("../services/userService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
 
-router.get("/", async (req, res, next) => {
+router.get("/", isAdmin, async (req, res, next) => {
     try {
         const { items, total } = await userService.getUsers(req);
 
