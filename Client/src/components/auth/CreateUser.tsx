@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { createUserSchema } from '../../shared/formValidations';
@@ -9,37 +9,32 @@ import useCreateUser from './hooks/useCreateUser';
 
 import mainLogo from '@/assets/timeManagementLogo.png';
 import GearSvg from '@/UI/design/GearSvg';
+import cn from '@/util/cn';
 //TODO: Implement Route Guard so this page will only be available to Admin users
 
 export default function CreateUser() {
-    // const selectRef = useRef<HTMLSelectElement>(null);
-    // function handleArrowClick() {
-    //     if (selectRef && selectRef.current) {
-    //         selectRef.current.focus();
-    //         selectRef.current.click();
-    //         console.log('clicked if selectref current');
-    //     }
-    //     console.log('clicked');
-    // }
-    // const Arrow = () => (
-    //     <svg
-    //         width='28'
-    //         height='28'
-    //         viewBox='0 0 28 28'
-    //         fill='none'
-    //         xmlns='http://www.w3.org/2000/svg'
-    //     >
-    //         <g id='ri:arrow-drop-down-line'>
-    //             <path
-    //                 id='Vector'
-    //                 d='M16.7817 22.5984C15.2309 24.0992 12.7691 24.0992 11.2183 22.5984L2.41082 14.075C1.09243 12.7991 1.09268 10.685 2.41136 9.40946C3.66998 8.19201 5.66741 8.19237 6.9256 9.41026L11.218 13.5652C12.7689 15.0664 15.2311 15.0664 16.782 13.5651L21.0744 9.41025C22.3326 8.19236 24.33 8.19201 25.5886 9.40946C26.9073 10.685 26.9076 12.7991 25.5892 14.075L16.7817 22.5984Z'
-    //                 fill='#008CFF'
-    //             />
-    //         </g>
-    //     </svg>
-    // );
+    const selectRef = useRef<HTMLSelectElement>(null);
+    const Arrow = () => (
+        <svg
+            width='28'
+            height='28'
+            viewBox='0 0 28 28'
+            fill='none'
+            xmlns='http://www.w3.org/2000/svg'
+            className='cursor-pointer'
+        >
+            <g id='ri:arrow-drop-down-line'>
+                <path
+                    id='Vector'
+                    d='M16.7817 22.5984C15.2309 24.0992 12.7691 24.0992 11.2183 22.5984L2.41082 14.075C1.09243 12.7991 1.09268 10.685 2.41136 9.40946C3.66998 8.19201 5.66741 8.19237 6.9256 9.41026L11.218 13.5652C12.7689 15.0664 15.2311 15.0664 16.782 13.5651L21.0744 9.41025C22.3326 8.19236 24.33 8.19201 25.5886 9.40946C26.9073 10.685 26.9076 12.7991 25.5892 14.075L16.7817 22.5984Z'
+                    fill='#008CFF'
+                />
+            </g>
+        </svg>
+    );
     const [userType, setUserType] = useState('');
     const [isVisible, setIsVisible] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     const { createUser, isSuccess } = useCreateUser();
     const {
@@ -71,7 +66,7 @@ export default function CreateUser() {
     return (
         <div className='mx-auto flex max-w-xl flex-col gap-6 p-5'>
             <div className='flex flex-col items-center'>
-                <img src={mainLogo} className='mt-2 mx-auto mb-2 scale-50' />
+                <img src={mainLogo} className='mx-auto mb-2 mt-2 scale-50' />
                 <p className='scale-75 font-mavenPro text-xl font-bold text-welcomeMsgColor'>
                     Welcome to your time management hero.
                 </p>
@@ -93,17 +88,21 @@ export default function CreateUser() {
                     Create user
                 </h2>
                 <div className='relative mb-3'>
-                    {/* <div
-                        className='absolute left-[345px] top-[7px] scale-50 cursor-pointer'
-                        onClick={handleArrowClick}
+                    <div
+                        className={cn(
+                            isOpen ? 'rotate-180' : '',
+                            'absolute left-[345px] top-[7px] scale-50 cursor-pointer'
+                        )}
                     >
                         <Arrow />
-                    </div> */}
+                    </div>
                     <select
                         id='userRole'
-                        className='mx-auto block w-2/3 rounded-xl border border-blue-500 border-opacity-50  p-2.5 text-sm text-gray-900 ring-blue-500 focus:border-2 focus:border-blue-700'
+                        className='z-10 mx-auto block w-2/3 appearance-none rounded-xl border border-blue-500 p-2.5 text-sm text-gray-900 opacity-50 ring-blue-500 focus:border-2 focus:border-blue-700'
                         defaultValue=''
                         {...register('userRole')}
+                        ref={selectRef}
+                        onClick={() => setIsOpen((prev) => !prev)}
                         onBlur={() => trigger('userRole')}
                         onChange={(e) => {
                             setUserType(e.currentTarget.value);
