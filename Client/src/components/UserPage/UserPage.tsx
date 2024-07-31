@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import httpServices from '../../services/httpServices';
 import { User } from '../../shared/types';
 import Profile from './Profile/Profile';
 import Table from './Table/Table';
 
+import useFetchUserById from '@/reactQuery/hooks/useFetchUserById';
 export interface Project {
     id: number;
     projectName: string;
@@ -15,18 +15,18 @@ export interface Project {
 }
 
 export default function UserPage() {
+    const navigate = useNavigate();
+    const { id } = useParams<string>();
     const [user, setUser] = useState<User | undefined>(undefined);
     const [projects, setProjects] = useState<Project[] | undefined>(undefined);
-    const { id } = useParams<string>();
+    const { data, error, isFetching } = useFetchUserById(id!);
+
     useEffect(() => {
-
-        httpServices()
-            .get<User>(`/users/${id}`)
-            .then((response) => {
-                setUser(response);
-            });
-    }, [id]);
-
+        setUser(data);
+        if (error && !isFetching) {
+            navigate('/');
+        }
+    }, [data, error, isFetching, navigate]);
 
     useEffect(() => {
         const projects: Project[] = [
