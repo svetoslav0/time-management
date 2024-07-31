@@ -1,6 +1,5 @@
 const User = require("../models/User");
 
-const InvitesValidationErrors = require("../errors/invitesValidationErrors");
 const UserValidationErrors = require("../errors/userValidationErrors");
 const {
     validateUserDataOnUserCreate
