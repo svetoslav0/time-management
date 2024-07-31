@@ -127,8 +127,9 @@ export type ProjectDataType = {
     projectName: string;
     pricePerHour: number;
     employeeIds: string[];
-    customerIds: string[];
+    customerIds?: string[];
     startingDate: string;
+    inviteEmails?: string[];
 };
 
 export type ProjectResponseDataType = {
