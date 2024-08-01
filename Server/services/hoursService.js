@@ -28,7 +28,6 @@ exports.getAllHours = async (req) => {
         if (!validateObjectId(_id)) {
             throw new HoursValidationErrors("Invalid user ID!", 400);
         }
-        filter.userId = _id;
     }
 
     if (projectId) {
@@ -45,27 +44,36 @@ exports.getAllHours = async (req) => {
             .populate({ path: "userId", select: "email" });
     }
 
-    let userProjects = [];
     if (userRole === "employee") {
-        userProjects = await Project.find({ employeeIds: _id }).select("_id");
-    } else if (userRole === "customer") {
-        userProjects = await Project.find({ customerIds: _id }).select("_id");
-    }
+        const userProjects = await Project.find({ employeeIds: _id }).select(
+            "_id"
+        );
+        const userProjectIds = userProjects.map((project) =>
+            project._id.toString()
+        );
+        let projectIdsIntersection = userProjectIds;
 
-    const userProjectIds = userProjects.map((project) =>
-        project._id.toString()
-    );
-
-    if (projectId) {
-        if (!userProjectIds.includes(projectId)) {
-            throw new HoursValidationErrors(
-                "Project not found or not associated with this user.",
-                404
-            );
+        if (projectId) {
+            projectIdsIntersection = userProjectIds.includes(projectId)
+                ? [projectId]
+                : [];
         }
-        filter = { projectId, userId: _id };
-    } else {
-        filter = { userId: _id };
+        filter.projectId = { $in: projectIdsIntersection };
+    } else if (userRole === "customer") {
+        const userProjects = await Project.find({ customerIds: _id }).select(
+            "_id"
+        );
+        const userProjectIds = userProjects.map((project) =>
+            project._id.toString()
+        );
+        let projectIdsIntersection = userProjectIds;
+
+        if (projectId) {
+            projectIdsIntersection = userProjectIds.includes(projectId)
+                ? [projectId]
+                : [];
+        }
+        filter.projectId = { $in: projectIdsIntersection };
     }
 
     return await Hours.find(filter)
