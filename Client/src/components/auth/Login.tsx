@@ -88,7 +88,7 @@ export default function Login() {
                         </div>
                         <div className='flex items-center justify-center'>
                             <button
-                                className='flex items-center rounded-lg border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-800 shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+                                className='flex w-2/3 items-center rounded-lg border border-gray-300 bg-white px-6 py-2 text-xs font-medium text-gray-800 shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
                                 onClick={(e) => googleSubmit(e)}
                             >
                                 <svg
