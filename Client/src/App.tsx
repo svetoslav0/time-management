@@ -4,13 +4,18 @@ import { AuthContextProvider } from './components/auth/AuthContext';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
 import Dashboard from './components/dashboard/Dashboard';
-import { restrictAdminPages, restrictHomePage, restrictLoginPage } from './components/guards/guards';
+import {
+    restrictAdminPages,
+    restrictHomePage,
+    restrictLoginPage,
+} from './components/guards/guards';
 import RootLayout from './components/layout/RootLayout';
 import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
 import ProjectDetails from './components/project/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
 import UserPage from './components/UserPage/UserPage';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
+import GoogleCreateAcc from './components/auth/GoogleCreateAcc';
 
 function App() {
     const router = createBrowserRouter([
@@ -32,6 +37,10 @@ function App() {
                             element: <Login />,
                             loader: restrictLoginPage,
                         },
+                        {
+                            path: 'invite/:id',
+                            element: <GoogleCreateAcc />,
+                        },
                     ],
                 },
                 {
@@ -47,6 +56,7 @@ function App() {
                             element: <CreateUser />,
                             loader: restrictAdminPages,
                         },
+
                         {
                             path: 'users',
                             element: <UsersDashboard />,
