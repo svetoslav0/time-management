@@ -3,7 +3,7 @@ const router = require("express").Router();
 const userService = require("../services/userService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
 
-router.get("/", async (req, res, next) => {
+router.get("/", isAdmin, async (req, res, next) => {
     try {
         const { items, total } = await userService.getUsers(req);
 
@@ -23,7 +23,7 @@ router.post("/", isAdmin, async (req, res, next) => {
     }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", isAdmin, async (req, res, next) => {
     try {
         const user = await userService.getSingleUser(req.params.id);
 
@@ -53,7 +53,7 @@ router.patch("/:userId/archive", isAdmin, async (req, res, next) => {
 });
 
 router.patch("/:id/password_restore", isAdmin, async (req, res, next) => {
-    
+
     try {
         await userService.restorePassword(req);
 

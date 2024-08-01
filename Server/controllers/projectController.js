@@ -3,7 +3,11 @@ const projectService = require("../services/projectService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
 const getJwtToken = require("../middlewares/getUserTokenMiddleware");
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
+const path = require("path");
 
+router.get("/logo", async (req, res, next) => {
+    res.sendFile(path.join(__dirname ,"../assets/timeManagementLogo.png"));
+});
 router.post("/", isAdmin, async (req, res, next) => {
     try {
         const project = await projectService.createProject(req);
@@ -62,6 +66,15 @@ router.get("/:id/report", getJwtToken, async (req, res, next) => {
     try {
         const report = await projectService.getReport(req);
         res.status(200).json(report);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get("/:id/report/pdf", getJwtToken, async (req, res, next) => {
+    try {
+        const pdfBuffer = await projectService.getReportPdf(req);
+        res.status(200).contentType('application/pdf').send(pdfBuffer);
     } catch (error) {
         next(error);
     }

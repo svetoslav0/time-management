@@ -5,7 +5,6 @@ import { useLoginData } from '../auth/AuthContext';
 import useLogout from '../auth/hooks/useLogout';
 import { useUser } from '../auth/hooks/useUser';
 import AdminLinks from './AdminLinks';
-import GuestLinks from './GuestLinks';
 import UserLinks from './UserLinks';
 
 import { User } from '@/shared/types';
@@ -28,10 +27,6 @@ export function Navigation() {
         setIsLoggedIn(false);
     };
 
-    const handleLogin = () => {
-        navigate('/auth/login');
-    };
-
     const redirectToUsersPanel = () => {
         navigate('/admin/users');
     };
@@ -41,9 +36,16 @@ export function Navigation() {
     };
 
     return (
-        <nav className='m-auto flex max-w-6xl items-center justify-between px-4 py-3'>
-            <ul className=' flex justify-end'>
-                <li>
+        <nav className='flex items-center justify-between px-4 py-3 '>
+            {isLoggedIn ? (
+                <span className='text-1xl mx-8 text-center font-bold leading-9 tracking-tight text-gray-900'>
+                    Welcome, {user?.email}
+                </span>
+            ) : (
+                ''
+            )}
+            <div className='mt-2 flex w-5/12 justify-between'>
+                <div className='flex'>
                     {user?.userRole === 'admin' ? (
                         <AdminLinks
                             redirectToUsersPanel={redirectToUsersPanel}
@@ -52,25 +54,9 @@ export function Navigation() {
                     ) : (
                         ''
                     )}
-                </li>
-
-                <li>
-                    {isLoggedIn ? (
-                        <span className='text-1xl mx-4 text-center font-bold leading-9 tracking-tight text-gray-900'>
-                            {user?.email}
-                        </span>
-                    ) : (
-                        ''
-                    )}
-                </li>
-                <li>
-                    {isLoggedIn ? (
-                        <UserLinks handleLogout={handleLogout} />
-                    ) : (
-                        <GuestLinks handleLogin={handleLogin} />
-                    )}
-                </li>
-            </ul>
+                </div>
+                <div>{isLoggedIn && <UserLinks handleLogout={handleLogout} />}</div>
+            </div>
         </nav>
     );
 }

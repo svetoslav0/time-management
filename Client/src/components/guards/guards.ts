@@ -10,6 +10,7 @@ export function restrictHomePage() {
     const isNotLoggedIn = !userData;
     const isAdmin = userData?.userRole === 'admin';
     const isEmployee = userData?.userRole === 'employee';
+    const isCustomer = userData?.userRole === 'customer';
 
     if (isNotLoggedIn) {
         return redirect('/auth/login');
@@ -17,6 +18,31 @@ export function restrictHomePage() {
         return redirect('/admin/projects');
     } else if (isEmployee) {
         return redirect('/dashboard');
+    } else if (isCustomer) {
+        return redirect('/dashboard');
+    }
+
+    return null;
+}
+
+export function restrictAdminPages() {
+    const userData: UserData = getUserData();
+    const isAdmin = userData?.userRole === 'admin';
+
+    if (!isAdmin) {
+        return redirect('/');
+    }
+
+    return null;
+}
+
+export function restrictLoginPage() {
+    const userData: UserData = getUserData();
+
+    const isLoggedIn = userData;
+
+    if (isLoggedIn) {
+        return redirect('/');
     }
 
     return null;
