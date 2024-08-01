@@ -34,7 +34,7 @@ export default function EmployeeProjectsAccordion({
             </g>
         </svg>
     );
-    
+
     return (
         <div className='font-maven-pro mb-4 w-full rounded-2xl border-2 border-transparent text-left text-lg text-[#163851] transition-all duration-500 hover:border-[#008cff]'>
             <div className='h-full w-full rounded-2xl bg-white shadow-[0px_0px_18.5px_-2px_rgba(0,_0,_0,_0.11)]'>
@@ -46,7 +46,6 @@ export default function EmployeeProjectsAccordion({
                         <h2 className='w-1/2'>{projectName}</h2>
                         <div className='w-1/2'>
                             {companies.map((company) => (
-
                                 <span key={company}>{company}</span>
                             ))}
                         </div>

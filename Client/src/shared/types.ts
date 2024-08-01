@@ -38,6 +38,7 @@ export type User = {
     companyName?: string | undefined;
     phoneNumber?: string | undefined;
     address?: string | undefined;
+    ref?: string;
     _id: string;
 };
 
@@ -67,6 +68,7 @@ export type CreateUserDataType = {
     companyName?: string | undefined;
     phoneNumber?: string | undefined;
     address?: string | undefined;
+    ref?: string;
 };
 export type EditUserDataType = {
     email: string;
