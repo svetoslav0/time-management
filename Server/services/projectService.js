@@ -81,11 +81,27 @@ exports.getProjects = async (req) => {
     return projects;
 };
 
-exports.getSingleProject = (req) => {
+exports.getSingleProject = async (req) => {
     const projectId = req.params.id;
+    const userId = req.userToken._id;
+    const userRole = req.userToken.userRole;
 
     if (!validateObjectId(projectId)) {
         throw new ProjectValidationErrors("Invalid project ID format", 400);
+    }
+
+    let project;
+    if (userRole === "admin") {
+        project = await Project.findById(projectId);
+    } else {
+        project = await getProjectByRole(projectId, userId, userRole);
+        if (!project) {
+            throw new ProjectValidationErrors("Access denied!", 403);
+        }
+    }
+
+    if (!project) {
+        throw new ProjectValidationErrors("Project not found!", 404);
     }
 
     return Project.findById(projectId);
@@ -152,7 +168,7 @@ exports.getReport = async (req) => {
     if (!project) {
         throw new ProjectValidationErrors("Project not found!", 404);
     }
-    
+
     const hours = await Hours.find({ projectId }).populate(
         "userId",
         "firstName"
@@ -169,7 +185,7 @@ exports.getReport = async (req) => {
         (total, hour) => total + hour.hours * project.pricePerHour,
         0
     );
-    
+
     return {
         projectData: {
             employeeNames: project.employeeIds.map(
