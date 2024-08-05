@@ -86,25 +86,9 @@ exports.getSingleProject = async (req) => {
     const userId = req.userToken._id;
     const userRole = req.userToken.userRole;
 
-    if (!validateObjectId(projectId)) {
-        throw new ProjectValidationErrors("Invalid project ID format", 400);
-    }
+    const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
 
-    let project;
-    if (userRole === "admin") {
-        project = await Project.findById(projectId);
-    } else {
-        project = await getProjectByRole(projectId, userId, userRole);
-        if (!project) {
-            throw new ProjectValidationErrors("Access denied!", 403);
-        }
-    }
-
-    if (!project) {
-        throw new ProjectValidationErrors("Project not found!", 404);
-    }
-
-    return Project.findById(projectId);
+    return project;
 };
 
 exports.updateProject = async (req) => {
@@ -148,26 +132,7 @@ exports.getReport = async (req) => {
     const userId = req.userToken._id;
     const userRole = req.userToken.userRole;
 
-    if (!validateObjectId(projectId)) {
-        throw new ProjectValidationErrors("Invalid project ID format!", 400);
-    }
-
-    let project;
-    if (userRole === "admin") {
-        project = await Project.findById(projectId).populate(
-            "customerIds employeeIds",
-            "firstName"
-        );
-    } else {
-        project = await getProjectByRole(projectId, userId, userRole);
-        if (!project) {
-            throw new ProjectValidationErrors("Access denied!", 403);
-        }
-    }
-
-    if (!project) {
-        throw new ProjectValidationErrors("Project not found!", 404);
-    }
+    const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
 
     const hours = await Hours.find({ projectId }).populate(
         "userId",
@@ -217,4 +182,29 @@ exports.getReportPdf = async (req) => {
     const pdfBuffer = await generatePdf(reportData, templatePath);
 
     return pdfBuffer;
+};
+
+const getProjectByRoleIfNotAdmin = async (projectId, userRole, userId) => {
+    if (!validateObjectId(projectId)) {
+        throw new ProjectValidationErrors("Invalid project ID format!", 400);
+    }
+
+    let project;
+    if (userRole === "admin") {
+        project = await Project.findById(projectId).populate(
+            "customerIds employeeIds",
+            "firstName"
+        );
+    } else {
+        project = await getProjectByRole(projectId, userId, userRole);
+        if (!project) {
+            throw new ProjectValidationErrors("Access denied!", 403);
+        }
+    }
+
+    if (!project) {
+        throw new ProjectValidationErrors("Project not found!", 404);
+    }
+
+    return project;
 };
