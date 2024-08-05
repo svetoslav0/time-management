@@ -10,7 +10,7 @@ const {
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const formatDate = require("../utils/formatDateUtil");
-const getProjectByRole = require("../utils/getProjectByRole");
+const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
 const createInvites = require("../utils/createInvitesUtil");
 const { areInviteEmailsValid } = require("../utils/validateEmailUtil");
 const generatePdf = require("../utils/generatePdfUtil");
@@ -182,29 +182,4 @@ exports.getReportPdf = async (req) => {
     const pdfBuffer = await generatePdf(reportData, templatePath);
 
     return pdfBuffer;
-};
-
-const getProjectByRoleIfNotAdmin = async (projectId, userRole, userId) => {
-    if (!validateObjectId(projectId)) {
-        throw new ProjectValidationErrors("Invalid project ID format!", 400);
-    }
-
-    let project;
-    if (userRole === "admin") {
-        project = await Project.findById(projectId).populate(
-            "customerIds employeeIds",
-            "firstName"
-        );
-    } else {
-        project = await getProjectByRole(projectId, userId, userRole);
-        if (!project) {
-            throw new ProjectValidationErrors("Access denied!", 403);
-        }
-    }
-
-    if (!project) {
-        throw new ProjectValidationErrors("Project not found!", 404);
-    }
-
-    return project;
 };
