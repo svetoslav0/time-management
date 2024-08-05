@@ -9,6 +9,7 @@ import { projectFormSchema } from '../../shared/formValidations';
 import InputComponent from '../../UI/formComponents/InputComponent';
 import cn from '../../util/cn';
 import Calendar from './Calendar';
+import EmailInvite from './EmailInvite';
 import useProjectCreate from './hooks/useProjectCreate';
 import useProjectUpdate from './hooks/useProjectUpdate';
 import MultiSelector from './MultiSelector';
@@ -27,6 +28,7 @@ export default function ProjectFormControl() {
     const [pricePerHour, setPricePerHour] = useState<number | string>('');
     const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
     const [selectedCustomer, setSelectedCustomer] = useState<string[]>([]);
+    const [inviteEmails, setInviteEmails] = useState<string[]>([]);
     const currentDate = dayjs();
     const [selectedDate, setSelectedDate] = useState<Dayjs | string>('');
     const [showCalendar, setShowCalendar] = useState(false);
@@ -64,6 +66,7 @@ export default function ProjectFormControl() {
             createProject(data);
         }
         reset();
+        setInviteEmails([]);
         setSelectedEmployees([]);
         setSelectedCustomer([]);
         setPricePerHour('');
@@ -84,12 +87,15 @@ export default function ProjectFormControl() {
                 setValue('projectName', project.projectName);
                 setPricePerHour(project.pricePerHour);
                 setValue('pricePerHour', project.pricePerHour);
-                setSelectedCustomer(project.customerIds);
-                setValue('customerIds', project.customerIds);
+                if (project.customerIds) {
+                    setSelectedCustomer(project.customerIds);
+                    setValue('customerIds', project.customerIds);
+                }
                 setSelectedEmployees(project.employeeIds);
                 setValue('employeeIds', project.employeeIds);
             }
         } else {
+            setInviteEmails([]);
             setSelectedEmployees([]);
             setSelectedCustomer([]);
             setPricePerHour('');
@@ -105,6 +111,13 @@ export default function ProjectFormControl() {
             clearErrors('employeeIds');
         }
     }, [selectedEmployees, setValue, clearErrors]);
+
+    useEffect(() => {
+        setValue('inviteEmails', inviteEmails);
+        if (inviteEmails) {
+            clearErrors('inviteEmails');
+        }
+    }, [inviteEmails, setValue, clearErrors]);
 
     useEffect(() => {
         setValue('customerIds', selectedCustomer);
@@ -223,6 +236,14 @@ export default function ProjectFormControl() {
                                 setSelectedUsers={setSelectedEmployees}
                                 field='employeeIds'
                                 placeholder='Employees'
+                            />
+
+                            <EmailInvite
+                                error={errors.inviteEmails?.message}
+                                inviteEmails={inviteEmails}
+                                setInviteEmails={setInviteEmails}
+                                field='inviteEmails'
+                                placeholder='Invite emails'
                             />
                         </div>
                         <div className='flex w-full justify-center'>
