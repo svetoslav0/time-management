@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import useCompleteProject from './hooks/useCompleteProject';
@@ -16,8 +16,14 @@ export default function ProjectDetails() {
     const { data: employees } = useFetchUsers({ userRole: 'employee', status: 'active' });
     const navigate = useNavigate();
     const { id } = useParams<string>();
-    const { data: project, error } = useFetchProjectById(id!);
+    const { data: project, error, isFetching } = useFetchProjectById(id!);
     const { completeProject } = useCompleteProject(id);
+
+    useEffect(() => {
+        if (error && !isFetching) {
+            navigate('/');
+        }
+    }, [error, isFetching, navigate]);
 
     const onCompleteProject = async () => {
         if (project && project.status == 'inProgress') {
