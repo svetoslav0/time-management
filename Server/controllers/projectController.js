@@ -6,7 +6,7 @@ const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const path = require("path");
 
 router.get("/logo", async (req, res, next) => {
-    res.sendFile(path.join(__dirname ,"../assets/timeManagementLogo.png"));
+    res.sendFile(path.join(__dirname, "../assets/timeManagementLogo.png"));
 });
 router.post("/", isAdmin, async (req, res, next) => {
     try {
@@ -36,7 +36,7 @@ router.get("/", getJwtToken, async (req, res, next) => {
     }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", getJwtToken, async (req, res, next) => {
     try {
         const project = await projectService.getSingleProject(req);
 
