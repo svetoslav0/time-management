@@ -17,6 +17,7 @@ type InputComponentProps<T extends FieldValues> = {
     ref?: string;
     toggleVisibility?: () => void;
     isVisible?: boolean;
+    shouldShowIcons?: boolean;
 } & ComponentPropsWithoutRef<'input'>;
 
 export default function InputComponent<T extends FieldValues>({
