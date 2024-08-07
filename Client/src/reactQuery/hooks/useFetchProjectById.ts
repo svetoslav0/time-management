@@ -11,7 +11,7 @@ export default function useFetchProjectById(id: string) {
     const queryKey = [queryKeys.projects, id];
     const generatedUrl = `${urlKeys.projects}/${id}`;
 
-    const { data, error, isLoading, refetch } = useQuery<ProjectResponseDataType>({
+    const { data, error, isLoading, isFetching, refetch } = useQuery<ProjectResponseDataType>({
         queryKey,
         queryFn: () => get<ProjectResponseDataType>(generatedUrl),
         staleTime: 1000 * 60 * 5,
@@ -19,5 +19,5 @@ export default function useFetchProjectById(id: string) {
         retry: 2,
         enabled: !!id,
     });
-    return { data, error, isLoading, refetch };
+    return { data, error, isLoading, isFetching, refetch };
 }
