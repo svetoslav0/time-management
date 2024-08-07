@@ -60,6 +60,7 @@ export default function Login() {
                             register={register}
                             trigger={trigger}
                             field='email'
+                            shouldShowIcons={true}
                         />
                         <InputComponent
                             disabled={isPending}
@@ -72,6 +73,7 @@ export default function Login() {
                             password={true}
                             toggleVisibility={toggleVisibility}
                             isVisible={isVisible}
+                            shouldShowIcons={true}
                         />
                         <LoginError errors={errors} loginResponseErr={error} />
                         <button
