@@ -69,7 +69,7 @@ exports.googleLogin = async (req) => {
         throw new UserValidationErrors("Such user was not found", 401);
     }
 
-    if (user.isGoogleLogin === "false") {
+    if (!user.isGoogleLogin) {
         throw new UserValidationErrors("Such user was not found", 405);
     }
 
