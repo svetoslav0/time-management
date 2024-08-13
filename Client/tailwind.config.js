@@ -12,6 +12,9 @@ export default {
                 inputFieldBorderColor: '#008CFF',
                 welcomeMsgColor: '#163851',
                 loginBtnColor: '#008CFF',
+                customBlue: '#008CFF',
+                customLightBlue: '#95CFFF',
+                customDarkBlue: '#163851'
             },
             boxShadow: {
                 loginFormShadow: '0px 0px 18.5px -2px #0000001C',
