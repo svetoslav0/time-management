@@ -1,39 +1,25 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { useLoginData } from '../auth/AuthContext';
 import useLogout from '../auth/hooks/useLogout';
 import { useUser } from '../auth/hooks/useUser';
-import AdminLinks from './AdminLinks';
-import UserLinks from './UserLinks';
 
 import { User } from '@/shared/types';
-import ButtonLogout from '@/UI/formComponents/ButtonLogout';
 
 export function Navigation() {
     const { loginResponseData } = useLoginData();
     const { currentUser } = useUser();
-    const navigate = useNavigate();
+
     const logout = useLogout();
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!loginResponseData);
     const [user, setUser] = useState<User | undefined>(currentUser);
 
     useEffect(() => {
         setUser(currentUser);
-        setIsLoggedIn(!!loginResponseData);
     }, [currentUser, loginResponseData]);
 
     const handleLogout = () => {
         logout();
-        setIsLoggedIn(false);
-    };
-
-    const redirectToUsersPanel = () => {
-        navigate('/admin/users');
-    };
-
-    const redirectToProjectsPanel = () => {
-        navigate('/admin/projects');
     };
 
     return (
@@ -82,20 +68,6 @@ export function Navigation() {
                         </li>
                     </ul>
                 )}
-
-                {/* <div className='mt-2 flex w-5/12 justify-between'>
-                    <div className='flex'>
-                        {user?.userRole === 'admin' ? (
-                            <AdminLinks
-                                redirectToUsersPanel={redirectToUsersPanel}
-                                redirectToProjectsPanel={redirectToProjectsPanel}
-                            />
-                        ) : (
-                            ''
-                        )}
-                    </div>
-                    <div>{isLoggedIn && <UserLinks handleLogout={handleLogout} />}</div>
-                </div> */}
             </div>
         </nav>
     );
