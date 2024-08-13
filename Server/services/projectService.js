@@ -28,7 +28,10 @@ exports.createProject = async (req) => {
         employeeIds: projectData.employeeIds,
     });
 
-    if (projectData.inviteEmails && areInviteEmailsValid(projectData.inviteEmails)) {
+    if (
+        projectData.inviteEmails &&
+        areInviteEmailsValid(projectData.inviteEmails)
+    ) {
         createInvites(projectData.inviteEmails, project._id);
     }
 
@@ -77,6 +80,10 @@ exports.getProjects = async (req) => {
     }
 
     const projects = await Project.find(query);
+
+    if (projects.length === 0) {
+        throw new ProjectValidationErrors("No projects found", 403);
+    }
 
     return projects;
 };
@@ -152,7 +159,7 @@ exports.getReport = async (req) => {
     if (!project) {
         throw new ProjectValidationErrors("Project not found!", 404);
     }
-    
+
     const hours = await Hours.find({ projectId }).populate(
         "userId",
         "firstName"
@@ -169,7 +176,7 @@ exports.getReport = async (req) => {
         (total, hour) => total + hour.hours * project.pricePerHour,
         0
     );
-    
+
     return {
         projectData: {
             employeeNames: project.employeeIds.map(
@@ -196,7 +203,10 @@ exports.getReport = async (req) => {
 exports.getReportPdf = async (req) => {
     const reportData = await this.getReport(req);
 
-    const templatePath = path.join(__dirname, '../templates/projectReport/projectReportTemplate.hbs');
+    const templatePath = path.join(
+        __dirname,
+        "../templates/projectReport/projectReportTemplate.hbs"
+    );
 
     const pdfBuffer = await generatePdf(reportData, templatePath);
 
