@@ -7,3 +7,7 @@
 body {
     @apply font-mavenPro;
 }
+
+.primaryBtn {
+    @apply bg-customBlue hover:bg-customLightBlue hover:text-customDarkBlue rounded-lg px-4 py-2 text-lg font-bold text-white;
+}
