@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 import LoginError from '../errors/LoginError';
 import useLogin from './hooks/useLogin';
@@ -37,14 +38,16 @@ export default function Login() {
 
     const onSuccess = (response: CredentialResponse) => {
         const token = response.credential;
-
-        post(`${import.meta.env.VITE_API_BASE_URL}/login/google/${token}`).then((resp) => {
-            console.log(resp);
-        });
+        post(`/login/google/${token}`)
+            .then(() => {})
+            .catch((err) => {
+                toast.error(err.message);
+            });
     };
 
     const onError = () => {
-        console.error('Google login failed');
+        toast.error('Google login failed');
+        console.log('Google login failed');
     };
 
     return (
@@ -98,7 +101,11 @@ export default function Login() {
                             <div className='flex-grow border-t border-gray-400'></div>
                         </div>
                         <div className='w-auto self-center'>
-                        <GoogleLogin onSuccess={onSuccess} onError={onError} text='continue_with' />
+                            <GoogleLogin
+                                onSuccess={onSuccess}
+                                onError={onError}
+                                text='continue_with'
+                            />
                         </div>
                     </form>
                 </div>
