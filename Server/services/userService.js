@@ -1,3 +1,4 @@
+const { OAuth2Client } = require("google-auth-library");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
@@ -8,6 +9,8 @@ const {
 
 const { generateToken } = require("../utils/jwt");
 const UserValidationErrors = require("../errors/userValidationErrors");
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 exports.login = async (req) => {
     const { email, password } = req.body;
@@ -29,6 +32,45 @@ exports.login = async (req) => {
 
     if (!isValid) {
         throw new UserValidationErrors("Invalid email or password!", 400);
+    }
+
+    const token = generateToken(user);
+
+    return {
+        user: {
+            _id: user._id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            userRole: user.userRole,
+            status: user.status,
+        },
+        token,
+    };
+};
+
+exports.googleLogin = async (req) => {
+    const googleToken = req.params.token;
+
+    const ticket = await client.verifyIdToken({
+        idToken: googleToken,
+        audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload) {
+        throw new UserValidationErrors("Invalid google token!", 401);
+    }
+
+    const user = await User.findOne({ email: payload.email });
+
+    if (!user) {
+        throw new UserValidationErrors("Such user was not found", 401);
+    }
+
+    if (!user.isGoogleLogin) {
+        throw new UserValidationErrors("Such user was not found", 405);
     }
 
     const token = generateToken(user);

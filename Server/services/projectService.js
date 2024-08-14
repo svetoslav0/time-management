@@ -10,7 +10,7 @@ const {
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const formatDate = require("../utils/formatDateUtil");
-const getProjectByRole = require("../utils/getProjectByRole");
+const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
 const createInvites = require("../utils/createInvitesUtil");
 const { areInviteEmailsValid } = require("../utils/validateEmailUtil");
 const generatePdf = require("../utils/generatePdfUtil");
@@ -81,14 +81,14 @@ exports.getProjects = async (req) => {
     return projects;
 };
 
-exports.getSingleProject = (req) => {
+exports.getSingleProject = async (req) => {
     const projectId = req.params.id;
+    const userId = req.userToken._id;
+    const userRole = req.userToken.userRole;
 
-    if (!validateObjectId(projectId)) {
-        throw new ProjectValidationErrors("Invalid project ID format", 400);
-    }
+    const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
 
-    return Project.findById(projectId);
+    return project;
 };
 
 exports.updateProject = async (req) => {
@@ -132,27 +132,8 @@ exports.getReport = async (req) => {
     const userId = req.userToken._id;
     const userRole = req.userToken.userRole;
 
-    if (!validateObjectId(projectId)) {
-        throw new ProjectValidationErrors("Invalid project ID format!", 400);
-    }
+    const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
 
-    let project;
-    if (userRole === "admin") {
-        project = await Project.findById(projectId).populate(
-            "customerIds employeeIds",
-            "firstName"
-        );
-    } else {
-        project = await getProjectByRole(projectId, userId, userRole);
-        if (!project) {
-            throw new ProjectValidationErrors("Access denied!", 403);
-        }
-    }
-
-    if (!project) {
-        throw new ProjectValidationErrors("Project not found!", 404);
-    }
-    
     const hours = await Hours.find({ projectId }).populate(
         "userId",
         "firstName"
@@ -169,7 +150,7 @@ exports.getReport = async (req) => {
         (total, hour) => total + hour.hours * project.pricePerHour,
         0
     );
-    
+
     return {
         projectData: {
             employeeNames: project.employeeIds.map(
