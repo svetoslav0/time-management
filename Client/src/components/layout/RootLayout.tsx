@@ -6,8 +6,10 @@ import { Navigation } from './Navigation';
 export default function RootLayout() {
     return (
         <>
-            <Navigation />
-            <div className='mx-auto flex min-h-screen max-w-screen-xl flex-col'>
+            <div className='fixed left-0 right-0 top-0 z-50 w-full'>
+                <Navigation />
+            </div>
+            <div className='mx-auto flex min-h-screen max-w-screen-xl flex-col mt-[98px]'>
                 <main className='flex-grow'>
                     <Toaster
                         position='top-center'
