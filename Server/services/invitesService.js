@@ -35,10 +35,6 @@ exports.createCustomerOnInvite = async (req) => {
         }
 
         const payload = await verifyGoogleToken(googleToken);
-
-        if (!payload) {
-            throw new UserValidationErrors("Invalid google token!", 401);
-        }
     }
 
     await validateUserDataOnUserCreate(userData);

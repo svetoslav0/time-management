@@ -54,10 +54,6 @@ exports.googleLogin = async (req) => {
 
     const payload = await verifyGoogleToken(googleToken);
 
-    if (!payload) {
-        throw new UserValidationErrors("Invalid google token!", 401);
-    }
-
     const user = await User.findOne({ email: payload.email });
 
     if (!user) {
