@@ -1,39 +1,38 @@
-import { LoginResponseData } from '../../shared/types';
-// import SearchBar from '../../UI/formComponents/SearchBar';
 import ProjectCard from './ProjectCard';
 
 import useFetchAllProjects from '@/reactQuery/hooks/useFetchAllProjects';
 import ActionSearchFiled from '@/UI/formComponents/ActionSearchFiled';
-import ButtonCreateProject from '@/UI/formComponents/ButtonCreateProject';
-import { getUserData } from '@/util/util';
+import Loader from '@/UI/Loader';
 
 export default function ProjectAdminDashboard() {
     const { data: projects, isLoading, filter, handleChangeFilter } = useFetchAllProjects();
-    const currentUser: LoginResponseData | undefined = getUserData();
 
     return (
-        <div className='flex-1 p-4'>
-            <div className='flex justify-center'>
-                <h2 className='my-3 text-3xl font-bold'>Projects</h2>
-            </div>
-            <div className='flex justify-center'>
-                {currentUser?.userRole === 'admin' && (
-                    <ButtonCreateProject
-                        children='Create Project'
-                        path={'/admin/projectForm?action=create'}
-                    />
-                )}
-            </div>
-            <div className='flex justify-center'>
-                <ActionSearchFiled value={filter} handleChangeFilter={handleChangeFilter} />
+        <div className=' flex-1'>
+            <div className='my-16 flex justify-center'>
+                <ActionSearchFiled
+                    value={filter}
+                    handleChangeFilter={handleChangeFilter}
+                    placeholder='search projects..'
+                />
             </div>
             {isLoading ? (
-                <h1>Loading...</h1>
+                <div className='relative flex w-full justify-center'>
+                    <Loader />
+                </div>
             ) : (
-                <div className='mx-10 mt-4 grid gap-10 pb-10 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4'>
-                    {projects?.map((project) => (
-                        <ProjectCard key={project._id} project={project} />
-                    ))}
+                <div>
+                    {projects && projects.length > 0 ? (
+                        <div className='grid grid-cols-2 gap-x-[72px] gap-y-[39px]'>
+                            {projects.map((project, index) => (
+                                <ProjectCard key={project._id} project={project} index={index} />
+                            ))}
+                        </div>
+                    ) : (
+                        <p className='text-center text-lg font-bold text-customDarkBlue'>
+                            There is no projects
+                        </p>
+                    )}
                 </div>
             )}
         </div>

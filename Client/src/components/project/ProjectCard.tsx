@@ -1,42 +1,49 @@
-import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
 import { ProjectResponseDataType } from '../../shared/types';
-import ButtonReport from '../../UI/formComponents/ButtonReport';
 
-import ButtonDetails from '@/UI/formComponents/ButtonDetails';
-import ButtonEdit from '@/UI/formComponents/ButtonEdit';
+import cn from '@/util/cn';
 
-export default function ProjectCard({ project }: { project: ProjectResponseDataType }) {
-    const colorStatus = `${project.status === 'inProgress' ? 'text-green-600' : project.status === 'completed' ? 'text-blue-600' : 'text-gray-300'}`;
-    const daysAgo = dayjs().diff(dayjs(project.startingDate), 'day');
-
+export default function ProjectCard({
+    project,
+    index,
+}: {
+    project: ProjectResponseDataType;
+    index: number;
+}) {
     return (
-        <>
-            <div className='text-surface shadow-secondary-1 dark:bg-surface-dark background-color max-w block rounded-lg border dark:text-white'>
-                <div className='border-b-2 px-6 py-3 text-black dark:rounded-t-lg dark:bg-gray-900 dark:text-white'>
-                    Client name: Yet to be implemented
-                </div>
-                <div className='p-6  text-black dark:bg-gray-900'>
-                    <h5 className='mb-2 text-xl font-medium leading-tight dark:text-white'>
-                        Project name: {project.projectName}
-                    </h5>
-                    <p className='text-base text-black dark:text-white'>
-                        Team: Yet to be implemented
+        <div
+            className={cn(
+                index % 2 === 0 ? 'justify-self-end' : 'justify-self-start',
+                'flex w-[519px] border-collapse overflow-hidden rounded-2xl border-[1px] border-l-0 border-white shadow transition duration-200 ease-out hover:border-customBlue'
+            )}
+        >
+            <div
+                className={cn(
+                    project.status === 'inProgress' ? 'bg-customBlue' : 'bg-customGreen',
+                    'h-full w-[9px]'
+                )}
+            ></div>
+            <div className='ml-2 w-full text-lg'>
+                <p className='mt-5 font-bold text-customDarkBlue'>
+                    Project name: {project.projectName}
+                </p>
+                <div className='mb-5 ml-4 mr-[41px] mt-4 flex justify-between'>
+                    <p
+                        className={cn(
+                            project.status === 'inProgress'
+                                ? 'text-customBlue'
+                                : 'text-customGreen',
+                            'font-normal'
+                        )}
+                    >
+                        Status: {project.status === 'inProgress' ? 'In Progress' : 'Completed'}
                     </p>
-                    <p className='text-black  dark:text-white'>Starting date {daysAgo} days ago.</p>
-                </div>
-                <div className='border-t-2 px-6 py-3 dark:rounded-b-lg dark:bg-gray-900'>
-                    <p className={`${colorStatus} mr-5 inline-block`}>
-                        Status: {project.status === 'inProgress' ? 'In Progress' : 'Complete'}.
-                    </p>
-                    <ButtonDetails children='Details' path={`/admin/projects/${project._id}`} />
-                    <ButtonEdit
-                        children='Edit'
-                        path={`/admin/projectForm?action=edit&projectId=${project._id}`}
-                    />
-                    {project.status === 'completed' ? <ButtonReport children='Report' /> : ''}
+                    <Link to={`/admin/projects/${project._id}`} className='secondaryBtn'>
+                        Details
+                    </Link>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
