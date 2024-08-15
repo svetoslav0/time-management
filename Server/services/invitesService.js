@@ -73,14 +73,7 @@ exports.sendInvite = async (req) => {
     const projectId = req.body.projectId;
     const emailToSendInvite = req.body.inviteEmail;
 
-    const isProjectIdValidAndExisting2 = await isProjectIdValidAndExisting(projectId);
-
-    if (isProjectIdValidAndExisting2 === false) {
-        throw new InvitesValidationErrors(
-            "Project with the provided ID does not exist!",
-            400
-        );
-    }
+    await isProjectIdValidAndExisting(projectId);
 
     if (emailToSendInvite.length < 1) {
         throw new InvitesValidationErrors(

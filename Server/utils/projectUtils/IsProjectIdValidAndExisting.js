@@ -13,7 +13,12 @@ const isProjectIdValidAndExisting = async (projectId) => {
 
     const project = await Project.findById(projectId).select('_id');
 
-    return project === null ? false : true;
+    if (!project) {
+        throw new InvitesValidationErrors(
+            "Project with the provided ID does not exist!",
+            400
+        );
+    }
 };
 
 module.exports = isProjectIdValidAndExisting;
