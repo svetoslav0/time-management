@@ -25,8 +25,8 @@ router.post("/register", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
     try {
         await invitesService.sendInvite(req);
-
-        res.status(200);
+        
+        res.status(200).send({ message: "All emails send successfully!" });
     } catch (error) {
         next(error);
     }
