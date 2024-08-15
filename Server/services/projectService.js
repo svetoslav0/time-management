@@ -118,10 +118,11 @@ exports.updateProject = async (req) => {
     });
 
     if (areInviteEmailsValid(emailsToCheck)) {
-        const existingEmails = await User.find({
+        const existingUsersWithEmails = await User.find({
             email: { $in: emailsToCheck }
         }, 'email');
-
+        
+        const existingEmails = existingUsersWithEmails.map(user => user.email);
         const nonExistingEmails = emailsToCheck.filter(email => !existingEmails.includes(email));
 
         createInvites(nonExistingEmails, project._id);
