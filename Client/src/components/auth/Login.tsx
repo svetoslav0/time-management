@@ -3,20 +3,24 @@ import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 import LoginError from '../errors/LoginError';
+import { useLoginData } from './AuthContext';
 import useLogin from './hooks/useLogin';
 
 import mainLogo from '@/assets/timeManagementLogo.png';
 import httpServices from '@/services/httpServices';
 import { loginSchema } from '@/shared/formValidations';
-import { LoginFormDataType } from '@/shared/types';
+import { LoginFormDataType, LoginResponseData } from '@/shared/types';
 import InputComponent from '@/UI/formComponents/InputComponent';
 import Loader from '@/UI/Loader';
 
 export default function Login() {
     const { login, error, isError, isPending } = useLogin();
     const { post } = httpServices();
+    const { setLoginData } = useLoginData();
+    const navigate = useNavigate();
 
     const [isVisible, setIsVisible] = useState(false);
     const {
@@ -39,7 +43,11 @@ export default function Login() {
     const onSuccess = (response: CredentialResponse) => {
         const token = response.credential;
         post(`/login/google/${token}`)
-            .then(() => {})
+            .then((res) => {
+                const loginResponse = res as LoginResponseData;
+                setLoginData(loginResponse);
+                navigate('/dashboard')
+            })
             .catch((err) => {
                 toast.error(err.message);
             });
