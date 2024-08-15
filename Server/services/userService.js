@@ -52,9 +52,7 @@ exports.login = async (req) => {
 exports.googleLogin = async (req) => {
     const googleToken = req.params.token;
 
-    const ticket = await verifyGoogleToken(googleToken);
-
-    const payload = ticket.getPayload();
+    const payload = await verifyGoogleToken(googleToken);
 
     if (!payload) {
         throw new UserValidationErrors("Invalid google token!", 401);
