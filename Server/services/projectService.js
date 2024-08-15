@@ -2,6 +2,8 @@ const path = require("path");
 
 const Project = require("../models/Project");
 const Hours = require("../models/Hours");
+const User = require("../models/User");
+
 const userService = require("../services/userService");
 const {
     validateProjectData,
@@ -94,6 +96,7 @@ exports.getSingleProject = async (req) => {
 exports.updateProject = async (req) => {
     const projectData = req.body;
     const projectId = req.params.id;
+    const emailsToCheck = projectData.inviteEmails;
 
     if (!projectData.status) {
         throw new ProjectValidationErrors("No status provided!", 400);
@@ -114,8 +117,14 @@ exports.updateProject = async (req) => {
         new: true,
     });
 
-    if (areInviteEmailsValid(projectData.inviteEmails)) {
-        createInvites(projectData.inviteEmails, project._id);
+    if (areInviteEmailsValid(emailsToCheck)) {
+        const existingEmails = await User.find({
+            email: { $in: emailsToCheck }
+        }, 'email');
+
+        const nonExistingEmails = emailsToCheck.filter(email => !existingEmails.includes(email));
+
+        createInvites(nonExistingEmails, project._id);
     }
 
     return {
