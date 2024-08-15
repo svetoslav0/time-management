@@ -22,4 +22,14 @@ router.post("/register", async (req, res, next) => {
     }
 });
 
+router.post("/", async (req, res, next) => {
+    try {
+        await invitesService.sendInvite(req);
+
+        res.status(200);
+    } catch (error) {
+        next(error);
+    }
+});
+
 module.exports = router;
