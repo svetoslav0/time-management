@@ -1,5 +1,7 @@
 const router = require("express").Router();
 
+const isAdmin = require("../middlewares/isAdminMiddleware");
+
 const invitesService = require("../services/invitesService");
 
 router.get("/validate/:id", async (req, res, next) => {
@@ -22,11 +24,11 @@ router.post("/register", async (req, res, next) => {
     }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", isAdmin, async (req, res, next) => {
     try {
         await invitesService.sendInvite(req);
-        
-        res.status(200).send({ message: "All emails send successfully!" });
+
+        res.status(200).send({ message: "Email was sent successfully!" });
     } catch (error) {
         next(error);
     }
