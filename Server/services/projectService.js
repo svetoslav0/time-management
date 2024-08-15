@@ -76,7 +76,9 @@ exports.getProjects = async (req) => {
         query.customerIds = user._id;
     }
 
-    const projects = await Project.find(query);
+    const projects = await Project.find(query).sort({
+        status: -1
+    });
 
     return projects;
 };
