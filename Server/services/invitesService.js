@@ -1,16 +1,14 @@
 const User = require("../models/User");
-const Project = require("../models/Project");
 
-const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const UserValidationErrors = require("../errors/userValidationErrors");
-const InvitesValidationErrors = require("../../errors/invitesValidationErrors");
+const InvitesValidationErrors = require("../errors/invitesValidationErrors");
 
 const {
     validateUserDataOnUserCreate
 } = require("../utils/validateUserDataUtil");
 const IsInviteValid = require("../utils/validationUtils/validateInviteUtil");
-const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
+const isProjectIdValidAndExisting = require("../utils/projectUtils/IsProjectIdValidAndExisting");
 
 exports.validateInvite = async (req) => {
     const inviteUUID = req.params.id;
@@ -75,27 +73,21 @@ exports.sendInvite = async (req) => {
     const projectId = req.body.projectId;
     const emailToSendInvite = req.body.inviteEmail;
 
-    const isProjectIdValidAndExisting = await isProjectIdValidAndExisting(projectId);
+    const isProjectIdValidAndExisting2 = await isProjectIdValidAndExisting(projectId);
 
-    if (isProjectIdValidAndExisting === false) {
+    if (isProjectIdValidAndExisting2 === false) {
         throw new InvitesValidationErrors(
             "Project with the provided ID does not exist!",
             400
         );
     }
 
-    await sendInvitesToNonExistingUsers(emailToSendInvite, projectId);
-};
-
-async function isProjectIdValidAndExisting(projectId) {
-    if (!validateObjectId(projectId)) {
-        throw new ProjectValidationErrors(
-            "Invalid project ID format",
+    if (emailToSendInvite.length < 1) {
+        throw new InvitesValidationErrors(
+            "No email provided!",
             400
         );
     }
 
-    const project = await Project.findById(projectId).select('_id');
-
-    return project === null ? false : true;
+    await sendInvitesToNonExistingUsers(emailToSendInvite, projectId);
 };
