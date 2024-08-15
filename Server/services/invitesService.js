@@ -2,9 +2,10 @@ const User = require("../models/User");
 
 const UserValidationErrors = require("../errors/userValidationErrors");
 const {
-    validateUserDataOnUserCreate
+    validateUserDataOnUserCreate,
 } = require("../utils/validateUserDataUtil");
 const IsInviteValid = require("../utils/validationUtils/validateInviteUtil");
+const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
 
 exports.validateInvite = async (req) => {
     const inviteUUID = req.params.id;
@@ -21,8 +22,24 @@ exports.createCustomerOnInvite = async (req) => {
     if (!userData.inviteId) {
         throw new UserValidationErrors("Invite id is required!", 400);
     }
-
     await IsInviteValid(userData.inviteId);
+
+    if (userData.isGoogleLogin) {
+        const googleToken = userData.googleToken;
+
+        if (!googleToken) {
+            throw new UserValidationErrors(
+                "googleToken parameter is missing",
+                401
+            );
+        }
+
+        const payload = await verifyGoogleToken(googleToken);
+
+        if (!payload) {
+            throw new UserValidationErrors("Invalid google token!", 401);
+        }
+    }
 
     await validateUserDataOnUserCreate(userData);
 
@@ -36,7 +53,7 @@ exports.createCustomerOnInvite = async (req) => {
         companyName,
         phoneNumber,
         address,
-        isGoogleLogin
+        isGoogleLogin,
     } = userData;
 
     const newUser = {
@@ -49,7 +66,7 @@ exports.createCustomerOnInvite = async (req) => {
         companyName,
         phoneNumber,
         address,
-        ...(isGoogleLogin === true && { isGoogleLogin })
+        ...(isGoogleLogin === true && { isGoogleLogin }),
     };
 
     const user = await User.create(newUser);
