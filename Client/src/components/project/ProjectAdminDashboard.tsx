@@ -13,7 +13,7 @@ export default function ProjectAdminDashboard() {
                 <ActionSearchFiled
                     value={filter}
                     handleChangeFilter={handleChangeFilter}
-                    placeholder='search projects..'
+                    placeholder='search projects...'
                 />
             </div>
             {isLoading ? (
