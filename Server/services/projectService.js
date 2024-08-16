@@ -2,6 +2,7 @@ const path = require("path");
 
 const Project = require("../models/Project");
 const Hours = require("../models/Hours");
+
 const userService = require("../services/userService");
 const {
     validateProjectData,
@@ -11,9 +12,8 @@ const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const formatDate = require("../utils/formatDateUtil");
 const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
-const createInvites = require("../utils/createInvitesUtil");
-const { areInviteEmailsValid } = require("../utils/validateEmailUtil");
 const generatePdf = require("../utils/generatePdfUtil");
+const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
@@ -28,8 +28,8 @@ exports.createProject = async (req) => {
         employeeIds: projectData.employeeIds,
     });
 
-    if (projectData.inviteEmails && areInviteEmailsValid(projectData.inviteEmails)) {
-        createInvites(projectData.inviteEmails, project._id);
+    if (projectData.inviteEmails) {
+        sendInvitesToNonExistingUsers(projectData.inviteEmails);
     }
 
     return {
@@ -76,7 +76,9 @@ exports.getProjects = async (req) => {
         query.customerIds = user._id;
     }
 
-    const projects = await Project.find(query);
+    const projects = await Project.find(query).sort({
+        status: -1
+    });
 
     return projects;
 };
@@ -94,6 +96,7 @@ exports.getSingleProject = async (req) => {
 exports.updateProject = async (req) => {
     const projectData = req.body;
     const projectId = req.params.id;
+    const emailsToCheck = projectData.inviteEmails;
 
     if (!projectData.status) {
         throw new ProjectValidationErrors("No status provided!", 400);
@@ -114,8 +117,8 @@ exports.updateProject = async (req) => {
         new: true,
     });
 
-    if (areInviteEmailsValid(projectData.inviteEmails)) {
-        createInvites(projectData.inviteEmails, project._id);
+    if (emailsToCheck) {
+        await sendInvitesToNonExistingUsers(emailsToCheck, projectId);
     }
 
     return {

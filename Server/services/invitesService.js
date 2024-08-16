@@ -1,16 +1,18 @@
 const User = require("../models/User");
 
 const UserValidationErrors = require("../errors/userValidationErrors");
-const {
-    validateUserDataOnUserCreate,
-} = require("../utils/validateUserDataUtil");
-const IsInviteValid = require("../utils/validationUtils/validateInviteUtil");
+const InvitesValidationErrors = require("../errors/invitesValidationErrors");
+
+const { validateUserDataOnUserCreate } = require("../utils/validateUserDataUtil");
+const isInviteValid = require("../utils/validationUtils/validateInviteUtil");
+const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
+const isProjectIdValidAndExisting = require("../utils/projectUtils/IsProjectIdValidAndExisting");
 const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
 
 exports.validateInvite = async (req) => {
     const inviteUUID = req.params.id;
 
-    const invite = IsInviteValid(inviteUUID);
+    const invite = isInviteValid(inviteUUID);
 
     return invite;
 };
@@ -22,7 +24,7 @@ exports.createCustomerOnInvite = async (req) => {
     if (!userData.inviteId) {
         throw new UserValidationErrors("Invite id is required!", 400);
     }
-    await IsInviteValid(userData.inviteId);
+    await isInviteValid(userData.inviteId);
 
     if (userData.isGoogleLogin) {
         const googleToken = userData.googleToken;
@@ -76,4 +78,20 @@ exports.createCustomerOnInvite = async (req) => {
         phoneNumber: user.phoneNumber,
         address: user.address,
     };
+};
+
+exports.sendInvite = async (req) => {
+    const projectId = req.body.projectId;
+    const emailToSendInvite = req.body.inviteEmail;
+
+    await isProjectIdValidAndExisting(projectId);
+
+    if (emailToSendInvite.length < 1) {
+        throw new InvitesValidationErrors(
+            "No email provided!",
+            400
+        );
+    }
+
+    await sendInvitesToNonExistingUsers(emailToSendInvite, projectId);
 };

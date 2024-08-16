@@ -16,6 +16,9 @@ echo "DEV_ADDRESS=$DEV_ADDRESS" >> .env
 echo "PORT=$PORT" >> .env
 echo "MONGODB_URI=$MONGODB_URI" >> .env
 echo "JWT_SECRET=$JWT_SECRET" >> .env
+echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env
+echo "SMTP_USER=$SMTP_USER" >> .env
+echo "SMTP_PASS=$SMTP_PASS" >> .env
 
 echo "Running npm install . . ."
 npm install
@@ -54,6 +57,7 @@ mkdir -p environment
 cd environment
 touch .env.stage
 echo "VITE_API_BASE_URL=$VITE_API_BASE_URL" >> .env.stage
+echo "VITE_GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env.stage
 
 cd ..
 

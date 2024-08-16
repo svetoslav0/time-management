@@ -1,21 +1,28 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 import LoginError from '../errors/LoginError';
+import { useLoginData } from './AuthContext';
 import useLogin from './hooks/useLogin';
 
 import mainLogo from '@/assets/timeManagementLogo.png';
+import httpServices from '@/services/httpServices';
 import { loginSchema } from '@/shared/formValidations';
-import { LoginFormDataType } from '@/shared/types';
+import { LoginFormDataType, LoginResponseData } from '@/shared/types';
 import InputComponent from '@/UI/formComponents/InputComponent';
 import Loader from '@/UI/Loader';
 
 export default function Login() {
     const { login, error, isError, isPending } = useLogin();
+    const { post } = httpServices();
+    const { setLoginData } = useLoginData();
+    const navigate = useNavigate();
 
     const [isVisible, setIsVisible] = useState(false);
-
     const {
         register,
         handleSubmit,
@@ -31,6 +38,24 @@ export default function Login() {
 
     const toggleVisibility = () => {
         setIsVisible((prevVisibility) => !prevVisibility);
+    };
+
+    const onSuccess = (response: CredentialResponse) => {
+        const token = response.credential;
+        post(`/login/google/${token}`)
+            .then((res) => {
+                const loginResponse = res as LoginResponseData;
+                setLoginData(loginResponse);
+                navigate('/dashboard')
+            })
+            .catch((err) => {
+                toast.error(err.message);
+            });
+    };
+
+    const onError = () => {
+        toast.error('Google login failed');
+        console.log('Google login failed');
     };
 
     return (
@@ -78,6 +103,18 @@ export default function Login() {
                         >
                             Login
                         </button>
+                        <div className='my-4 flex w-2/4 items-center self-center'>
+                            <div className='flex-grow border-t border-gray-400'></div>
+                            <span className='mx-4 text-gray-500'>or</span>
+                            <div className='flex-grow border-t border-gray-400'></div>
+                        </div>
+                        <div className='w-auto self-center'>
+                            <GoogleLogin
+                                onSuccess={onSuccess}
+                                onError={onError}
+                                text='continue_with'
+                            />
+                        </div>
                     </form>
                 </div>
             </div>
