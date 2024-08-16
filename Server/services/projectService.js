@@ -2,7 +2,6 @@ const path = require("path");
 
 const Project = require("../models/Project");
 const Hours = require("../models/Hours");
-const User = require("../models/User");
 
 const userService = require("../services/userService");
 const {
@@ -13,9 +12,8 @@ const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const formatDate = require("../utils/formatDateUtil");
 const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
-const createInvites = require("../utils/createInvitesUtil");
-const { areInviteEmailsValid } = require("../utils/validateEmailUtil");
 const generatePdf = require("../utils/generatePdfUtil");
+const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
@@ -30,8 +28,8 @@ exports.createProject = async (req) => {
         employeeIds: projectData.employeeIds,
     });
 
-    if (projectData.inviteEmails && areInviteEmailsValid(projectData.inviteEmails)) {
-        createInvites(projectData.inviteEmails, project._id);
+    if (projectData.inviteEmails) {
+        sendInvitesToNonExistingUsers(projectData.inviteEmails);
     }
 
     return {
@@ -119,15 +117,8 @@ exports.updateProject = async (req) => {
         new: true,
     });
 
-    if (areInviteEmailsValid(emailsToCheck)) {
-        const existingUsersWithEmails = await User.find({
-            email: { $in: emailsToCheck }
-        }, 'email');
-        
-        const existingEmails = existingUsersWithEmails.map(user => user.email);
-        const nonExistingEmails = emailsToCheck.filter(email => !existingEmails.includes(email));
-
-        createInvites(nonExistingEmails, project._id);
+    if (emailsToCheck) {
+        await sendInvitesToNonExistingUsers(emailsToCheck, projectId);
     }
 
     return {

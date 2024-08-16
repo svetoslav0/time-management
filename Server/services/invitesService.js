@@ -1,10 +1,14 @@
 const User = require("../models/User");
 
 const UserValidationErrors = require("../errors/userValidationErrors");
+const InvitesValidationErrors = require("../errors/invitesValidationErrors");
+
 const {
     validateUserDataOnUserCreate
 } = require("../utils/validateUserDataUtil");
 const IsInviteValid = require("../utils/validationUtils/validateInviteUtil");
+const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
+const isProjectIdValidAndExisting = require("../utils/projectUtils/IsProjectIdValidAndExisting");
 
 exports.validateInvite = async (req) => {
     const inviteUUID = req.params.id;
@@ -63,4 +67,20 @@ exports.createCustomerOnInvite = async (req) => {
         phoneNumber: user.phoneNumber,
         address: user.address,
     };
+};
+
+exports.sendInvite = async (req) => {
+    const projectId = req.body.projectId;
+    const emailToSendInvite = req.body.inviteEmail;
+
+    await isProjectIdValidAndExisting(projectId);
+
+    if (emailToSendInvite.length < 1) {
+        throw new InvitesValidationErrors(
+            "No email provided!",
+            400
+        );
+    }
+
+    await sendInvitesToNonExistingUsers(emailToSendInvite, projectId);
 };
