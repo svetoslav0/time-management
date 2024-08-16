@@ -30,16 +30,16 @@ function App() {
                     loader: restrictHomePage,
                 },
                 {
+                    path: 'invite/:id',
+                    element: <GoogleCreateAcc />,
+                },
+                {
                     path: 'auth',
                     children: [
                         {
                             path: 'login',
                             element: <Login />,
                             loader: restrictLoginPage,
-                        },
-                        {
-                            path: 'invite/:id',
-                            element: <GoogleCreateAcc />,
                         },
                     ],
                 },

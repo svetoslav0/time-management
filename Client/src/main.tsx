@@ -7,8 +7,10 @@ import { queryClient } from './reactQuery/queryClient.ts';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
+const clientId: string = process.env.CLIENT_ID as string;
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <GoogleOAuthProvider clientId='<client-id>'>
+    <GoogleOAuthProvider clientId={clientId}>
         <React.StrictMode>
             <QueryClientProvider client={queryClient}>
                 <App />
