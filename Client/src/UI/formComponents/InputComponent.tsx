@@ -29,6 +29,7 @@ export default function InputComponent<T extends FieldValues>({
     password,
     toggleVisibility,
     isVisible,
+    shouldShowIcons,
     ...props
 }: InputComponentProps<T>) {
     return (
@@ -43,7 +44,7 @@ export default function InputComponent<T extends FieldValues>({
                     id={field}
                     className={`block w-full ${field === 'description' ? 'h-20 mb-5 placeholder-custom': ''} rounded-xl border border-inputFieldBorderColor border-opacity-50 ${
                         error || isResponseError ? 'border-red-500' : 'border-gray-300'
-                    } ${password || field === 'email' ? 'pl-10' : ''} bg-gray-100 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500`}
+                    } ${(password || field === 'email') && shouldShowIcons === true ? 'pl-10' : ''} bg-gray-100 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500`}
                     placeholder={capitalizeAndFormat(field)}
                     {...register(field)}
                     onBlur={() => trigger(field)}
@@ -61,12 +62,12 @@ export default function InputComponent<T extends FieldValues>({
                         )}
                     </span>
                 )}
-                {field === 'email' && (
+                {field === 'email' && shouldShowIcons === true && (
                     <span>
                         <CiMail className='absolute left-4 top-1/2 -translate-y-1/2 scale-150 transform text-welcomeMsgColor' />
                     </span>
                 )}
-                {password && (
+                {password && shouldShowIcons === true && (
                     <span>
                         <CiLock className='absolute left-4 top-1/2 -translate-y-1/2 scale-150 transform text-welcomeMsgColor' />
                     </span>
