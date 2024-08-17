@@ -10,11 +10,15 @@ import useCreateUser from './hooks/useCreateUser';
 
 import mainLogo from '@/assets/timeManagementLogo.png';
 import GearSvg from '@/UI/design/GearSvg';
+import useFetchEmailValidation from '@/reactQuery/hooks/useFetchEmailValidation';
+import { useParams } from 'react-router-dom';
 
 export default function GoogleCreateAcc() {
     const [isVisible, setIsVisible] = useState(false);
-
+    const [isValid, setIsValid] = useState<boolean | null>(null);
     const { createUser, isSuccess } = useCreateUser();
+    const { id } = useParams<string>();
+
     const {
         register,
         handleSubmit,
@@ -24,6 +28,9 @@ export default function GoogleCreateAcc() {
     } = useForm<CreateUserDataType>({
         resolver: yupResolver(createUserSchema),
     });
+
+    const { data, error, isLoading } = useFetchEmailValidation(id!);
+    console.log(data, error, isLoading);
 
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
         createUser(data);
@@ -38,6 +45,10 @@ export default function GoogleCreateAcc() {
             reset();
         }
     }, [isSuccess, reset]);
+
+    if (isValid) {
+        return <h1>Invalid Invitation!</h1>;
+    }
 
     return (
         <div className='mx-auto flex max-w-xl flex-col gap-6 p-5'>
