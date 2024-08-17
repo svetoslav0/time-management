@@ -12,12 +12,15 @@ import mainLogo from '@/assets/timeManagementLogo.png';
 import GearSvg from '@/UI/design/GearSvg';
 import useFetchEmailValidation from '@/reactQuery/hooks/useFetchEmailValidation';
 import { useParams } from 'react-router-dom';
+import Loader from '@/UI/Loader';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function GoogleCreateAcc() {
     const [isVisible, setIsVisible] = useState(false);
-    const [isValid, setIsValid] = useState<boolean | null>(null);
     const { createUser, isSuccess } = useCreateUser();
     const { id } = useParams<string>();
+    const navigate = useNavigate();
 
     const {
         register,
@@ -30,7 +33,6 @@ export default function GoogleCreateAcc() {
     });
 
     const { data, error, isLoading } = useFetchEmailValidation(id!);
-    console.log(data, error, isLoading);
 
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
         createUser(data);
@@ -46,8 +48,19 @@ export default function GoogleCreateAcc() {
         }
     }, [isSuccess, reset]);
 
-    if (isValid) {
-        return <h1>Invalid Invitation!</h1>;
+    useEffect(() => {
+        if (error) {
+            toast.error('Invalid invite');
+            navigate('/'); // Redirect to home page on error
+        }
+    }, [error, navigate]);
+
+    if (isLoading) {
+        return (
+            <div className='flex flex-row items-center justify-center'>
+                <Loader />
+            </div>
+        );
     }
 
     return (
