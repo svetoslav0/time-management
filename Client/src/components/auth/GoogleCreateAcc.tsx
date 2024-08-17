@@ -50,7 +50,7 @@ export default function GoogleCreateAcc() {
 
     useEffect(() => {
         if (error) {
-            toast.error('Invalid invite');
+            toast.error('Invalid or expired invite!');
             navigate('/'); // Redirect to home page on error
         }
     }, [error, navigate]);
