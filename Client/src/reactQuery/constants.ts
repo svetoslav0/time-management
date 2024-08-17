@@ -9,6 +9,7 @@ export const urlKeys = {
     logout: '/logout',
     hours: '/hours',
     completeProject: '/projects/',
+    emailValidation: '/invites/validate',
 };
 
 export const queryKeys = {
@@ -20,4 +21,5 @@ export const queryKeys = {
     projects: 'Projects',
     user: 'User',
     hours: 'Hours',
+    isValidEmail: 'IsValidEmail',
 };
