@@ -9,7 +9,7 @@ export const urlKeys = {
     logout: '/logout',
     hours: '/hours',
     completeProject: '/projects/',
-    emailValidation: '/validate',
+    emailValidation: '/invites/validate',
 };
 
 export const queryKeys = {
