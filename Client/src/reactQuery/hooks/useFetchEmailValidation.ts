@@ -13,6 +13,7 @@ export default function useFetchEmailValidation(id: string) {
     const { data, error, isLoading } = useQuery<EmailValidationResponse>({
         queryKey: [queryKeys.isValidEmail, id],
         queryFn: () => get<EmailValidationResponse>(generatedUrl),
+        retry: 1,
     });
 
     return { data, error, isLoading };
