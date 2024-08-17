@@ -2,6 +2,7 @@ const path = require("path");
 
 const Project = require("../models/Project");
 const Hours = require("../models/Hours");
+
 const userService = require("../services/userService");
 const {
     validateProjectData,
@@ -10,10 +11,9 @@ const {
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const formatDate = require("../utils/formatDateUtil");
-const getProjectByRole = require("../utils/getProjectByRole");
-const createInvites = require("../utils/createInvitesUtil");
-const { areInviteEmailsValid } = require("../utils/validateEmailUtil");
+const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
 const generatePdf = require("../utils/generatePdfUtil");
+const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
@@ -28,8 +28,8 @@ exports.createProject = async (req) => {
         employeeIds: projectData.employeeIds,
     });
 
-    if (projectData.inviteEmails && areInviteEmailsValid(projectData.inviteEmails)) {
-        createInvites(projectData.inviteEmails, project._id);
+    if (projectData.inviteEmails) {
+        sendInvitesToNonExistingUsers(projectData.inviteEmails);
     }
 
     return {
@@ -76,24 +76,27 @@ exports.getProjects = async (req) => {
         query.customerIds = user._id;
     }
 
-    const projects = await Project.find(query);
+    const projects = await Project.find(query).sort({
+        status: -1
+    });
 
     return projects;
 };
 
-exports.getSingleProject = (req) => {
+exports.getSingleProject = async (req) => {
     const projectId = req.params.id;
+    const userId = req.userToken._id;
+    const userRole = req.userToken.userRole;
 
-    if (!validateObjectId(projectId)) {
-        throw new ProjectValidationErrors("Invalid project ID format", 400);
-    }
+    const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
 
-    return Project.findById(projectId);
+    return project;
 };
 
 exports.updateProject = async (req) => {
     const projectData = req.body;
     const projectId = req.params.id;
+    const emailsToCheck = projectData.inviteEmails;
 
     if (!projectData.status) {
         throw new ProjectValidationErrors("No status provided!", 400);
@@ -114,8 +117,8 @@ exports.updateProject = async (req) => {
         new: true,
     });
 
-    if (areInviteEmailsValid(projectData.inviteEmails)) {
-        createInvites(projectData.inviteEmails, project._id);
+    if (emailsToCheck) {
+        await sendInvitesToNonExistingUsers(emailsToCheck, projectId);
     }
 
     return {
@@ -132,27 +135,8 @@ exports.getReport = async (req) => {
     const userId = req.userToken._id;
     const userRole = req.userToken.userRole;
 
-    if (!validateObjectId(projectId)) {
-        throw new ProjectValidationErrors("Invalid project ID format!", 400);
-    }
+    const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
 
-    let project;
-    if (userRole === "admin") {
-        project = await Project.findById(projectId).populate(
-            "customerIds employeeIds",
-            "firstName"
-        );
-    } else {
-        project = await getProjectByRole(projectId, userId, userRole);
-        if (!project) {
-            throw new ProjectValidationErrors("Access denied!", 403);
-        }
-    }
-
-    if (!project) {
-        throw new ProjectValidationErrors("Project not found!", 404);
-    }
-    
     const hours = await Hours.find({ projectId }).populate(
         "userId",
         "firstName"
@@ -169,7 +153,7 @@ exports.getReport = async (req) => {
         (total, hour) => total + hour.hours * project.pricePerHour,
         0
     );
-    
+
     return {
         projectData: {
             employeeNames: project.employeeIds.map(

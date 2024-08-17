@@ -25,6 +25,19 @@ router.post("/login", async (req, res, next) => {
     }
 });
 
+router.post("/login/google/:token", async (req, res, next) => {
+    try {
+        const { user, token } = await userService.googleLogin(req);
+        res.cookie("authCookie", token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.post("/logout", (req, res, next) => {
     try {
         res.clearCookie("authCookie");

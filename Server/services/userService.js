@@ -8,6 +8,9 @@ const {
 
 const { generateToken } = require("../utils/jwt");
 const UserValidationErrors = require("../errors/userValidationErrors");
+const {
+    default: verifyGoogleToken,
+} = require("../utils/verifyGoogleTokenUtil");
 
 exports.login = async (req) => {
     const { email, password } = req.body;
@@ -29,6 +32,36 @@ exports.login = async (req) => {
 
     if (!isValid) {
         throw new UserValidationErrors("Invalid email or password!", 400);
+    }
+
+    const token = generateToken(user);
+
+    return {
+        user: {
+            _id: user._id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            userRole: user.userRole,
+            status: user.status,
+        },
+        token,
+    };
+};
+
+exports.googleLogin = async (req) => {
+    const googleToken = req.params.token;
+
+    const payload = await verifyGoogleToken(googleToken);
+
+    const user = await User.findOne({ email: payload.email });
+
+    if (!user) {
+        throw new UserValidationErrors("Such user was not found", 401);
+    }
+
+    if (!user.isGoogleLogin) {
+        throw new UserValidationErrors("Such user was not found", 405);
     }
 
     const token = generateToken(user);
