@@ -187,6 +187,7 @@ export default function GoogleCreateAcc() {
                     </div>
                     <div className='self-center'>
                         <GoogleLogin
+                            text="continue_with"
                             onSuccess={(credentialResponse) => {
                                 console.log(credentialResponse);
                             }}
