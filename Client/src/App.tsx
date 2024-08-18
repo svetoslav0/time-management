@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthContextProvider } from './components/auth/AuthContext';
 import CreateUser from './components/auth/CreateUser';
 import Login from './components/auth/Login';
+import CustomerProjectDetails from './components/dashboard/customerProjects/CustomerProjectDetails';
 import Dashboard from './components/dashboard/Dashboard';
 import { restrictAdminPages, restrictHomePage, restrictLoginPage } from './components/guards/guards';
 import RootLayout from './components/layout/RootLayout';
@@ -72,6 +73,13 @@ function App() {
                 {
                     path: '/dashboard',
                     element: <Dashboard />,
+                    children: [
+                      {
+                        path: 'project/:id',
+                        element: <CustomerProjectDetails />,
+
+                      }
+                    ]
                 },
             ],
         },
