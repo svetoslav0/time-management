@@ -71,15 +71,12 @@ function App() {
                     ],
                 },
                 {
-                    path: '/dashboard',
+                    path: 'dashboard',
                     element: <Dashboard />,
-                    children: [
-                      {
-                        path: 'project/:id',
-                        element: <CustomerProjectDetails />,
-
-                      }
-                    ]
+                },
+                {
+                    path: 'dashboard/:id',
+                    element: <CustomerProjectDetails />,
                 },
             ],
         },

@@ -17,7 +17,7 @@ export default function Dashboard() {
 
     return (
         <>
-            {loginResponseData?.userRole === 'customer' && <p>Customer projects</p>}
+            <h1>Dashboard</h1>
             {(loginResponseData?.userRole === 'admin' ||
                 loginResponseData?.userRole === 'employee') && <EmployeeProjects userData={loginResponseData} />}
         </>
