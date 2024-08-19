@@ -11,6 +11,9 @@ import { queryClient } from './reactQuery/queryClient.ts';
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID!;
 
+console.log('DEBUG clientId:');
+console.log(clientId);
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <GoogleOAuthProvider clientId={clientId}>
         <React.StrictMode>
