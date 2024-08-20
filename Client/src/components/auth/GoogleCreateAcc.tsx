@@ -30,9 +30,12 @@ export default function GoogleCreateAcc() {
         reset,
     } = useForm<CreateUserDataType>({
         resolver: yupResolver(createUserSchema),
+        defaultValues: {
+            userRole: 'customer',
+        },
     });
 
-    const { data, error, isLoading } = useFetchEmailValidation(id!);
+    const { error, isLoading } = useFetchEmailValidation(id!);
 
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
         createUser(data);
@@ -51,7 +54,7 @@ export default function GoogleCreateAcc() {
     useEffect(() => {
         if (error) {
             toast.error('Invalid or expired invite!');
-            navigate('/'); // Redirect to home page on error
+            navigate('/');
         }
     }, [error, navigate]);
 
@@ -187,7 +190,7 @@ export default function GoogleCreateAcc() {
                     </div>
                     <div className='self-center'>
                         <GoogleLogin
-                            text="continue_with"
+                            text='continue_with'
                             onSuccess={(credentialResponse) => {
                                 console.log(credentialResponse);
                             }}
