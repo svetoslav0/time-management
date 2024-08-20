@@ -9,7 +9,7 @@ const generalErrorHandlerMiddleware = require("./middlewares/generalErrorHandler
 const routes = require("./routes");
 
 const corsOrigin = process.env.ENV === "DEV"
-    ? process.env.DEV_ADDRESS
+    ? process.env.DEV_ADDRESS.split(',')
     : "http://localhost:5173";
 
 const app = express();

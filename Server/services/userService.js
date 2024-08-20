@@ -1,4 +1,3 @@
-const { OAuth2Client } = require("google-auth-library");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
@@ -9,8 +8,9 @@ const {
 
 const { generateToken } = require("../utils/jwt");
 const UserValidationErrors = require("../errors/userValidationErrors");
-
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const {
+    default: verifyGoogleToken,
+} = require("../utils/verifyGoogleTokenUtil");
 
 exports.login = async (req) => {
     const { email, password } = req.body;
@@ -52,16 +52,7 @@ exports.login = async (req) => {
 exports.googleLogin = async (req) => {
     const googleToken = req.params.token;
 
-    const ticket = await client.verifyIdToken({
-        idToken: googleToken,
-        audience: process.env.GOOGLE_CLIENT_ID,
-    });
-
-    const payload = ticket.getPayload();
-
-    if (!payload) {
-        throw new UserValidationErrors("Invalid google token!", 401);
-    }
+    const payload = await verifyGoogleToken(googleToken);
 
     const user = await User.findOne({ email: payload.email });
 
