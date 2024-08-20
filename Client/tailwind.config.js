@@ -16,10 +16,24 @@ export default {
                 customLightBlue: '#95CFFF',
                 customDarkBlue: '#163851',
                 customGreen: '#3EDD24',
-                customGrey: '#DEE5EC'
+                customGrey: '#DEE5EC',
+                customTableRowDarker: '#E6F4FF',
             },
             boxShadow: {
                 loginFormShadow: '0px 0px 18.5px -2px #0000001C',
+                TrInsetShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.1)',
+            },
+            scale: {
+                40: '0.4',
+                30: '0.3',
+                35: '0.35',
+                // Add more custom scales if needed
+            },
+            hoursDescriptionTextSizeLineHeight: {
+                custom: {
+                    fontSize: '14px',
+                    lineHeight: '16.45px',
+                },
             },
         },
     },
@@ -37,6 +51,15 @@ export default {
                 },
             };
             addUtilities(newUtilities, ['responsive', 'hover']);
+            addUtilities(
+                {
+                  '.text-hoursDescription': {
+                    fontSize: '14px',
+                    lineHeight: '16.45px',
+                  },
+                },
+                ['responsive', 'hover']
+              );
         },
     ],
 };
