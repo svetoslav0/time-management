@@ -23,12 +23,15 @@ export default function useFetchUsers({ userRole, status }: useFetchUsersProps) 
     const selectFn = useCallback((data: UserResponseDetails, filter: string) => {
         if (filter) {
             const filterData = filter.toLowerCase().trim();
-            const filteredData = data.items.filter(
-                (users) =>
-                    users.email.toLowerCase().includes(filterData) ||
-                    users.firstName.toLowerCase().includes(filterData) ||
-                    users.lastName.toLowerCase().includes(filterData)
-            );
+            const filteredData = data.items.filter((user) => {
+                const fullName = `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`;
+                return (
+                    user.email.toLowerCase().includes(filterData) ||
+                    user.firstName.toLowerCase().includes(filterData) ||
+                    user.lastName.toLowerCase().includes(filterData) ||
+                    fullName.includes(filterData)
+                );
+            });
             return { total: filteredData.length, items: filteredData };
         }
         return data;
