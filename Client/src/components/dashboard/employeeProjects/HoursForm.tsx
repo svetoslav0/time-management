@@ -11,6 +11,7 @@ import useDeleteHours from './hooks/useDeleteHours';
 import useUpdateProjectHours from './hooks/useUpdateProjectHours';
 import { HoursResponseData, UpdateHoursData } from './types';
 
+import { useLoginData } from '@/components/auth/AuthContext';
 import Calendar from '@/components/projectForm/Calendar';
 import { hoursFormSchema } from '@/shared/formValidations';
 import Modal from '@/UI/Modal';
@@ -35,6 +36,14 @@ export default function HoursForm(props: HoursFormProps) {
     const [selectedDate, setSelectedDate] = useState<Dayjs | string>('');
     const [showCalendar, setShowCalendar] = useState(false);
     const [edit, setEdit] = useState(false);
+
+    const { loginResponseData } = useLoginData();
+
+    let isTimeOwner = false;
+
+    if (props.action === 'edit') {
+        isTimeOwner = loginResponseData?._id === props.dateData.userId._id;
+    }
 
     const pendingData = useMutationState({
         filters: { mutationKey: ['update-hours'], status: 'pending' },
@@ -176,7 +185,7 @@ export default function HoursForm(props: HoursFormProps) {
                     </div>
                 ) : (
                     <div className='col-span-3 flex justify-end'>
-                        {props.action === 'edit' && !edit && (
+                        {props.action === 'edit' && isTimeOwner && !edit && (
                             <>
                                 <button
                                     type='button'
