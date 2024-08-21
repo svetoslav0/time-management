@@ -13,7 +13,8 @@ const getProjectByRole = async (projectId, userId, userRole) => {
 
     return Project.findOne(query).populate(
         "customerIds employeeIds",
-        "firstName"
+        "firstName lastName",
+        
     );
 };
 

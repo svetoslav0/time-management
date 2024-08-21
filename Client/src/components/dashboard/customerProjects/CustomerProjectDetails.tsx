@@ -1,29 +1,17 @@
+
+import { useParams } from 'react-router-dom';
+
 import mainLogo from '@/assets/timeManagementLogo.png';
+import useFetchProjectByIdReport from '@/reactQuery/hooks/useFetchProjectByIdReport';
 import GearSvg from '@/UI/design/GearSvg';
 export default function CustomerProjectDetails() {
-    const data = [
-        { date: '2023-10-01', description: 'Worked on project AWorked on project AWorked on project AWorked on project AWorked on project AWorked on project AWorked on project AWorked on project A', hours: 8 },
-        { date: '2023-10-02', description: 'Meeting with client', hours: 2 },
-        { date: '2023-10-03', description: 'Developed feature X', hours: 7 },
-        { date: '2023-10-02', description: 'Meeting with client', hours: 2 },
-        { date: '2023-10-03', description: 'Developed feature X', hours: 7 },
-        { date: '2023-10-02', description: 'Meeting with client', hours: 2 },
-        { date: '2023-10-03', description: 'Developed feature X', hours: 7 },
-        { date: '2023-10-02', description: 'Meeting with client', hours: 2 },
-        { date: '2023-10-03', description: 'Developed feature X', hours: 7 },
-        { date: '2023-10-03', description: 'Developed feature X', hours: 7 },
-        { date: '2023-10-02', description: 'Meeting with client', hours: 2 },
-        { date: '2023-10-03', description: 'Developed feature X', hours: 7 },
-        { date: '2023-10-02', description: 'Meeting with client', hours: 2 },
-        { date: '2023-10-03', description: 'Developed feature X', hours: 7 },
-        { date: '2023-10-03', description: 'Developed feature X', hours: 7 },
-        { date: '2023-10-02', description: 'Meeting with client', hours: 2 },
-        { date: '2023-10-03', description: 'Developed feature X', hours: 7 },
-        { date: '2023-10-02', description: 'Meeting with client', hours: 2 },
-        { date: '2023-10-03', description: 'Developed feature X', hours: 7 },
-       
-     
-    ];
+
+    const {id} = useParams<string>();
+
+    const { data: project } = useFetchProjectByIdReport(id!);
+   
+
+    const hours = project?.hours || [];
     return (
         <div className='mb-20 flex flex-col items-center px-4'>
             <div className='fixed left-[-4rem] top-[40rem] -z-10'>
@@ -41,15 +29,19 @@ export default function CustomerProjectDetails() {
             <div className='mb-8 w-3/4 font-medium text-customBlue -mt-8'>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Employee Name:</p>
-                    <span className='ml-2 text-black'>Dimitrov Ivan</span>
+                    <span className='ml-2 text-black'>{project?.projectData.employeeNames.join(', ')}</span>
                 </div>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Client Name:</p>
-                    <span className='ml-2 text-black'>BackStack</span>
+                    <span className='ml-2 text-black'>{project?.projectData.customerNames}</span>
                 </div>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Project Name:</p>
-                    <span className='ml-2 text-black'>BackStack</span>
+                    <span className='ml-2 text-black'>{project?.projectData.projectName}</span>
+                </div>
+                <div className='flex'>
+                    <p className='min-w-[150px]'>Current price:</p>
+                    <span className='ml-2 text-black'>{project?.totalPrice}</span>
                 </div>
             </div>
             <div className='w-3/4 overflow-hidden rounded-2xl border shadow-lg'>
@@ -62,13 +54,13 @@ export default function CustomerProjectDetails() {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((row, index) => (
+                        {hours.map((row, index) => (
                             <tr
                                 key={index}
                                 className={`${index % 2 === 0 ? 'bg-white': 'bg-customTableRowDarker shadow-TrInsetShadow'} min-h-12`}
                             >
                                 <td className='p-4 font-bold text-welcomeMsgColor text-base'>{row.date}</td>
-                                <td className='p-4 text-hoursDescription text-welcomeMsgColor font-medium'>{row.description}</td>
+                                <td className='p-4 text-hoursDescription text-welcomeMsgColor font-medium'>{row.notes}</td>
                                 <td className='p-4 font-bold text-welcomeMsgColor text-base'>{row.hours.toFixed(1)}</td>
                             </tr>
                         ))}
