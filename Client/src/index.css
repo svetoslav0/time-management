@@ -20,3 +20,6 @@ body {
     @apply flex rounded-lg border-2 border-white bg-white py-1 pl-3  pr-5 text-base font-semibold text-customBlue no-underline shadow outline-none transition-all duration-300 hover:border-customBlue focus:outline-none;
 }
 
+.adminProjectBtn {
+    @apply inline-block rounded-md  px-4 py-1 text-sm font-bold no-underline outline-none focus:outline-none;
+}
