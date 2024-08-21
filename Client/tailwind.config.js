@@ -14,9 +14,11 @@ export default {
                 loginBtnColor: '#008CFF',
                 customBlue: '#008CFF',
                 customLightBlue: '#95CFFF',
+                customVeryLightBlue: '#E8F5FF',
                 customDarkBlue: '#163851',
                 customGreen: '#3EDD24',
-                customGrey: '#DEE5EC'
+                customGrey: '#DEE5EC',
+                customDarkGray: '#7d7d7d',
             },
             boxShadow: {
                 loginFormShadow: '0px 0px 18.5px -2px #0000001C',
