@@ -151,6 +151,13 @@ export default function HoursForm(props: HoursFormProps) {
                     />
                     {props.action === 'edit' && <span>hours</span>}
                 </div>
+                {props.action === 'edit' && !isTimeOwner ? (
+                    <p className='text-base font-semibold text-customDarkBlue'>
+                        {props.dateData.userId.email}
+                    </p>
+                ) : (
+                    <p></p>
+                )}
                 <input
                     readOnly={props.action === 'edit' && !edit}
                     type='text'
@@ -170,7 +177,7 @@ export default function HoursForm(props: HoursFormProps) {
                 )}
 
                 {isDeleting && props.action === 'edit' ? (
-                    <div className='col-span-3 flex justify-end'>
+                    <div className='col-span-2 flex justify-end'>
                         <button
                             className='h-7 w-20 rounded-lg bg-red-400 text-center text-base font-extrabold text-white'
                             onClick={() => {
@@ -184,7 +191,7 @@ export default function HoursForm(props: HoursFormProps) {
                         </button>
                     </div>
                 ) : (
-                    <div className='col-span-3 flex justify-end'>
+                    <div className='col-span-2 flex justify-end'>
                         {props.action === 'edit' && isTimeOwner && !edit && (
                             <>
                                 <button
