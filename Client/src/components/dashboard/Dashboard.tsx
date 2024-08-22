@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useLoginData } from '../auth/AuthContext';
+import CustomersProjects from './customersProjects/CustomersProjects';
 import EmployeeProjects from './employeeProjects/EmployeeProjects';
 
 export default function Dashboard() {
@@ -17,9 +18,11 @@ export default function Dashboard() {
 
     return (
         <>
-            {loginResponseData?.userRole === 'customer' && <p>Customer projects</p>}
-            {(loginResponseData?.userRole === 'admin' ||
-                loginResponseData?.userRole === 'employee') && <EmployeeProjects/>}
+
+            {loginResponseData?.userRole === 'customer' && <CustomersProjects />}
+            {loginResponseData?.userRole === 'employee' && (
+                <EmployeeProjects userData={loginResponseData} />
+            )}
         </>
     );
 }
