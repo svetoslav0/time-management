@@ -27,3 +27,9 @@ body {
 .employeeProjectBtn {
     @apply inline-block rounded-[10px]  min-w-20 px-2.5 leading-none py-[5px] text-base font-extrabold no-underline outline-none focus:outline-none;
 }
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
