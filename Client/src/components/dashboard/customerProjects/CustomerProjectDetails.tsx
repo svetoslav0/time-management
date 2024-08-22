@@ -57,7 +57,7 @@ export default function CustomerProjectDetails() {
                         {hours.map((row, index) => (
                             <tr
                                 key={index}
-                                className={`${index % 2 === 0 ? 'bg-white': 'bg-customTableRowDarker shadow-TrInsetShadow'} min-h-12`}
+                                className={`${index % 2 === 0 ? 'bg-white': 'bg-customDarkGrey shadow-TrInsetShadow'} min-h-12`}
                             >
                                 <td className='p-4 font-bold text-welcomeMsgColor text-base'>{row.date}</td>
                                 <td className='p-4 text-hoursDescription text-welcomeMsgColor font-medium'>{row.notes}</td>
