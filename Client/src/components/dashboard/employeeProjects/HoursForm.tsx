@@ -1,10 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutationState } from '@tanstack/react-query';
 import dayjs, { Dayjs } from 'dayjs';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { FaTrash } from 'react-icons/fa';
-import { LuClipboardEdit } from 'react-icons/lu';
 
 import useAddHours from './hooks/useAddHours';
 import useDeleteHours from './hooks/useDeleteHours';
@@ -14,6 +12,9 @@ import { HoursResponseData, UpdateHoursData } from './types';
 import { useLoginData } from '@/components/auth/AuthContext';
 import Calendar from '@/components/projectForm/Calendar';
 import { hoursFormSchema } from '@/shared/formValidations';
+import ClipboardEditSvg from '@/UI/design/ClipboardEditSvg';
+import PolygonSvg from '@/UI/design/PolygonSvg';
+import TrashSvg from '@/UI/design/TrashSvg';
 import Modal from '@/UI/Modal';
 import cn from '@/util/cn';
 
@@ -35,7 +36,9 @@ export default function HoursForm(props: HoursFormProps) {
     const currentDate = dayjs();
     const [selectedDate, setSelectedDate] = useState<Dayjs | string>('');
     const [showCalendar, setShowCalendar] = useState(false);
-    const [edit, setEdit] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+
+    const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
     const { loginResponseData } = useLoginData();
 
@@ -58,13 +61,16 @@ export default function HoursForm(props: HoursFormProps) {
         setValue,
         setError,
         clearErrors,
+        getValues,
         formState: { errors },
     } = useForm<FormInputs>({
         resolver: yupResolver(hoursFormSchema),
     });
 
+    const { ref, ...restNotes } = register('notes');
+
     useEffect(() => {
-        if (props.action === 'edit' && !edit) {
+        if (props.action === 'edit' && !isEdit) {
             if (!pendingData.length && !isSuccess) {
                 const parsedDate = dayjs(props.dateData.date);
                 setSelectedDate(parsedDate);
@@ -78,7 +84,7 @@ export default function HoursForm(props: HoursFormProps) {
                 setValue('notes', pendingData[0].notes);
             }
         }
-    }, [props, edit, setValue, pendingData, isSuccess]);
+    }, [props, isEdit, setValue, pendingData, isSuccess]);
 
     useEffect(() => {
         if (errors.date && errors.hours?.message === 'Please add time' && errors.notes) {
@@ -103,7 +109,7 @@ export default function HoursForm(props: HoursFormProps) {
             props.onCancel();
         } else {
             updateHours({ ...data, projectId: props.projectId, _id: props.dateData._id });
-            setEdit(false);
+            setIsEdit(false);
         }
     };
 
@@ -118,38 +124,83 @@ export default function HoursForm(props: HoursFormProps) {
     );
 
     return (
-        <div className={cn(props.action === 'create' ? 'bg-[#F0F0F0]' : 'bg-[#fcfcfc]')}>
+        <div>
             {errors && <p className='mx-6 text-red-600'>{errors.root?.message}</p>}
-            <form onSubmit={handleSubmit(onSubmit)} className='mx-6 mb-8 grid grid-cols-6'>
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                className={cn(
+                    'min-h-11 grid grid-cols-[130px_130px_280px_484px_1fr] items-center pl-8 pr-6 mb-3.5 text-base font-semibold text-customDarkBlue',
+                    (isEdit || isDeleting )&& 'bg-customDarkWhite'
+                )}
+            >
                 <input
                     type='text'
-                    className='w-32 bg-transparent outline-none'
+                    className='bg-transparent outline-none'
                     {...register('date')}
                     value={
-                        dayjs.isDayjs(selectedDate)
-                            ? selectedDate.format('YYYY-MM-DD')
-                            : selectedDate
+                        dayjs.isDayjs(selectedDate) ? selectedDate.format('DD.MM.YY') : selectedDate
                     }
                     placeholder='Choose date'
                     onClick={() => setShowCalendar(true)}
                     readOnly
                 />
-                <div>
+                <div className='relative flex'>
                     <input
-                        readOnly={props.action === 'edit' && !edit}
-                        type='number'
+                        readOnly={props.action === 'edit' && !isEdit}
+                        type={isEdit ? 'number' : 'text'}
                         step='0.5'
                         min={0.5}
                         max={8}
                         className={cn(
-                            props.action === 'edit' ? 'w-12 text-right' : 'w-28',
-                            ' bg-transparent text-left outline-none',
-                            errors.hours?.message ? 'border-2 border-red-500' : ''
+                            isEdit ? 'w-10' : 'w-7',
+                            ' relative bg-transparent outline-none',
+                            errors.hours?.message ? 'border-2 border-customRed' : ''
                         )}
                         {...register('hours')}
                         placeholder='Add hours'
                     />
-                    {props.action === 'edit' && <span>hours</span>}
+                    {props.action === 'edit' && !isEdit ? (
+                        <span>hours</span>
+                    ) : (
+                        <div className='absolute left-7 -top-1.5'>
+                            <button
+                                type='button'
+                                className='my-1 flex'
+                                onClick={() => {
+                                    const hours = getValues('hours') as unknown as string;
+                                    let currentValue = parseFloat(hours) || 0;
+                                    if (
+                                        typeof currentValue === 'number' &&
+                                        !isNaN(currentValue) &&
+                                        currentValue < 8
+                                    ) {
+                                        currentValue += 0.5;
+                                        setValue('hours', parseFloat(currentValue.toFixed(1)));
+                                    }
+                                }}
+                            >
+                                <PolygonSvg />
+                            </button>
+                            <button
+                                type='button'
+                                className='my-0.5 flex rotate-180'
+                                onClick={() => {
+                                    const hours = getValues('hours') as unknown as string;
+                                    let currentValue = parseFloat(hours) || 0;
+                                    if (
+                                        typeof currentValue === 'number' &&
+                                        !isNaN(currentValue) &&
+                                        currentValue > 0
+                                    ) {
+                                        currentValue -= 0.5;
+                                        setValue('hours', parseFloat(currentValue.toFixed(1)));
+                                    }
+                                }}
+                            >
+                                <PolygonSvg />
+                            </button>
+                        </div>
+                    )}
                 </div>
                 {props.action === 'edit' && !isTimeOwner ? (
                     <p className='text-base font-semibold text-customDarkBlue'>
@@ -158,12 +209,26 @@ export default function HoursForm(props: HoursFormProps) {
                 ) : (
                     <p></p>
                 )}
-                <input
-                    readOnly={props.action === 'edit' && !edit}
-                    type='text'
-                    className='w-48 bg-transparent outline-none'
-                    {...register('notes')}
+                <textarea
+                    ref={(e) => {
+                        ref(e);
+                        textAreaRef.current = e;
+                        if (e) {
+                            // Resize on load
+                            e.style.height = 'auto';
+                            e.style.height = `${e.scrollHeight}px`;
+                        }
+                    }}
+                    rows={1}
+                    readOnly={props.action === 'edit' && !isEdit}
+                    className='max-h-20 w-96 resize-none bg-transparent px-4  text-sm font-medium outline-none'
                     placeholder='Add notes'
+                    {...restNotes}
+                    onChange={(e) => {
+                        // Resize when we add new text
+                        e.currentTarget.style.height = 'auto';
+                        e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+                    }}
                 />
 
                 {showCalendar && (
@@ -177,9 +242,16 @@ export default function HoursForm(props: HoursFormProps) {
                 )}
 
                 {isDeleting && props.action === 'edit' ? (
-                    <div className='col-span-2 flex justify-end'>
+                    <div className='col-span-1 flex justify-end gap-[14px]'>
                         <button
-                            className='h-7 w-20 rounded-lg bg-red-400 text-center text-base font-extrabold text-white'
+                            type='button'
+                            onClick={() => setIsDeleting(false)}
+                            className='employeeProjectBtn border-[1px] border-customDarkBlue text-customDarkBlue'
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className='employeeProjectBtn bg-customRed  text-white'
                             onClick={() => {
                                 if (props.dateData) {
                                     deletedHour(props.dateData);
@@ -189,33 +261,33 @@ export default function HoursForm(props: HoursFormProps) {
                         >
                             Delete?
                         </button>
+                        
                     </div>
                 ) : (
-                    <div className='col-span-2 flex justify-end'>
-                        {props.action === 'edit' && isTimeOwner && !edit && (
+                    <div className='col-span-1 flex justify-end gap-[14px]'>
+                        {props.action === 'edit' && isTimeOwner && !isEdit && (
                             <>
                                 <button
                                     type='button'
-                                    className='mr-2 h-6 w-6'
-                                    onClick={() => setEdit(true)}
+
+                                    onClick={() => setIsEdit(true)}
                                 >
-                                    <LuClipboardEdit size='100%' />
+                                    <ClipboardEditSvg />
                                 </button>
                                 <button
                                     type='button'
-                                    className='mr-4 h-6 w-6'
                                     onClick={() => setIsDeleting(true)}
                                 >
-                                    <FaTrash size='100%' color='red' />
+                                    <TrashSvg />
                                 </button>
                             </>
                         )}
-                        {props.action === 'edit' && edit && (
+                        {props.action === 'edit' && isEdit && (
                             <>
                                 <button
                                     type='button'
-                                    onClick={() => setEdit(false)}
-                                    className='mr-4 rounded-xl border-2 border-[#163851] px-3 py-0.5 text-lg font-bold text-[#163851]'
+                                    onClick={() => setIsEdit(false)}
+                                    className='employeeProjectBtn border-[1px] border-customDarkBlue text-customDarkBlue'
                                 >
                                     Cancel
                                 </button>
@@ -225,15 +297,15 @@ export default function HoursForm(props: HoursFormProps) {
                             <button
                                 type='button'
                                 onClick={props.onCancel}
-                                className='mr-4 rounded-xl border-2 border-[#163851] px-3 py-0.5 text-lg font-bold text-[#163851]'
+                                className='employeeProjectBtn border-[1px] border-customDarkBlue text-customDarkBlue'
                             >
                                 Cancel
                             </button>
                         )}
-                        {(props.action === 'create' || edit) && (
+                        {(props.action === 'create' || isEdit) && (
                             <button
                                 type='submit'
-                                className='mr-4 rounded-xl border-2 border-[#008cff] bg-[#008cff] px-5 py-0.5 text-lg font-bold text-white'
+                                className='employeeProjectBtn bg-customBlue text-white'
                             >
                                 Save
                             </button>

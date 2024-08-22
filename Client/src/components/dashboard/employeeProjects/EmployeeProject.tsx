@@ -3,7 +3,6 @@ import { useState } from 'react';
 import useFetchAllHoursByProject from './hooks/useFetchAllHoursByProject';
 import HoursForm from './HoursForm';
 
-
 type EmployeeProjectProps = {
     projectId: string;
 };
@@ -16,7 +15,7 @@ export default function EmployeeProject({ projectId }: EmployeeProjectProps) {
         setAddTime(false);
     }
     return (
-        <div>
+        <div className='mt-3'>
             {hours &&
                 hours.map((hourData) => (
                     <HoursForm
@@ -33,7 +32,7 @@ export default function EmployeeProject({ projectId }: EmployeeProjectProps) {
             ) : (
                 <button
                     onClick={() => setAddTime(true)}
-                    className='mb-8 ml-10 rounded-xl border-2 border-[#008cff] px-4 py-1 text-lg font-bold text-[#008cff]'
+                    className='rounded-[10px] border-[1px] border-customBlue px-[22px] py-2.5 text-base font-black leading-none text-customBlue hover:bg-customBlue hover:text-white inline-block transition-all duration-300 ml-8 mb-5'
                 >
                     Add time
                 </button>
