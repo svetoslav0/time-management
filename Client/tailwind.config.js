@@ -19,6 +19,8 @@ export default {
                 customGreen: '#3EDD24',
                 customGrey: '#DEE5EC',
                 customDarkGray: '#7d7d7d',
+                customDarkWhite: '#efefef',
+                customRed: '#ff6363',
             },
             boxShadow: {
                 loginFormShadow: '0px 0px 18.5px -2px #0000001C',
