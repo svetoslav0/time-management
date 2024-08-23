@@ -11,8 +11,7 @@ export const urlKeys = {
     completeProject: '/projects/',
     emailValidation: '/invites/validate',
     inviteRegister: '/invites/register',
-
-
+};
 export const queryKeys = {
     customer: 'All Customers',
     employee: 'All Employees',
