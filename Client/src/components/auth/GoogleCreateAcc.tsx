@@ -36,7 +36,7 @@ export default function GoogleCreateAcc() {
         },
     });
 
-    const { error, isLoading } = useFetchEmailValidation(id!);
+    const { error, isLoading } = useFetchEmailValidation(id);
 
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
         let inviteData = { ...data, inviteId: id };
