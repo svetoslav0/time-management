@@ -53,7 +53,7 @@ export default function ProjectCustomersList({ project }: ProjectCustomersListPr
     return (
         <>
             <div
-                className='shadow-loginFormShadow'
+                className='shadow-loginFormShadow rounded-2xl'
                 onMouseEnter={() => setIsHover(true)}
                 onMouseLeave={() => setIsHover(false)}
             >

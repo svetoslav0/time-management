@@ -8,6 +8,7 @@ import ProjectEmployeesList from './projectDetails/ProjectEmployeesList';
 
 import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import { ProjectResponseDataType } from '@/shared/types';
+import cn from '@/util/cn';
 
 export default function ProjectDetails() {
     const navigate = useNavigate();
@@ -57,7 +58,14 @@ export default function ProjectDetails() {
                                 Complete project
                             </button>
                         </div>
-                        <p className='mt-6 font-normal text-customBlue'>
+                        <p
+                            className={cn(
+                                project.status === 'inProgress'
+                                    ? 'text-customBlue'
+                                    : 'text-customGreen',
+                                'mt-6 font-normal'
+                            )}
+                        >
                             Status: {project.status === 'inProgress' ? 'In Progress' : 'Completed'}
                         </p>
                     </div>
