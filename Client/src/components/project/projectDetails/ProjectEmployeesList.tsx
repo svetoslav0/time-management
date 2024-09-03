@@ -5,9 +5,9 @@ import useUpdateProject from '../hooks/useUpdateProject';
 import EmployeesForm from './EmployeesForm';
 
 import { EmployeeIds, ProjectResponseDataType } from '@/shared/types';
-import cn from '@/util/cn';
 import EditPenSvg from '@/UI/design/EditPenSvg';
 import XSvg from '@/UI/design/XSvg';
+import cn from '@/util/cn';
 
 type ProjectEmployeesListProps = {
     project: ProjectResponseDataType;
