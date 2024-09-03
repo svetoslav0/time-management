@@ -49,7 +49,7 @@ export default function ProjectEmployeesList({ project }: ProjectEmployeesListPr
 
     return (
         <div
-            className='shadow-loginFormShadow'
+            className='shadow-loginFormShadow rounded-2xl'
             onMouseEnter={() => setIsHover(true)}
             onMouseLeave={() => setIsHover(false)}
         >
