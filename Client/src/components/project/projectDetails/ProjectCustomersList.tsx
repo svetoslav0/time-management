@@ -155,7 +155,7 @@ export default function ProjectCustomersList({ project }: ProjectCustomersListPr
                         </button>
                         <button
                             className='adminProjectBtn bg-customDarkBlue text-white'
-                            onClick={() => setIsEdit(false)}
+                            onClick={() => {setIsEdit(false); setCurrentCustomers(project.customerIds)}}
                         >
                             Cancel
                         </button>
