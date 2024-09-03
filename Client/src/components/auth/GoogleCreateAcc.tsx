@@ -15,10 +15,11 @@ import { useParams } from 'react-router-dom';
 import Loader from '@/UI/Loader';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import useInviteRegister from './hooks/useInviteRegister';
 
 export default function GoogleCreateAcc() {
     const [isVisible, setIsVisible] = useState(false);
-    const { createUser, isSuccess } = useCreateUser();
+    const { createUser, isSuccess } = useInviteRegister();
     const { id } = useParams<string>();
     const navigate = useNavigate();
 
@@ -35,10 +36,11 @@ export default function GoogleCreateAcc() {
         },
     });
 
-    const { error, isLoading } = useFetchEmailValidation(id!);
+    const { error, isLoading } = useFetchEmailValidation(id);
 
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
-        createUser(data);
+        let inviteData = { ...data, inviteId: id };
+        createUser(inviteData);
     };
 
     const toggleVisibility = () => {

@@ -69,6 +69,7 @@ export type CreateUserDataType = {
     phoneNumber?: string | undefined;
     address?: string | undefined;
     ref?: string;
+    userId?: string;
 };
 export type EditUserDataType = {
     email: string;
