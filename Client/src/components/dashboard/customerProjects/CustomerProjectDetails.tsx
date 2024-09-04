@@ -40,8 +40,12 @@ export default function CustomerProjectDetails() {
                     <span className='ml-2 text-black'>{project?.projectData.projectName}</span>
                 </div>
                 <div className='flex'>
-                    <p className='min-w-[150px]'>Current price:</p>
-                    <span className='ml-2 text-black'>{project?.totalPrice}</span>
+                    <p className='min-w-[150px]'>Price per hour:</p>
+                    <span className='ml-2 text-black'>${project?.projectData.pricePerHours}</span>
+                </div>
+                <div className='flex'>
+                    <p className='min-w-[150px]'>Total price:</p>
+                    <span className='ml-2 text-black'>${project?.totalPrice}</span>
                 </div>
             </div>
             <div className='w-3/4 overflow-hidden rounded-2xl border shadow-lg'>
