@@ -2,7 +2,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { AuthContextProvider } from './components/auth/AuthContext';
 import CreateUser from './components/auth/CreateUser';
+import GoogleCreateAcc from './components/auth/GoogleCreateAcc';
 import Login from './components/auth/Login';
+import CustomerProjectDetails from './components/dashboard/customerProjects/CustomerProjectDetails';
 import Dashboard from './components/dashboard/Dashboard';
 import {
     restrictAdminPages,
@@ -15,7 +17,6 @@ import ProjectDetails from './components/project/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
 import UserPage from './components/UserPage/UserPage';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
-import GoogleCreateAcc from './components/auth/GoogleCreateAcc';
 
 function App() {
     const router = createBrowserRouter([
@@ -80,8 +81,12 @@ function App() {
                     ],
                 },
                 {
-                    path: '/dashboard',
+                    path: 'dashboard',
                     element: <Dashboard />,
+                },
+                {
+                    path: 'dashboard/:id',
+                    element: <CustomerProjectDetails />,
                 },
             ],
         },

@@ -153,3 +153,27 @@ export type ProjectResponseDataType = {
     _id: string;
     status: ProjectStatusType;
 } & ProjectDataType;
+
+export interface ProjectReport {
+    hours: HourTypeFromProjectReport[];
+    projectData: ProjectDataFromReport;
+    totalPrice: number;
+}
+
+export interface ProjectDataFromReport {
+    customerNames: string[];
+    employeeNames: string[];
+    pricePerHours: number;
+    projectName: string;
+    startingDate: string;
+}
+
+
+//Hour types
+export interface HourTypeFromProjectReport {
+    date: string;
+    employeeName: string;
+    hours: number;
+    id: string;
+    notes:string;
+}

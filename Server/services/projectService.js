@@ -157,7 +157,7 @@ exports.getReport = async (req) => {
     return {
         projectData: {
             employeeNames: project.employeeIds.map(
-                (employee) => employee.firstName
+                (employee) => employee.firstName + " " + employee.lastName
             ),
             customerNames: project.customerIds.map(
                 (customer) => customer.firstName
