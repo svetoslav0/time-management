@@ -34,4 +34,13 @@ router.post("/", isAdmin, async (req, res, next) => {
     }
 });
 
+router.delete("/:id", async (req, res, next) => {
+    try {
+        const deletedInvite = await invitesService.deleteInvite(req);
+        res.send(deletedInvite);
+    } catch (error) {
+        next(error);
+    }
+});
+
 module.exports = router;
