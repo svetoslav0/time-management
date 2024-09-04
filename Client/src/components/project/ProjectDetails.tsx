@@ -54,7 +54,6 @@ export default function ProjectDetails() {
         <div className='mx-20 mt-[126px]'>
             {showCompleteModal && (
                 <Modal
-                    opacity={25}
                     bgColor='bg-customDarkBlue'
                     padding='p-0'
                     rounded='rounded-[22px]'
@@ -77,7 +76,6 @@ export default function ProjectDetails() {
             )}
             {showActionCompleteModal && (
                 <Modal
-                    opacity={25}
                     bgColor='bg-customDarkBlue'
                     padding='p-0'
                     rounded='rounded-[22px]'
