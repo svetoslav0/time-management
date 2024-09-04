@@ -3,11 +3,15 @@ const User = require("../models/User");
 const UserValidationErrors = require("../errors/userValidationErrors");
 const InvitesValidationErrors = require("../errors/invitesValidationErrors");
 
-const { validateUserDataOnUserCreate } = require("../utils/validateUserDataUtil");
+const {
+    validateUserDataOnUserCreate,
+} = require("../utils/validateUserDataUtil");
 const isInviteValid = require("../utils/validationUtils/validateInviteUtil");
 const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
 const isProjectIdValidAndExisting = require("../utils/projectUtils/IsProjectIdValidAndExisting");
 const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
+const Invite = require("../models/Invite");
+const { validateObjectId } = require("../utils/validateObjectIdUtil");
 
 exports.validateInvite = async (req) => {
     const inviteUUID = req.params.id;
@@ -87,11 +91,24 @@ exports.sendInvite = async (req) => {
     await isProjectIdValidAndExisting(projectId);
 
     if (emailToSendInvite.length < 1) {
-        throw new InvitesValidationErrors(
-            "No email provided!",
-            400
-        );
+        throw new InvitesValidationErrors("No email provided!", 400);
     }
 
     await sendInvitesToNonExistingUsers(emailToSendInvite, projectId);
+};
+
+exports.deleteInvite = async (req) => {
+    const inviteId = req.params.id;
+
+    if (!validateObjectId(inviteId)) {
+        throw new InvitesValidationErrors("Invalid invite ID“", 404);
+    }
+
+    const deletedInvite = await Invite.findByIdAndDelete(inviteId);
+
+    if (!deletedInvite) {
+        throw new InvitesValidationErrors("Invalid invite ID", 404);
+    }
+
+    return deletedInvite;
 };
