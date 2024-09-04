@@ -1,9 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate,  } from 'react-router-dom';
 
 import { projectFormSchema } from '../../shared/formValidations';
 import InputComponent from '../../UI/formComponents/InputComponent';
@@ -11,10 +11,9 @@ import cn from '../../util/cn';
 import Calendar from './Calendar';
 import EmailInvite from './EmailInvite';
 import useProjectCreate from './hooks/useProjectCreate';
-import useProjectUpdate from './hooks/useProjectUpdate';
+
 import MultiSelector from './MultiSelector';
 
-import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
 import { ProjectDataType } from '@/shared/types';
 
@@ -23,7 +22,6 @@ dayjs.extend(customParseFormat);
 export default function ProjectFormControl() {
     const { data: employeeResponse } = useFetchUsers({ userRole: 'employee', status: 'active' });
     const { data: customerResponse } = useFetchUsers({ userRole: 'customer', status: 'active' });
-    const [searchParams] = useSearchParams();
     const [projectName, setProjectName] = useState('');
     const [pricePerHour, setPricePerHour] = useState<number | string>('');
     const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
@@ -32,18 +30,8 @@ export default function ProjectFormControl() {
     const currentDate = dayjs();
     const [selectedDate, setSelectedDate] = useState<Dayjs | string>('');
     const [showCalendar, setShowCalendar] = useState(false);
-    const [editProjectName, setEditProjectName] = useState('');
-    const action = searchParams.get('action') === 'edit' ? 'edit' : 'create';
-    const projectId = searchParams.get('projectId') || '';
     const { createProject } = useProjectCreate();
-    const { updateProject } = useProjectUpdate(projectId);
     const navigate = useNavigate();
-
-    const { data: project, error } = useFetchProjectById(projectId);
-
-    if (error) {
-        navigate('/admin/projectForm?action=create');
-    }
 
     const methods = useForm<ProjectDataType>({
         resolver: yupResolver(projectFormSchema),
@@ -56,15 +44,10 @@ export default function ProjectFormControl() {
         register,
         trigger,
         setValue,
-        clearErrors,
     } = methods;
 
     const onSubmit: SubmitHandler<ProjectDataType> = async (data) => {
-        if (project) {
-            updateProject(data);
-        } else {
-            createProject(data);
-        }
+        createProject(data);
         reset();
         setInviteEmails([]);
         setSelectedEmployees([]);
@@ -72,66 +55,9 @@ export default function ProjectFormControl() {
         setPricePerHour('');
         setProjectName('');
         setSelectedDate('');
+        navigate('/admin/projects')
     };
 
-    useEffect(() => {
-        if (action === 'edit' && projectId) {
-            if (project) {
-                setEditProjectName(project.projectName);
-                const date = dayjs(project.startingDate, 'YYYY-MM-DD');
-                if (date.isValid()) {
-                    setSelectedDate(date);
-                    setValue('startingDate', date.format('YYYY-MM-DD'));
-                }
-                setProjectName(project.projectName);
-                setValue('projectName', project.projectName);
-                setPricePerHour(project.pricePerHour);
-                setValue('pricePerHour', project.pricePerHour);
-                if (project.customerIds) {
-                    setSelectedCustomer(project.customerIds);
-                    setValue('customerIds', project.customerIds);
-                }
-                setSelectedEmployees(project.employeeIds);
-                setValue('employeeIds', project.employeeIds);
-            }
-        } else {
-            setInviteEmails([]);
-            setSelectedEmployees([]);
-            setSelectedCustomer([]);
-            setPricePerHour('');
-            setProjectName('');
-            setSelectedDate('');
-            setEditProjectName('');
-        }
-    }, [action, project, projectId, setValue]);
-
-    useEffect(() => {
-        setValue('employeeIds', selectedEmployees);
-        if (selectedEmployees) {
-            clearErrors('employeeIds');
-        }
-    }, [selectedEmployees, setValue, clearErrors]);
-
-    useEffect(() => {
-        setValue('inviteEmails', inviteEmails);
-        if (inviteEmails) {
-            clearErrors('inviteEmails');
-        }
-    }, [inviteEmails, setValue, clearErrors]);
-
-    useEffect(() => {
-        setValue('customerIds', selectedCustomer);
-        if (selectedCustomer) {
-            clearErrors('customerIds');
-        }
-    }, [selectedCustomer, setValue, clearErrors]);
-
-    useEffect(() => {
-        if (dayjs.isDayjs(selectedDate) && selectedDate.isValid()) {
-            setValue('startingDate', selectedDate.format('YYYY-MM-DD'));
-            clearErrors('startingDate');
-        }
-    }, [selectedDate, setValue, clearErrors]);
 
     const handleChangeDate = useCallback((date: Dayjs) => {
         setSelectedDate(date);
@@ -144,7 +70,6 @@ export default function ProjectFormControl() {
 
     return (
         <>
-            {action && (
                 <FormProvider {...methods}>
                     <form
                         onSubmit={handleSubmit(onSubmit)}
@@ -152,8 +77,7 @@ export default function ProjectFormControl() {
                     >
                         <div className='m-10 grid grid-cols-2 gap-10 space-y-12'>
                             <h1 className='col-span-2 text-center text-4xl font-semibold capitalize text-gray-900 dark:text-gray-50'>
-                                {action.toLowerCase() === 'create' ? 'Create New ' : 'Edit '}
-                                Project {editProjectName}
+                                Create New Project
                             </h1>
                             <InputComponent
                                 error={errors.projectName?.message}
@@ -257,7 +181,6 @@ export default function ProjectFormControl() {
                         </div>
                     </form>
                 </FormProvider>
-            )}
         </>
     );
 }

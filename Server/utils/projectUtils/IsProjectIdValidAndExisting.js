@@ -1,6 +1,7 @@
 const Project = require("../../models/Project");
 
 const ProjectValidationErrors = require("../../errors/projectsValidationErrors");
+const InvitesValidationErrors = require("../../errors/invitesValidationErrors");
 const { validateObjectId } = require("../validateObjectIdUtil");
 
 const isProjectIdValidAndExisting = async (projectId) => {

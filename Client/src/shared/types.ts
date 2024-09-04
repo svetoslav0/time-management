@@ -69,6 +69,7 @@ export type CreateUserDataType = {
     phoneNumber?: string | undefined;
     address?: string | undefined;
     ref?: string;
+    userId?: string;
 };
 export type EditUserDataType = {
     email: string;
@@ -125,11 +126,25 @@ export type Project = {
 };
 export type ProjectStatusType = 'inProgress' | 'completed';
 
+export type EmployeeIds = {
+    _id: string;
+    firstName: string;
+    lastName: string;
+};
+
+export type CustomersIds = {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+};
+
 export type ProjectDataType = {
+    _id?: string;
     projectName: string;
     pricePerHour: number;
-    employeeIds: string[];
-    customerIds?: string[];
+    employeeIds: EmployeeIds[];
+    customerIds: CustomersIds[];
     startingDate: string;
     inviteEmails?: string[];
 };

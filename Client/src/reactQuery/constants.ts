@@ -10,8 +10,9 @@ export const urlKeys = {
     hours: '/hours',
     completeProject: '/projects/',
     emailValidation: '/invites/validate',
+    inviteRegister: '/invites/register',
+    invites: '/invites'
 };
-
 export const queryKeys = {
     customer: 'All Customers',
     employee: 'All Employees',

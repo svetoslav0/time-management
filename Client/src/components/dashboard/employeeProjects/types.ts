@@ -1,4 +1,3 @@
-
 export type HoursData = {
     date: string;
     hours: number;
@@ -6,10 +5,10 @@ export type HoursData = {
     projectId: string;
 };
 
-export type UpdateHoursData = { _id: string;} & HoursData
+export type UpdateHoursData = { _id: string } & HoursData;
 
 export type HoursResponseData = {
     _id: string;
-    userId: string;
+    userId: { _id: string; email: string };
     __v: number;
 } & HoursData;

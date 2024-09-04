@@ -15,7 +15,10 @@ export default function ProjectCard({
         <div
             className={cn(
                 index % 2 === 0 ? 'justify-self-end' : 'justify-self-start',
-                'flex w-[519px] border-collapse overflow-hidden rounded-2xl border-[1px] border-l-0 border-white shadow transition duration-200 ease-out hover:border-customBlue'
+                project.status === 'inProgress'
+                    ? 'hover:border-customBlue'
+                    : 'hover:border-customGreen',
+                'flex w-[519px] border-collapse overflow-hidden rounded-2xl border-[1px] border-l-0 border-white transition duration-200 ease-out '
             )}
         >
             <div

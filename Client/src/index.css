@@ -9,13 +9,27 @@ body {
 }
 
 .primaryBtn {
-    @apply bg-customBlue hover:bg-customLightBlue hover:text-customDarkBlue rounded-lg px-4 py-2 text-lg font-bold text-white transition-all duration-300;
+    @apply inline-block rounded-lg bg-customBlue px-4 py-1 text-lg font-bold text-white no-underline outline-none transition-all duration-300 hover:bg-customLightBlue hover:text-customDarkBlue focus:outline-none;
 }
 
 .secondaryBtn {
-    @apply rounded-[10px] border-[1px] border-customBlue px-6 pb-1.5 pt-1 text-base font-semibold text-customBlue transition duration-300 ease-out hover:border-customGrey hover:bg-customGrey
+    @apply rounded-[10px] border-[1px] border-customBlue px-6 pb-1.5 pt-1 text-base font-semibold text-customBlue transition duration-300 ease-out hover:border-customGrey hover:bg-customGrey;
 }
 
 .logoutBtn {
-    @apply text-customBlue hover:border-customBlue flex rounded-lg border-2 border-white bg-white py-1.5 pl-3 pr-5 text-base font-semibold shadow transition-all duration-300;
+    @apply flex rounded-lg border-2 border-white bg-white py-1 pl-3  pr-5 text-base font-semibold text-customBlue no-underline shadow outline-none transition-all duration-300 hover:border-customBlue focus:outline-none;
+}
+
+.adminProjectBtn {
+    @apply inline-block rounded-md  px-4 py-1 text-sm font-bold no-underline outline-none focus:outline-none;
+}
+
+.employeeProjectBtn {
+    @apply inline-block rounded-[10px]  min-w-20 px-2.5 leading-none py-[5px] text-base font-extrabold no-underline outline-none focus:outline-none;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
