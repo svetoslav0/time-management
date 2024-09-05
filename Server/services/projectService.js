@@ -14,6 +14,7 @@ const formatDate = require("../utils/formatDateUtil");
 const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
 const generatePdf = require("../utils/generatePdfUtil");
 const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
+const getInvitesByProjectId = require("../utils/inviteUtils/getInvitesByProjectId");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
@@ -89,8 +90,12 @@ exports.getSingleProject = async (req) => {
     const userRole = req.userToken.userRole;
 
     const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
+    const projectInvites = await getInvitesByProjectId(projectId);
 
-    return project;
+    return {
+        project,
+        invites: projectInvites
+    };
 };
 
 exports.updateProject = async (req) => {
