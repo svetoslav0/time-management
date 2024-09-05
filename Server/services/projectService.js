@@ -92,10 +92,10 @@ exports.getSingleProject = async (req) => {
     const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
     const projectInvites = await getInvitesByProjectId(projectId);
 
-    return {
-        project,
-        invites: projectInvites
-    };
+    const projectClone = JSON.parse(JSON.stringify(project));
+    projectClone.invites = projectInvites;
+
+    return projectClone;
 };
 
 exports.updateProject = async (req) => {
