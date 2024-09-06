@@ -7,7 +7,7 @@ import { ProjectResponseDataType } from '@/shared/types';
 
 const { get } = httpServices();
 
-export default function useFetchProjectById(id: string) {
+export default function useFetchProjectById(id: string | undefined) {
     const queryKey = [queryKeys.projects, id];
     const generatedUrl = `${urlKeys.projects}/${id}`;
 
