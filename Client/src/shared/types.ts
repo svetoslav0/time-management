@@ -126,27 +126,29 @@ export type Project = {
 };
 export type ProjectStatusType = 'inProgress' | 'completed';
 
-export type EmployeeIds = {
-    _id: string;
-    firstName: string;
-    lastName: string;
-};
-
-export type CustomersIds = {
+export type UserData = {
     _id: string;
     firstName: string;
     lastName: string;
     email: string;
 };
 
+export type InvitesProjectData = {
+    _id: string;
+    email: string;
+    uuid: string;
+    expiresOn: string;
+    projectId: string;
+};
+
 export type ProjectDataType = {
     _id?: string;
     projectName: string;
     pricePerHour: number;
-    employeeIds: EmployeeIds[];
-    customerIds: CustomersIds[];
+    employeeIds: UserData[];
+    customerIds: UserData[];
     startingDate: string;
-    inviteEmails?: string[];
+    invites: InvitesProjectData[];
 };
 
 export type ProjectResponseDataType = {
@@ -168,12 +170,11 @@ export interface ProjectDataFromReport {
     startingDate: string;
 }
 
-
 //Hour types
 export interface HourTypeFromProjectReport {
     date: string;
     employeeName: string;
     hours: number;
     id: string;
-    notes:string;
+    notes: string;
 }
