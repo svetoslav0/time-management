@@ -13,7 +13,7 @@ import {
 } from './components/guards/guards';
 import RootLayout from './components/layout/RootLayout';
 import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
-import ProjectDetails from './components/project/ProjectDetails';
+import ProjectDetails from './components/project/projectDetails/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
 import UserPage from './components/UserPage/UserPage';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
