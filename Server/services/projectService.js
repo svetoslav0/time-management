@@ -30,7 +30,7 @@ exports.createProject = async (req) => {
     });
 
     if (projectData.inviteEmails) {
-        sendInvitesToNonExistingUsers(projectData.inviteEmails);
+        sendInvitesToNonExistingUsers(projectData.inviteEmails, project._id);
     }
 
     return {
@@ -78,7 +78,7 @@ exports.getProjects = async (req) => {
     }
 
     const projects = await Project.find(query).sort({
-        status: -1
+        status: -1,
     });
 
     return projects;
@@ -89,7 +89,11 @@ exports.getSingleProject = async (req) => {
     const userId = req.userToken._id;
     const userRole = req.userToken.userRole;
 
-    const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
+    const project = await getProjectByRoleIfNotAdmin(
+        projectId,
+        userId,
+        userRole
+    );
     const projectInvites = await getInvitesByProjectId(projectId);
 
     const projectClone = JSON.parse(JSON.stringify(project));
@@ -140,7 +144,11 @@ exports.getReport = async (req) => {
     const userId = req.userToken._id;
     const userRole = req.userToken.userRole;
 
-    const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
+    const project = await getProjectByRoleIfNotAdmin(
+        projectId,
+        userId,
+        userRole
+    );
 
     const hours = await Hours.find({ projectId }).populate(
         "userId",
@@ -185,7 +193,10 @@ exports.getReport = async (req) => {
 exports.getReportPdf = async (req) => {
     const reportData = await this.getReport(req);
 
-    const templatePath = path.join(__dirname, '../templates/projectReport/projectReportTemplate.hbs');
+    const templatePath = path.join(
+        __dirname,
+        "../templates/projectReport/projectReportTemplate.hbs"
+    );
 
     const pdfBuffer = await generatePdf(reportData, templatePath);
 
