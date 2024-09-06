@@ -1,7 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
-import { urlKeys } from '@/reactQuery/constants';
+import { queryKeys, urlKeys } from '@/reactQuery/constants';
+import { queryClient } from '@/reactQuery/queryClient';
 import httpServices from '@/services/httpServices';
 
 type InviteDataType = {
@@ -9,7 +10,11 @@ type InviteDataType = {
     inviteEmail: string;
 };
 
-export default function useInviteUser() {
+type UseInviteUserProps = {
+    projectId: string;
+};
+
+export default function useInviteUser({ projectId }: UseInviteUserProps) {
     const { post } = httpServices();
 
     const {
@@ -19,7 +24,12 @@ export default function useInviteUser() {
     } = useMutation({
         mutationFn: (data: InviteDataType) =>
             post(urlKeys.invites, { projectId: data.projectId, inviteEmail: data.inviteEmail }),
-        onSuccess: () => toast.success('Email was sent successfully!'),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [queryKeys.projects, projectId],
+            });
+            toast.success('Email was sent successfully!');
+        },
         onError: (error) => toast.error(error.message),
     });
 
