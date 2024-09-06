@@ -12,7 +12,7 @@ type CustomersInviteFormProps = {
 };
 
 export default function CustomersInviteForm({ setIsInvite, project }: CustomersInviteFormProps) {
-    const { inviteUser, isInviteSuccess } = useInviteUser();
+    const { inviteUser, isInviteSuccess } = useInviteUser({ projectId: project._id });
 
     const validationSchema = yup.object().shape({
         inviteEmail: yup.string().email('Invalid email address').required('Email is required'),
@@ -50,7 +50,7 @@ export default function CustomersInviteForm({ setIsInvite, project }: CustomersI
                 type='text'
                 name='inviteEmail'
                 placeholder='type email'
-                className='placeholder:text-customDarkGray w-60 rounded-md border-[1px] border-customDarkBlue px-3 py-1.5 text-sm font-semibold text-customDarkBlue'
+                className='w-60 rounded-md border-[1px] border-customDarkBlue px-3 py-1.5 text-sm font-semibold text-customDarkBlue placeholder:text-customDarkGray'
             />
             <button
                 type='submit'
