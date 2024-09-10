@@ -2,20 +2,20 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import useCompleteProject from './hooks/useCompleteProject';
-import ProjectCustomersList from './projectDetails/ProjectCustomersList';
-import ProjectEmployeesList from './projectDetails/ProjectEmployeesList';
+import useCompleteProject from '../hooks/useCompleteProject';
+import ExistingUsersCardLayout from './ExistingUsersCardLayout';
 
 import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import { ProjectResponseDataType } from '@/shared/types';
 import GearSvg from '@/UI/design/GearSvg';
 import Modal from '@/UI/Modal';
 import cn from '@/util/cn';
+import InviteUsersCardLayout from './InviteUsersCardLayout';
 
 export default function ProjectDetails() {
     const navigate = useNavigate();
     const { id } = useParams<string>();
-    const { data: project, error, isFetching } = useFetchProjectById(id!);
+    const { data: project, error, isFetching } = useFetchProjectById(id);
     const { completeProject, isCompletedSuccessful } = useCompleteProject(id);
     const [showActionCompleteModal, setShowActionCompleteModal] = useState(false);
     const [showCompleteModal, setShowCompleteModal] = useState(false);
@@ -139,8 +139,9 @@ export default function ProjectDetails() {
                             Status: {project.status === 'inProgress' ? 'In Progress' : 'Completed'}
                         </p>
                     </div>
-                    <ProjectEmployeesList project={project} />
-                    <ProjectCustomersList project={project} />
+                    <ExistingUsersCardLayout userType='employeeIds' project={project} />
+                    <ExistingUsersCardLayout userType='customerIds' project={project} />
+                    <InviteUsersCardLayout project={project} />
                 </>
             ) : (
                 <p>Something went wrong</p>

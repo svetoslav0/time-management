@@ -2,14 +2,14 @@ import { useState } from 'react';
 
 import EmployeeProject from './EmployeeProject';
 
-import { CustomersIds } from '@/shared/types';
+import { UserData } from '@/shared/types';
 import ArrowSvg from '@/UI/design/ArrowSvg';
 import cn from '@/util/cn';
 
 type EmployeeProjectsAccordionProps = {
     projectName: string;
     projectId: string;
-    companies: CustomersIds[];
+    companies: UserData[];
 };
 
 export default function EmployeeProjectsAccordion({
@@ -22,7 +22,7 @@ export default function EmployeeProjectsAccordion({
         <div className='font-maven-pro mb-4 w-full rounded-2xl border-2 border-transparent text-left text-lg text-customDarkBlue transition-all duration-500 hover:border-customBlue'>
             <div className='h-full w-full rounded-2xl bg-white shadow-[0px_0px_18.5px_-2px_rgba(0,_0,_0,_0.11)]'>
                 <div
-                    className='flex cursor-pointer justify-between pl-4 pr-[29px] py-5'
+                    className='flex cursor-pointer justify-between py-5 pl-4 pr-[29px]'
                     onClick={() => setIsOpen((prev) => !prev)}
                 >
                     <div className='text-lg text-customDarkBlue'>

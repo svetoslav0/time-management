@@ -10,13 +10,6 @@ export default function useUpdateProject(id: string | undefined) {
     const { patch } = httpServices();
     const { mutate: updateProject, isError } = useMutation({
         mutationFn: (data: ProjectDataType) => patch(urlKeys.completeProject + id, data),
-        onSettled: (data) => {
-            if (data) {
-                queryClient.invalidateQueries({
-                    queryKey: [queryKeys.projects, id],
-                });
-            }
-        },
         onSuccess: () => {
             toast.success('Project Updated');
             queryClient.invalidateQueries({
