@@ -57,7 +57,7 @@ export type LoginFormDataType = {
 };
 
 export type CreateUserDataType = {
-    email: string;
+    email?: string;
     firstName: string;
     lastName: string;
     userRole: string;

@@ -4,6 +4,7 @@ import httpServices from '@/services/httpServices';
 
 type EmailValidationResponse = {
     isValid: boolean;
+    email?: string;
 };
 
 export default function useFetchEmailValidation(id: string | undefined) {

@@ -1,21 +1,19 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { GoogleLogin } from '@react-oauth/google';
+import toast from 'react-hot-toast';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { createUserSchema } from '../../shared/formValidations';
+import { createGoogleUserSchema } from '../../shared/formValidations';
 import { CreateUserDataType } from '../../shared/types';
 import InputComponent from '../../UI/formComponents/InputComponent';
-import useCreateUser from './hooks/useCreateUser';
+import useInviteRegister from './hooks/useInviteRegister';
 
 import mainLogo from '@/assets/timeManagementLogo.png';
-import GearSvg from '@/UI/design/GearSvg';
 import useFetchEmailValidation from '@/reactQuery/hooks/useFetchEmailValidation';
-import { useParams } from 'react-router-dom';
+import GearSvg from '@/UI/design/GearSvg';
 import Loader from '@/UI/Loader';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import useInviteRegister from './hooks/useInviteRegister';
 
 export default function GoogleCreateAcc() {
     const [isVisible, setIsVisible] = useState(false);
@@ -30,16 +28,18 @@ export default function GoogleCreateAcc() {
         formState: { errors },
         reset,
     } = useForm<CreateUserDataType>({
-        resolver: yupResolver(createUserSchema),
+        resolver: yupResolver(createGoogleUserSchema),
         defaultValues: {
             userRole: 'customer',
         },
     });
 
-    const { error, isLoading } = useFetchEmailValidation(id);
+    const { data: initialData, error, isLoading } = useFetchEmailValidation(id);
 
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
-        let inviteData = { ...data, inviteId: id };
+        data.email = initialData!.email!;
+        const inviteData = { ...data, isGoogleLogin: true, inviteId: id };
+        console.log(inviteData);
         createUser(inviteData);
     };
 
@@ -89,9 +89,10 @@ export default function GoogleCreateAcc() {
                 className='flex flex-col rounded-3xl border bg-white  p-9 shadow-loginFormShadow'
                 onSubmit={handleSubmit(onSubmit)}
             >
-                <h2 className='mb-6 self-center font-mavenPro text-2xl font-semibold text-welcomeMsgColor'>
-                    Create your account
-                </h2>
+                <div>
+                    <p>Complete account for</p>
+                    <p className='font-bold'>{initialData?.email}</p>
+                </div>
 
                 {errors && (
                     <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
@@ -100,12 +101,6 @@ export default function GoogleCreateAcc() {
                 )}
 
                 <>
-                    <InputComponent
-                        error={errors.email?.message}
-                        register={register}
-                        trigger={trigger}
-                        field='email'
-                    />
                     <div className='flex justify-between gap-5'>
                         <InputComponent
                             error={errors.firstName?.message}
@@ -179,28 +174,12 @@ export default function GoogleCreateAcc() {
                     />
                     <button
                         type='submit'
-                        className='mt-6 w-1/3 self-center rounded-lg bg-loginBtnColor px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300'
+                        className='mt-6 w-2/3 self-center rounded-lg bg-loginBtnColor px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300'
                         // disabled={loading}
                     >
                         {/* {loading ? 'Creating...' : 'Create user'} */}
-                        Continue
+                        Complete your account
                     </button>
-                    <div className='my-4 flex items-center justify-center'>
-                        <div className='w-1/3 border-t border-gray-300'></div>
-                        <span className='mx-2 text-gray-500'>or</span>
-                        <div className='w-1/3 border-t border-gray-300'></div>
-                    </div>
-                    <div className='self-center'>
-                        <GoogleLogin
-                            text='continue_with'
-                            onSuccess={(credentialResponse) => {
-                                console.log(credentialResponse);
-                            }}
-                            onError={() => {
-                                console.log('Login Failed');
-                            }}
-                        />
-                    </div>
                 </>
             </form>
         </div>

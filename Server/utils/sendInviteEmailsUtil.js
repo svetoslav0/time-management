@@ -13,6 +13,7 @@ const sendInviteEmails = async (inviteEmails) => {
         });
 
         const emailPromises = inviteEmails.map(async (invite) => {
+            // const inviteLink = `http://localhost:5173/invite/${invite.uuid}`;
             const inviteLink = `http://142.93.163.217:5173/invite/${invite.uuid}`;
 
             const htmlContent = generateInviteEmail(inviteLink, invite.expiresOn);
