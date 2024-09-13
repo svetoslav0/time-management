@@ -4,6 +4,7 @@ const getJwtToken = async (req, res, next) => {
     const token = req.cookies.authCookie;
     
     if (!token) {
+        res.clearCookie("authCookie");
         return res.status(401).json({ message: "No token provided!" });
     }
 
@@ -14,6 +15,7 @@ const getJwtToken = async (req, res, next) => {
 
         next();
     } catch (error) {
+        res.clearCookie("authCookie");
         return res.status(403).json({ message: "Invalid token!" });
     }
 };
