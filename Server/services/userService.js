@@ -8,9 +8,7 @@ const {
 
 const { generateToken } = require("../utils/jwt");
 const UserValidationErrors = require("../errors/userValidationErrors");
-const {
-    default: verifyGoogleToken,
-} = require("../utils/verifyGoogleTokenUtil");
+const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
 
 exports.login = async (req) => {
     const { email, password } = req.body;
