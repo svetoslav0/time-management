@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Invite = require("../models/Invite");
 
 const UserValidationErrors = require("../errors/userValidationErrors");
 const InvitesValidationErrors = require("../errors/invitesValidationErrors");
@@ -10,7 +11,6 @@ const isInviteValid = require("../utils/validationUtils/validateInviteUtil");
 const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
 const isProjectIdValidAndExisting = require("../utils/projectUtils/IsProjectIdValidAndExisting");
 const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
-const Invite = require("../models/Invite");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 
 exports.validateInvite = async (req) => {
@@ -72,6 +72,7 @@ exports.createCustomerOnInvite = async (req) => {
     };
 
     const user = await User.create(newUser);
+    await Invite.findByIdAndDelete(userData.inviteId);
 
     return {
         email: user.email,
