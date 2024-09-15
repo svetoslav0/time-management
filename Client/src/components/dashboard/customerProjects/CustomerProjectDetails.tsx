@@ -66,6 +66,10 @@ export default function CustomerProjectDetails() {
                     <p className='min-w-[150px]'>Total price:</p>
                     <span className='ml-2 text-black'>${project?.totalPrice}</span>
                 </div>
+                <div className='flex'>
+                    <p className='min-w-[150px]'>Total price:</p>
+                    <span className='ml-2 text-black'>{project?.totalHours} hours</span>
+                </div>
                 <div className='absolute -top-4 right-4'>
                     <button
                         onClick={handleDownload}
