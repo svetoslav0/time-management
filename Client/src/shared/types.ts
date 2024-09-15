@@ -6,7 +6,7 @@ export type UserDetails = {
     firstName: string;
     lastName: string;
     userRole: string;
-    status: string;
+    status: 'active' | 'inActive';
     createdAt: string;
     description?: string | undefined;
 };
