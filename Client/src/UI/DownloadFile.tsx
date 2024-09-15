@@ -1,8 +1,8 @@
 import { saveAs } from 'file-saver';
 import { useCallback, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 import useGetReport from '@/reactQuery/hooks/useGetReport';
-import toast from 'react-hot-toast';
 
 type DownloadFileProps = {
     projectId: string | undefined;
