@@ -1,15 +1,32 @@
-
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import mainLogo from '@/assets/timeManagementLogo.png';
 import useFetchProjectByIdReport from '@/reactQuery/hooks/useFetchProjectByIdReport';
+import DownloadSvg from '@/UI/design/DownloadSvg';
 import GearSvg from '@/UI/design/GearSvg';
-export default function CustomerProjectDetails() {
+import DownloadFile from '@/UI/DownloadFile';
 
-    const {id} = useParams<string>();
+export default function CustomerProjectDetails() {
+    const { id } = useParams<string>();
+    const [isDownloading, setIsDownloading] = useState(false);
+    const [shouldDownload, setShouldDownload] = useState(false);
 
     const { data: project } = useFetchProjectByIdReport(id!);
-   
+
+    console.log(project);
+
+    const handleDownload = () => {
+        if (!isDownloading) {
+            setIsDownloading(true);
+            setShouldDownload(true);
+        }
+    };
+
+    const onDownloadComplete = () => {
+        setIsDownloading(false);
+        setShouldDownload(false);
+    };
 
     const hours = project?.hours || [];
     return (
@@ -20,16 +37,18 @@ export default function CustomerProjectDetails() {
             <div className='fixed right-[-7rem] top-[10rem] -z-10'>
                 <GearSvg />
             </div>
-            <div className='flex items-center justify-around -mt-4'>
-                <img src={mainLogo} className='scale-35 m-0 mr-[-75px]' />
+            <div className='-mt-4 flex items-center justify-around'>
+                <img src={mainLogo} className='m-0 mr-[-75px] scale-35' />
                 <h1 className='m-0 font-mavenPro text-5xl font-medium text-welcomeMsgColor'>
                     OpsHero
                 </h1>
             </div>
-            <div className='mb-8 w-3/4 font-medium text-customBlue -mt-8'>
+            <div className='relative -mt-8 mb-8 w-3/4 font-medium text-customBlue'>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Employee Name:</p>
-                    <span className='ml-2 text-black'>{project?.projectData.employeeNames.join(', ')}</span>
+                    <span className='ml-2 text-black'>
+                        {project?.projectData.employeeNames.join(', ')}
+                    </span>
                 </div>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Client Name:</p>
@@ -47,6 +66,20 @@ export default function CustomerProjectDetails() {
                     <p className='min-w-[150px]'>Total price:</p>
                     <span className='ml-2 text-black'>${project?.totalPrice}</span>
                 </div>
+                <div className='absolute -top-4 right-4'>
+                    <button
+                        onClick={handleDownload}
+                        type='button'
+                        disabled={isDownloading || shouldDownload}
+                    >
+                        <span className='flex gap-1'>
+                            <DownloadSvg color='#163851' />
+                        </span>
+                    </button>
+                    {shouldDownload && (
+                        <DownloadFile projectId={id} onDownloadComplete={onDownloadComplete} />
+                    )}
+                </div>
             </div>
             <div className='w-3/4 overflow-hidden rounded-2xl border shadow-lg'>
                 <table className='w-full'>
@@ -61,11 +94,17 @@ export default function CustomerProjectDetails() {
                         {hours.map((row, index) => (
                             <tr
                                 key={index}
-                                className={`${index % 2 === 0 ? 'bg-white': 'bg-customDarkTableGrey shadow-TrInsetShadow'} min-h-12`}
+                                className={`${index % 2 === 0 ? 'bg-white' : 'bg-customDarkTableGrey shadow-TrInsetShadow'} min-h-12`}
                             >
-                                <td className='p-4 font-bold text-welcomeMsgColor text-base'>{row.date}</td>
-                                <td className='p-4 text-hoursDescription text-welcomeMsgColor font-medium'>{row.notes}</td>
-                                <td className='p-4 font-bold text-welcomeMsgColor text-base'>{row.hours.toFixed(1)}</td>
+                                <td className='p-4 text-base font-bold text-welcomeMsgColor'>
+                                    {row.date}
+                                </td>
+                                <td className='p-4 font-medium text-welcomeMsgColor text-hoursDescription'>
+                                    {row.notes}
+                                </td>
+                                <td className='p-4 text-base font-bold text-welcomeMsgColor'>
+                                    {row.hours.toFixed(1)}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
