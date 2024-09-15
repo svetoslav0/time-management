@@ -22,7 +22,11 @@ function App() {
     const router = createBrowserRouter([
         {
             path: '/',
-            element: <RootLayout />,
+            element: (
+                <AuthContextProvider>
+                    <RootLayout />
+                </AuthContextProvider>
+            ),
             errorElement: <h1>error</h1>,
             children: [
                 {
@@ -92,11 +96,7 @@ function App() {
         },
     ]);
 
-    return (
-        <AuthContextProvider>
-            <RouterProvider router={router} />
-        </AuthContextProvider>
-    );
+    return <RouterProvider router={router} />;
 }
 
 export default App;
