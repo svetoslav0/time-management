@@ -1,26 +1,29 @@
 import { saveAs } from 'file-saver';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import useGetReport from '@/reactQuery/hooks/useGetReport';
 
 type DownloadFileProps = {
     projectId: string | undefined;
-    setIsDownloading: React.Dispatch<React.SetStateAction<boolean>>;
+    onDownloadComplete: () => void;
 };
 
-export default function DownloadFile({ projectId, setIsDownloading }: DownloadFileProps) {
+export default function DownloadFile({ projectId, onDownloadComplete }: DownloadFileProps) {
     const { report } = useGetReport(projectId);
 
-    const downloadBlob = (blob: Blob, filename: string) => {
-        saveAs(blob, filename);
-    };
+    const downloadBlob = useCallback(
+        (blob: Blob, filename: string) => {
+            saveAs(blob, filename);
+            onDownloadComplete();
+        },
+        [onDownloadComplete]
+    );
 
     useEffect(() => {
         if (report) {
             downloadBlob(report, `report_${projectId}.pdf`);
         }
-        setIsDownloading(false);
-    }, [report, projectId, setIsDownloading]);
+    }, [report, projectId, downloadBlob]);
 
     return null;
 }

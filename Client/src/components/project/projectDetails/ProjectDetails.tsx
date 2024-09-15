@@ -53,9 +53,18 @@ export default function ProjectDetails() {
     }
 
     const [isDownloading, setIsDownloading] = useState(false);
+    const [shouldDownload, setShouldDownload] = useState(false);
 
     const handleDownload = () => {
-        setIsDownloading(true);
+        if (!isDownloading) {
+            setIsDownloading(true);
+            setShouldDownload(true);
+        }
+    };
+
+    const onDownloadComplete = () => {
+        setIsDownloading(false);
+        setShouldDownload(false);
     };
 
     return (
@@ -137,14 +146,18 @@ export default function ProjectDetails() {
                                     onClick={handleDownload}
                                     type='button'
                                     className='primaryBtn'
+                                    disabled={isDownloading || shouldDownload}
                                 >
                                     <span className='flex gap-1'>
                                         <DownloadSvg /> Download report
                                     </span>
                                 </button>
                             )}
-                            {isDownloading && (
-                                <DownloadFile projectId={id} setIsDownloading={setIsDownloading} />
+                            {shouldDownload && (
+                                <DownloadFile
+                                    projectId={id}
+                                    onDownloadComplete={onDownloadComplete}
+                                />
                             )}
                         </div>
                         <p
