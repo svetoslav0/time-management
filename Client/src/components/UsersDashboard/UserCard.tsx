@@ -1,56 +1,42 @@
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import { User } from '../../shared/types';
+import { UserDetails } from '../../shared/types';
 
-export default function UserCard({ user }: { user: User }) {
-    const navigate = useNavigate();
+import AvatarSvg from '@/UI/design/AvatarSvg';
+import capitalizeFirstLetter from '@/util/capitalizeFirstLetter';
+import cn from '@/util/cn';
+
+export default function UserCard({ user }: { user: UserDetails }) {
     return (
-        <div
-            className='w-full max-w-sm rounded-lg border border-gray-200 bg-white p-4 shadow dark:border-gray-700 dark:bg-gray-800'
-            onClick={() => {
-                navigate(`/admin/users/${user._id}`);
-            }}
-        >
-            <h5 className='mb-3 text-base font-semibold text-gray-900 dark:text-white md:text-xl'>
-                User: {user.email}
-            </h5>
-
-            <ul className='my-4 space-y-3'>
-                <li>
-                    <p className='group flex items-center rounded-lg bg-gray-50 p-3 text-base font-bold text-gray-900  dark:bg-gray-600 dark:text-white'>
-                        First Name:
-                        <span className='ms-3 flex-1 whitespace-nowrap font-light'>
-                            {user.firstName}
-                        </span>
-                    </p>
-                </li>
-                <li>
-                    <p className='group flex items-center rounded-lg bg-gray-50 p-3 text-base font-bold text-gray-900  dark:bg-gray-600 dark:text-white'>
-                        Last Name:
-                        <span className='ms-3 flex-1 whitespace-nowrap font-light'>
-                            {user.lastName}
-                        </span>
-                    </p>
-                </li>
-                <li>
-                    <p className='group flex items-center rounded-lg bg-gray-50 p-3 text-base font-bold text-gray-900  dark:bg-gray-600 dark:text-white'>
-                        Role:
-                        <span className='ms-3 flex-1 whitespace-nowrap font-light'>
-                            {' '}
-                            {user.userRole}
-                        </span>
-                    </p>
-                </li>
-                <li>
-                    <p>
-                        <span
-                            className={`ms-3 flex-1 whitespace-nowrap font-light ${user.status === 'Active' ? 'text-lime-400' : 'text-red-400'}`}
+        <div className='flex w-full border-collapse overflow-hidden rounded-2xl border-[1px] border-l-0 border-white transition duration-200 ease-out hover:border-customBlue '>
+            <div className={'h-full w-[5.65px] bg-customBlue'}></div>
+            <div className='my-5 ml-5 w-full'>
+                <div className='grid w-full grid-cols-[83px_1fr] items-center gap-y-5 text-lg font-bold text-customDarkBlue'>
+                    <AvatarSvg />
+                    <div className='ml-7 w-full'>
+                        <div className=' flex gap-1'>
+                            <p> {capitalizeFirstLetter(user.firstName)} </p>
+                            <p> {capitalizeFirstLetter(user.lastName)} </p>
+                        </div>
+                        <p className='my-2'> {capitalizeFirstLetter(user.userRole)}</p>
+                    </div>
+                    <div>
+                        <p
+                            className={cn(
+                                user.status === 'active' ? 'text-customGreen' : 'text-customRed',
+                                'text-center text-lg font-normal'
+                            )}
                         >
-                            {user.status}
-                        </span>
-                    </p>
-                </li>
-            </ul>
+                            {user.status === 'active' ? 'Active' : 'Inactive'}
+                        </p>
+                    </div>
+                    <div className='mr-6 flex justify-end'>
+                        <Link className='secondaryBtn w-[103px]' to={`/admin/users/${user._id}`}>
+                            Details
+                        </Link>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

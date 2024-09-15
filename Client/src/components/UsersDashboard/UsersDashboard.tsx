@@ -1,45 +1,35 @@
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import { LoginResponseData } from '../../shared/types';
 import UserCard from './UserCard';
 
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
 import ActionSearchFiled from '@/UI/formComponents/ActionSearchFiled';
-import ButtonCreateUser from '@/UI/formComponents/ButtonCreateUser';
-import ButtonShowActiveOrInactiveUsers from '@/UI/formComponents/ButtonShowActiveOrInactiveUsers';
-import { getUserData } from '@/util/util';
+import Loader from '@/UI/Loader';
 
 export default function UsersDashboard() {
-    const [active, setActive] = useState<boolean>(true);
-    const currentUser: LoginResponseData | undefined = getUserData();
-    const {
-        data: users,
-        isLoading,
-        filter,
-        handleChangeFilter,
-    } = useFetchUsers({ status: active ? 'active' : 'inactive' });
+    const { data: users, isLoading, filter, handleChangeFilter } = useFetchUsers({});
 
     return (
         <div className='mx-auto flex flex-col gap-6 p-5'>
-            <div className='flex gap-5'>
-                <ButtonShowActiveOrInactiveUsers active={active} setActive={setActive} />
-                {currentUser?.userRole === 'admin' && <ButtonCreateUser />}
+            <div className='flex justify-center'>
+                <Link to={'/admin/createUser'} className='adminProjectBtn w-[132px] '>
+                    Create user
+                </Link>
             </div>
             <div className='flex justify-center'>
-                <ActionSearchFiled value={filter} handleChangeFilter={handleChangeFilter} />
+                <ActionSearchFiled
+                    value={filter}
+                    placeholder='search users..'
+                    handleChangeFilter={handleChangeFilter}
+                />
             </div>
-            <h2 className='self-center font-bold'>{active ? 'Active' : 'Inactive'} Users</h2>
             {isLoading ? (
-                <div className='self-center'>Loading...</div>
+                <div className='self-center'>
+                    <Loader />
+                </div>
             ) : (
-                <div className='mx-10 mt-4 grid gap-10 pb-10 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4'>
-                    {users &&
-                        users.items.map(
-                            (user) => (
-                                active ? (user.status = 'Active') : (user.status = 'Inactive'),
-                                (<UserCard key={user._id} user={user} />)
-                            )
-                        )}
+                <div className='mt-16 grid grid-cols-3 gap-x-[66px] gap-y-10'>
+                    {users && users.items.map((user) => <UserCard key={user._id} user={user} />)}
                 </div>
             )}
         </div>
