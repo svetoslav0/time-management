@@ -4,13 +4,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import useCompleteProject from '../hooks/useCompleteProject';
 import ExistingUsersCardLayout from './ExistingUsersCardLayout';
+import InviteUsersCardLayout from './InviteUsersCardLayout';
 
 import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
 import { ProjectResponseDataType } from '@/shared/types';
+import DownloadSvg from '@/UI/design/DownloadSvg';
 import GearSvg from '@/UI/design/GearSvg';
+import DownloadFile from '@/UI/DownloadFile';
 import Modal from '@/UI/Modal';
 import cn from '@/util/cn';
-import InviteUsersCardLayout from './InviteUsersCardLayout';
 
 export default function ProjectDetails() {
     const navigate = useNavigate();
@@ -49,6 +51,21 @@ export default function ProjectDetails() {
     if (error) {
         navigate('admin/projectAdminDashboard');
     }
+
+    const [isDownloading, setIsDownloading] = useState(false);
+    const [shouldDownload, setShouldDownload] = useState(false);
+
+    const handleDownload = () => {
+        if (!isDownloading) {
+            setIsDownloading(true);
+            setShouldDownload(true);
+        }
+    };
+
+    const onDownloadComplete = () => {
+        setIsDownloading(false);
+        setShouldDownload(false);
+    };
 
     return (
         <div className='mx-20 mt-[126px]'>
@@ -125,7 +142,22 @@ export default function ProjectDetails() {
                                     Complete project
                                 </button>
                             ) : (
-                                <button>download button </button>
+                                <button
+                                    onClick={handleDownload}
+                                    type='button'
+                                    className='primaryBtn'
+                                    disabled={isDownloading || shouldDownload}
+                                >
+                                    <span className='flex gap-1'>
+                                        <DownloadSvg /> Download report
+                                    </span>
+                                </button>
+                            )}
+                            {shouldDownload && (
+                                <DownloadFile
+                                    projectId={id}
+                                    onDownloadComplete={onDownloadComplete}
+                                />
                             )}
                         </div>
                         <p
