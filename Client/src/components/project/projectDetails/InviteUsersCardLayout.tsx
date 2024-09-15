@@ -35,7 +35,6 @@ export default function InviteUsersCardLayout({ project }: InviteUsersCardLayout
         setDeletedInvites((prevInvites) => [...prevInvites, inviteData]);
     }
 
-    console.log(deletedInvites);
     useEffect(() => {
         setCurrentInvites(project.invites);
     }, [project]);
