@@ -1,20 +1,17 @@
-const path = require("path");
+const path = require('path');
 
-const Project = require("../models/Project");
-const Hours = require("../models/Hours");
+const Project = require('../models/Project');
+const Hours = require('../models/Hours');
 
-const userService = require("../services/userService");
-const {
-    validateProjectData,
-    validateProjectStatus,
-} = require("../utils/validateProjectDataUtil");
-const ProjectValidationErrors = require("../errors/projectsValidationErrors");
-const { validateObjectId } = require("../utils/validateObjectIdUtil");
-const formatDate = require("../utils/formatDateUtil");
-const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
-const generatePdf = require("../utils/generatePdfUtil");
-const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
-const getInvitesByProjectId = require("../utils/inviteUtils/getInvitesByProjectId");
+const userService = require('../services/userService');
+const { validateProjectData, validateProjectStatus } = require('../utils/validateProjectDataUtil');
+const ProjectValidationErrors = require('../errors/projectsValidationErrors');
+const { validateObjectId } = require('../utils/validateObjectIdUtil');
+const formatDate = require('../utils/formatDateUtil');
+const { getProjectByRoleIfNotAdmin } = require('../utils/getProjectByRole');
+const generatePdf = require('../utils/generatePdfUtil');
+const sendInvitesToNonExistingUsers = require('../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers');
+const getInvitesByProjectId = require('../utils/inviteUtils/getInvitesByProjectId');
 
 exports.createProject = async (req) => {
     const projectData = req.body;
@@ -49,10 +46,7 @@ exports.getProjects = async (req) => {
 
     if (employeeId) {
         if (!validateObjectId(employeeId)) {
-            throw new ProjectValidationErrors(
-                "Invalid employee ID format",
-                400
-            );
+            throw new ProjectValidationErrors('Invalid employee ID format', 400);
         }
     }
 
@@ -71,9 +65,9 @@ exports.getProjects = async (req) => {
 
     const user = await userService.getSingleUser(userId);
 
-    if (user.userRole === "employee") {
+    if (user.userRole === 'employee') {
         query.employeeIds = user._id;
-    } else if (user.userRole === "customer") {
+    } else if (user.userRole === 'customer') {
         query.customerIds = user._id;
     }
 
@@ -89,11 +83,7 @@ exports.getSingleProject = async (req) => {
     const userId = req.userToken._id;
     const userRole = req.userToken.userRole;
 
-    const project = await getProjectByRoleIfNotAdmin(
-        projectId,
-        userId,
-        userRole
-    );
+    const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
     const projectInvites = await getInvitesByProjectId(projectId);
 
     const projectClone = JSON.parse(JSON.stringify(project));
@@ -108,7 +98,7 @@ exports.updateProject = async (req) => {
     const emailsToCheck = projectData.inviteEmails;
 
     if (!projectData.status) {
-        throw new ProjectValidationErrors("No status provided!", 400);
+        throw new ProjectValidationErrors('No status provided!', 400);
     }
 
     await validateProjectStatus(projectData.status);
@@ -144,37 +134,20 @@ exports.getReport = async (req) => {
     const userId = req.userToken._id;
     const userRole = req.userToken.userRole;
 
-    const project = await getProjectByRoleIfNotAdmin(
-        projectId,
-        userId,
-        userRole
-    );
+    const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
 
-    const hours = await Hours.find({ projectId }).populate(
-        "userId",
-        "firstName"
-    );
+    const hours = await Hours.find({ projectId }).populate('userId', 'firstName');
 
     if (!hours || hours.length === 0) {
-        throw new ProjectValidationErrors(
-            "Could not generate report for the specified project. No hours logged.",
-            404
-        );
+        throw new ProjectValidationErrors('Could not generate report for the specified project. No hours logged.', 404);
     }
 
-    const totalPrice = hours.reduce(
-        (total, hour) => total + hour.hours * project.pricePerHour,
-        0
-    );
+    const totalHours = hours.reduce((total, hour) => total + hour.hours, 0);
 
     return {
         projectData: {
-            employeeNames: project.employeeIds.map(
-                (employee) => employee.firstName + " " + employee.lastName
-            ),
-            customerNames: project.customerIds.map(
-                (customer) => customer.firstName
-            ),
+            employeeNames: project.employeeIds.map((employee) => employee.firstName + ' ' + employee.lastName),
+            customerNames: project.customerIds.map((customer) => customer.firstName),
             projectName: project.projectName,
             startingDate: formatDate(project.startingDate),
             pricePerHours: project.pricePerHour,
@@ -186,17 +159,15 @@ exports.getReport = async (req) => {
             hours: hour.hours,
             notes: hour.notes,
         })),
-        totalPrice: totalPrice,
+        totalPrice: totalHours * project.pricePerHour,
+        totalHours: totalHours,
     };
 };
 
 exports.getReportPdf = async (req) => {
     const reportData = await this.getReport(req);
 
-    const templatePath = path.join(
-        __dirname,
-        "../templates/projectReport/projectReportTemplate.hbs"
-    );
+    const templatePath = path.join(__dirname, '../templates/projectReport/projectReportTemplate.hbs');
 
     const pdfBuffer = await generatePdf(reportData, templatePath);
 
