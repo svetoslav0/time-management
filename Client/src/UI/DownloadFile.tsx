@@ -2,6 +2,7 @@ import { saveAs } from 'file-saver';
 import { useCallback, useEffect } from 'react';
 
 import useGetReport from '@/reactQuery/hooks/useGetReport';
+import toast from 'react-hot-toast';
 
 type DownloadFileProps = {
     projectId: string | undefined;
@@ -9,7 +10,7 @@ type DownloadFileProps = {
 };
 
 export default function DownloadFile({ projectId, onDownloadComplete }: DownloadFileProps) {
-    const { report } = useGetReport(projectId);
+    const { report, downloadError } = useGetReport(projectId);
 
     const downloadBlob = useCallback(
         (blob: Blob, filename: string) => {
@@ -18,6 +19,13 @@ export default function DownloadFile({ projectId, onDownloadComplete }: Download
         },
         [onDownloadComplete]
     );
+
+    useEffect(() => {
+        if (downloadError) {
+            toast.error(downloadError.message);
+            onDownloadComplete();
+        }
+    });
 
     useEffect(() => {
         if (report) {

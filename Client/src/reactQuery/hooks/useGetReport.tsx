@@ -9,11 +9,11 @@ export default function useGetReport(id: string | undefined) {
     const queryKey = [queryKeys.pdf, id];
     const generatedUrl = `/projects/${id}/report/pdf`;
 
-    const { data: report } = useQuery<Blob>({
+    const { data: report, error: downloadError } = useQuery<Blob>({
         queryKey,
         queryFn: () => get<Blob>(generatedUrl, undefined, 'blob'),
         retry: 0,
         enabled: !!id,
     });
-    return { report };
+    return { report, downloadError };
 }
