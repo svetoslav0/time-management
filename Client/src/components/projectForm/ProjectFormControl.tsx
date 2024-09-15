@@ -15,6 +15,7 @@ import MultiSelector from './MultiSelector';
 import { ProjectFormDataType } from './types';
 
 import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
+import LogoSvg from '@/UI/design/LogoSvg';
 
 dayjs.extend(customParseFormat);
 
@@ -44,6 +45,7 @@ export default function ProjectFormControl() {
         trigger,
         setValue,
         clearErrors,
+        setError,
     } = methods;
 
     const onSubmit: SubmitHandler<ProjectFormDataType> = async (data) => {
@@ -66,26 +68,15 @@ export default function ProjectFormControl() {
     const handleShowCalendar = () => {
         setShowCalendar((prev) => !prev);
     };
+
     useEffect(() => {
         setValue('employeeIds', selectedEmployees);
-        if (selectedEmployees) {
-            clearErrors('employeeIds');
-        }
-    }, [selectedEmployees, setValue, clearErrors]);
-
-    useEffect(() => {
         setValue('inviteEmails', inviteEmails);
-        if (inviteEmails) {
-            clearErrors('inviteEmails');
-        }
-    }, [inviteEmails, setValue, clearErrors]);
-
-    useEffect(() => {
         setValue('customerIds', selectedCustomer);
-        if (selectedCustomer) {
-            clearErrors('customerIds');
+        if (dayjs.isDayjs(selectedDate) && selectedDate.isValid()) {
+            setValue('startingDate', selectedDate.format('YYYY-MM-DD'));
         }
-    }, [selectedCustomer, setValue, clearErrors]);
+    }, [selectedEmployees, inviteEmails, selectedCustomer, selectedDate, setValue]);
 
     useEffect(() => {
         if (dayjs.isDayjs(selectedDate) && selectedDate.isValid()) {
@@ -94,15 +85,25 @@ export default function ProjectFormControl() {
         }
     }, [selectedDate, setValue, clearErrors]);
 
+    const errorMessages = Object.values(errors)
+        .map((error) => error?.message)
+        .filter(Boolean);
+
     return (
-        <>
+        <div>
+            <div className='z-10 mt-7  flex justify-center'>
+                <LogoSvg />
+            </div>
+            <p className='my-16 text-center text-base font-semibold text-customDarkBlue'>
+                Welcome to your time management hero.
+            </p>
             <FormProvider {...methods}>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className='m-auto w-2/4 rounded-md border-2 border-gray-900/10 dark:border-gray-50 dark:bg-gray-900'
+                    className='m-auto w-2/4 rounded-2xl border  bg-white shadow-2xl backdrop-blur-[13.50px]'
                 >
-                    <div className='m-10 grid grid-cols-2 gap-10 space-y-12'>
-                        <h1 className='col-span-2 text-center text-4xl font-semibold capitalize text-gray-900 dark:text-gray-50'>
+                    <div className='m-10 mb-3 grid grid-cols-2 gap-x-3.5 gap-y-5'>
+                        <h1 className='col-span-2 text-center text-2xl font-semibold capitalize text-customDarkBlue'>
                             Create New Project
                         </h1>
                         <InputComponent
@@ -136,36 +137,35 @@ export default function ProjectFormControl() {
                             setSelectedUsers={setSelectedCustomer}
                             field='customerIds'
                             placeholder='Customers'
+                            setError={setError}
+                            clearErrors={clearErrors}
+                            selectedError={
+                                selectedCustomer.length > 0 ? selectedCustomer : inviteEmails
+                            }
                         />
                         <div className='relative'>
                             <input
-                                type='date'
+                                type='text'
+                                placeholder='Date'
                                 readOnly
                                 {...register('startingDate')}
                                 value={
                                     dayjs.isDayjs(selectedDate)
-                                        ? selectedDate.format('YYYY-MM-DD')
+                                        ? selectedDate.format('DD/MM/YYYY')
                                         : selectedDate
                                 }
                                 onClick={handleShowCalendar}
+                                onBlur={() => {
+                                    if (!selectedDate) {
+                                        setError('startingDate', { message: 'Please select date' });
+                                    }
+                                }}
                                 className={cn(
-                                    errors.startingDate
-                                        ? 'border-red-500 dark:border-red-500'
-                                        : 'border-gray-300',
-                                    selectedDate === '' ? 'text-gray-400 dark:text-gray-400' : '',
-                                    `block w-full rounded-lg border  bg-gray-50 p-2.5 text-sm  focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600
-                                         dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`
+                                    errors.startingDate ? 'border-customRed' : 'border-customBlue',
+                                    selectedDate === '' ? 'text-customDarkBlue' : '',
+                                    'focus:customBlue block w-full rounded-xl   border p-2.5  text-sm focus:outline-none focus:ring-red-500'
                                 )}
                             />
-                            {errors.startingDate && (
-                                <span
-                                    role='alert'
-                                    className='text-sm text-red-500 dark:text-red-400'
-                                >
-                                    {errors.startingDate?.message}
-                                </span>
-                            )}
-
                             {showCalendar && (
                                 <div className='absolute z-10 mt-4 rounded-md border-2 border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-600'>
                                     <Calendar
@@ -184,6 +184,9 @@ export default function ProjectFormControl() {
                             setSelectedUsers={setSelectedEmployees}
                             field='employeeIds'
                             placeholder='Employees'
+                            setError={setError}
+                            clearErrors={clearErrors}
+                            selectedError={selectedEmployees}
                         />
 
                         <EmailInvite
@@ -191,20 +194,30 @@ export default function ProjectFormControl() {
                             inviteEmails={inviteEmails}
                             setInviteEmails={setInviteEmails}
                             field='inviteEmails'
-                            placeholder='Invite emails'
+                            placeholder='Invite via email'
+                            selectedError={
+                                selectedCustomer.length > 0 ? selectedCustomer : inviteEmails
+                            }
+                            setError={setError}
+                            clearErrors={clearErrors}
                         />
                     </div>
-                    <div className='flex w-full justify-center'>
+                    <div className='mb-4 ml-12 text-xs font-medium text-customRed'>
+                        {errorMessages &&
+                            errorMessages.map((errorMessage, inx) => (
+                                <p key={inx}>{errorMessage}*</p>
+                            ))}
+                    </div>
+                    <div className='mb-11 flex w-full justify-center'>
                         <button
-                            className=' mb-2 me-2 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-5 py-2.5 text-center text-sm font-medium
-                                 text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800'
+                            className='rounded-lg bg-customBlue px-14 py-2 text-base font-bold text-white '
                             type='submit'
                         >
-                            Submit
+                            Create
                         </button>
                     </div>
                 </form>
             </FormProvider>
-        </>
+        </div>
     );
 }
