@@ -49,6 +49,7 @@ export type LoginResponseData = {
     status: string;
     userRole: string;
     _id: string;
+    expire: number;
 };
 
 export type LoginFormDataType = {
