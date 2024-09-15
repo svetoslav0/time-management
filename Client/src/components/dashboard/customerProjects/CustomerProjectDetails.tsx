@@ -46,29 +46,35 @@ export default function CustomerProjectDetails() {
             <div className='relative -mt-8 mb-8 w-3/4 font-medium text-customBlue'>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Employee Name:</p>
-                    <span className='ml-2 text-black'>
+                    <span className='ml-2 text-customDarkBlue'>
                         {project?.projectData.employeeNames.join(', ')}
                     </span>
                 </div>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Client Name:</p>
-                    <span className='ml-2 text-black'>{project?.projectData.customerNames}</span>
+                    <span className='ml-2 text-customDarkBlue'>
+                        {project?.projectData.customerNames}
+                    </span>
                 </div>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Project Name:</p>
-                    <span className='ml-2 text-black'>{project?.projectData.projectName}</span>
+                    <span className='ml-2 text-customDarkBlue'>
+                        {project?.projectData.projectName}
+                    </span>
                 </div>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Price per hour:</p>
-                    <span className='ml-2 text-black'>${project?.projectData.pricePerHours}</span>
+                    <span className='ml-2 text-customDarkBlue'>
+                        ${project?.projectData.pricePerHours}
+                    </span>
                 </div>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Total price:</p>
-                    <span className='ml-2 text-black'>${project?.totalPrice}</span>
+                    <span className='ml-2 text-customDarkBlue'>${project?.totalPrice}</span>
                 </div>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Total price:</p>
-                    <span className='ml-2 text-black'>{project?.totalHours} hours</span>
+                    <span className='ml-2 text-customDarkBlue'>{project?.totalHours} hours</span>
                 </div>
                 <div className='absolute -top-4 right-4'>
                     <button
