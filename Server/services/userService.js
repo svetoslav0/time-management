@@ -34,6 +34,8 @@ exports.login = async (req) => {
 
     const token = generateToken(user);
 
+    const expire = Date.now() + 7 * 24 * 60 * 60 * 1000;
+
     return {
         user: {
             _id: user._id,
@@ -42,6 +44,7 @@ exports.login = async (req) => {
             lastName: user.lastName,
             userRole: user.userRole,
             status: user.status,
+            expire,
         },
         token,
     };
