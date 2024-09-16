@@ -12,7 +12,8 @@ const generatePdf = async (reportData, templatePath) => {
 
     try {
         browser = await puppeteer.launch({
-            headless: true
+            headless: true,
+            executablePath: '/usr/bin/chromium-browser'
         });
 
         const page = await browser.newPage();
