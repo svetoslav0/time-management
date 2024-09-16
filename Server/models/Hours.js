@@ -26,6 +26,9 @@ const hoursSchema = new Schema({
         type: String,
         required: true,
     },
+},
+{
+    timestamps: true,
 });
 
 const Hours = mongoose.model("Hours", hoursSchema);
