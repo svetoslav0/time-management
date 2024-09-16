@@ -1,27 +1,28 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { GoogleLogin } from '@react-oauth/google';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { GoogleLogin } from '@react-oauth/google';
+import toast from 'react-hot-toast';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { createUserSchema } from '../../shared/formValidations';
 import { CreateUserDataType } from '../../shared/types';
 import InputComponent from '../../UI/formComponents/InputComponent';
-import useCreateUser from './hooks/useCreateUser';
+import useInviteRegister from './hooks/useInviteRegister';
 
 import mainLogo from '@/assets/timeManagementLogo.png';
-import GearSvg from '@/UI/design/GearSvg';
 import useFetchEmailValidation from '@/reactQuery/hooks/useFetchEmailValidation';
-import { useParams } from 'react-router-dom';
+import GearSvg from '@/UI/design/GearSvg';
 import Loader from '@/UI/Loader';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import useInviteRegister from './hooks/useInviteRegister';
 
 export default function GoogleCreateAcc() {
     const [isVisible, setIsVisible] = useState(false);
     const { createUser, isSuccess } = useInviteRegister();
     const { id } = useParams<string>();
     const navigate = useNavigate();
+    const { error, isLoading, data: emailValidationData } = useFetchEmailValidation(id);
+    const [email, setEmail] = useState('');
 
     const {
         register,
@@ -29,6 +30,7 @@ export default function GoogleCreateAcc() {
         trigger,
         formState: { errors },
         reset,
+        setValue,
     } = useForm<CreateUserDataType>({
         resolver: yupResolver(createUserSchema),
         defaultValues: {
@@ -36,10 +38,8 @@ export default function GoogleCreateAcc() {
         },
     });
 
-    const { error, isLoading } = useFetchEmailValidation(id);
-
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
-        let inviteData = { ...data, inviteId: id };
+        const inviteData = { ...data, inviteId: id };
         createUser(inviteData);
     };
 
@@ -59,6 +59,12 @@ export default function GoogleCreateAcc() {
             navigate('/');
         }
     }, [error, navigate]);
+
+    useEffect(() => {
+        if (emailValidationData && emailValidationData.email) {
+            setEmail(emailValidationData.email);
+        }
+    }, [emailValidationData]);
 
     if (isLoading) {
         return (
@@ -105,6 +111,11 @@ export default function GoogleCreateAcc() {
                         register={register}
                         trigger={trigger}
                         field='email'
+                        value={email}
+                        onChange={(e) => {
+                            setValue('email', e.currentTarget.value);
+                            setEmail(e.currentTarget.value);
+                        }}
                     />
                     <div className='flex justify-between gap-5'>
                         <InputComponent
