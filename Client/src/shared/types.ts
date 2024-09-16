@@ -160,6 +160,7 @@ export interface ProjectReport {
     hours: HourTypeFromProjectReport[];
     projectData: ProjectDataFromReport;
     totalPrice: number;
+    totalHours: number;
 }
 
 export interface ProjectDataFromReport {
