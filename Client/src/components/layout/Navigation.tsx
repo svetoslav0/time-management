@@ -8,7 +8,7 @@ import { useUser } from '../auth/hooks/useUser';
 import { User } from '@/shared/types';
 
 export function Navigation() {
-    const { loginResponseData } = useLoginData();
+    const { loginData } = useLoginData();
     const { currentUser } = useUser();
 
     const logout = useLogout();
@@ -16,7 +16,7 @@ export function Navigation() {
 
     useEffect(() => {
         setUser(currentUser);
-    }, [currentUser, loginResponseData]);
+    }, [currentUser, loginData]);
 
     const handleLogout = () => {
         logout();
@@ -25,9 +25,9 @@ export function Navigation() {
     return (
         <nav
             aria-label='Main navigation'
-            className='from-customLightBlue bg-gradient-to-b to-white'
+            className='bg-gradient-to-b from-customLightBlue to-white'
         >
-            <div className='text-customDarkBlue m-auto flex h-[98px] w-[1440px] items-center justify-between text-lg font-bold'>
+            <div className='m-auto flex h-[98px] w-[1440px] items-center justify-between text-lg font-bold text-customDarkBlue'>
                 <span className='ml-20'>{user ? `Welcome, ${user?.email}` : ''}</span>
                 {user && (
                     <ul className='mr-20 flex items-center space-x-20'>
