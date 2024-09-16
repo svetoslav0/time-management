@@ -45,10 +45,7 @@ exports.getProjects = async (req) => {
 
     if (employeeId) {
         if (!validateObjectId(employeeId)) {
-            throw new ProjectValidationErrors(
-                "Invalid employee ID format",
-                400
-            );
+            throw new ProjectValidationErrors('Invalid employee ID format', 400);
         }
     }
 
@@ -67,9 +64,9 @@ exports.getProjects = async (req) => {
 
     const user = await userService.getSingleUser(userId);
 
-    if (user.userRole === "employee") {
+    if (user.userRole === 'employee') {
         query.employeeIds = user._id;
-    } else if (user.userRole === "customer") {
+    } else if (user.userRole === 'customer') {
         query.customerIds = user._id;
     }
 
@@ -85,11 +82,7 @@ exports.getSingleProject = async (req) => {
     const userId = req.userToken._id;
     const userRole = req.userToken.userRole;
 
-    const project = await getProjectByRoleIfNotAdmin(
-        projectId,
-        userId,
-        userRole
-    );
+    const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
     const projectInvites = await getInvitesByProjectId(projectId);
 
     const projectClone = JSON.parse(JSON.stringify(project));
@@ -104,7 +97,7 @@ exports.updateProject = async (req) => {
     const emailsToCheck = projectData.inviteEmails;
 
     if (!projectData.status) {
-        throw new ProjectValidationErrors("No status provided!", 400);
+        throw new ProjectValidationErrors('No status provided!', 400);
     }
 
     await validateProjectStatus(projectData.status);

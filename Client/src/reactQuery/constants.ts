@@ -11,7 +11,7 @@ export const urlKeys = {
     completeProject: '/projects/',
     emailValidation: '/invites/validate',
     inviteRegister: '/invites/register',
-    invites: '/invites'
+    invites: '/invites',
 };
 export const queryKeys = {
     customer: 'All Customers',
@@ -23,4 +23,5 @@ export const queryKeys = {
     user: 'User',
     hours: 'Hours',
     isValidEmail: 'IsValidEmail',
+    pdf: 'PDF',
 };
