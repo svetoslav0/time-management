@@ -89,9 +89,13 @@ exports.sendInvite = async (req) => {
     const projectId = req.body.projectId;
     const emailToSendInvite = req.body.inviteEmail;
 
+    if (!projectId) {
+        throw new InvitesValidationErrors("No project id provided!", 400);
+    }
+
     await isProjectIdValidAndExisting(projectId);
 
-    if (emailToSendInvite.length < 1) {
+    if (!emailToSendInvite || emailToSendInvite.trim().length < 1) {
         throw new InvitesValidationErrors("No email provided!", 400);
     }
 
