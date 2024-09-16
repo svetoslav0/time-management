@@ -21,7 +21,7 @@ router.get("/", getJwtToken, async (req, res, next) => {
         const hours = await hoursService.getAllHours(req);
 
         if (!hours || hours.length === 0) {
-            throw new HoursValidationErrors("Hours not found", 404);
+            return res.status(200).json({ message: "No hour logs found for the specified criteria." })
         }
 
         res.status(200).json(hours);
