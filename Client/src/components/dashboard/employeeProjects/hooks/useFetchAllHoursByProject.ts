@@ -10,8 +10,8 @@ const { get } = httpServices();
 
 export default function useFetchAllHoursByProject({ projectId }: { projectId: string }) {
     // TODO loginResponseData and userId is temporary
-    const { loginResponseData } = useLoginData();
-    const id = loginResponseData?._id || '';
+    const { loginData } = useLoginData();
+    const id = loginData?._id || '';
 
     const queryKey = [queryKeys.hours, `ProjectId-${projectId}`];
 

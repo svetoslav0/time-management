@@ -40,12 +40,12 @@ export default function HoursForm(props: HoursFormProps) {
 
     const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
-    const { loginResponseData } = useLoginData();
+    const { loginData } = useLoginData();
 
     let isTimeOwner = false;
 
     if (props.action === 'edit') {
-        isTimeOwner = loginResponseData?._id === props.dateData.userId._id;
+        isTimeOwner = loginData?._id === props.dateData.userId._id;
     }
 
     const pendingData = useMutationState({
@@ -129,8 +129,8 @@ export default function HoursForm(props: HoursFormProps) {
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className={cn(
-                    'min-h-11 grid grid-cols-[130px_130px_280px_484px_1fr] items-center pl-8 pr-6 mb-3.5 text-base font-semibold text-customDarkBlue',
-                    (isEdit || isDeleting )&& 'bg-customDarkWhite'
+                    'mb-3.5 grid min-h-11 grid-cols-[130px_130px_280px_484px_1fr] items-center pl-8 pr-6 text-base font-semibold text-customDarkBlue',
+                    (isEdit || isDeleting) && 'bg-customDarkWhite'
                 )}
             >
                 <input
@@ -162,7 +162,7 @@ export default function HoursForm(props: HoursFormProps) {
                     {props.action === 'edit' && !isEdit ? (
                         <span>hours</span>
                     ) : (
-                        <div className='absolute left-7 -top-1.5'>
+                        <div className='absolute -top-1.5 left-7'>
                             <button
                                 type='button'
                                 className='my-1 flex'
@@ -261,23 +261,15 @@ export default function HoursForm(props: HoursFormProps) {
                         >
                             Delete?
                         </button>
-                        
                     </div>
                 ) : (
                     <div className='col-span-1 flex justify-end gap-[14px]'>
                         {props.action === 'edit' && isTimeOwner && !isEdit && (
                             <>
-                                <button
-                                    type='button'
-
-                                    onClick={() => setIsEdit(true)}
-                                >
+                                <button type='button' onClick={() => setIsEdit(true)}>
                                     <ClipboardEditSvg />
                                 </button>
-                                <button
-                                    type='button'
-                                    onClick={() => setIsDeleting(true)}
-                                >
+                                <button type='button' onClick={() => setIsDeleting(true)}>
                                     <TrashSvg />
                                 </button>
                             </>

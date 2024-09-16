@@ -9,13 +9,13 @@ import { User } from '@/shared/types';
 
 export function useUser() {
     const { get } = httpServices();
-    const { loginResponseData } = useLoginData();
+    const { loginData } = useLoginData();
     const queryKey = [queryKeys.user];
 
     const { data: currentUser } = useQuery<User | undefined>({
-        enabled: !!loginResponseData?._id,
+        enabled: !!loginData?._id,
         queryKey,
-        queryFn: () => get<User>(urlKeys.getUserById + `/${loginResponseData?._id}`),
+        queryFn: () => get<User>(urlKeys.getUserById + `/${loginData?._id}`),
         staleTime: Infinity,
     });
 
