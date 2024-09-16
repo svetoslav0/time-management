@@ -1,13 +1,17 @@
-import { ComponentPropsWithoutRef, useCallback, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { ComponentPropsWithoutRef, useCallback, useEffect, useState } from 'react';
+import { UseFormClearErrors, useFormContext, UseFormSetError } from 'react-hook-form';
 
 import cn from '../../util/cn';
+import { ProjectFormDataType } from './types';
 
 type UserSelectorProps = {
     inviteEmails: string[];
     setInviteEmails: React.Dispatch<React.SetStateAction<string[]>>;
     error: string | undefined;
     field: string;
+    selectedError: string[];
+    setError: UseFormSetError<ProjectFormDataType>;
+    clearErrors: UseFormClearErrors<ProjectFormDataType>;
 } & ComponentPropsWithoutRef<'input'>;
 
 const isValidEmail = (email: string): boolean => {
@@ -20,9 +24,13 @@ export default function EmailInvite({
     setInviteEmails,
     error,
     field,
+    selectedError,
+    setError,
+    clearErrors,
     ...props
 }: UserSelectorProps) {
     const [input, setInput] = useState<string>('');
+    const [isBlur, setIsBlur] = useState(false);
 
     const { register } = useFormContext();
 
@@ -46,12 +54,20 @@ export default function EmailInvite({
         setInviteEmails(inviteEmails.filter((email) => email !== emailToRemove));
     };
 
+    useEffect(() => {
+        if (selectedError.length === 0 && isBlur) {
+            setError('inviteEmails', { message: 'Please add invite email' });
+        } else {
+            clearErrors('inviteEmails');
+        }
+    }, [selectedError, isBlur, setError, clearErrors]);
+
     return (
         <div className='place-items-center'>
             <div
                 className={cn(
-                    error ? 'border-red-500 dark:border-red-500' : '',
-                    'relative w-full rounded-md border-2 border-gray-300 bg-gray-50 text-sm dark:border-gray-600 dark:bg-gray-700'
+                    error ? 'border-customRed' : 'border-customBlue',
+                    'relative w-full rounded-xl border  text-sm'
                 )}
             >
                 <input value={inviteEmails} id={field} {...register(field)} className='hidden' />
@@ -61,11 +77,11 @@ export default function EmailInvite({
                             return (
                                 <div
                                     key={email}
-                                    className='flex w-fit items-center gap-2  rounded-lg border-gray-400 bg-gray-200 px-3  text-gray-900 dark:bg-gray-800 dark:text-gray-50'
+                                    className='flex w-fit items-center gap-2  px-3  text-customDarkBlue'
                                 >
                                     <span>{email}</span>
                                     <div
-                                        className='cursor-pointer text-red-500'
+                                        className='cursor-pointer text-customRed'
                                         onMouseDown={(e) => e.preventDefault()}
                                         onClick={() => handleRemoveEmail(email)}
                                     >
@@ -75,10 +91,7 @@ export default function EmailInvite({
                             );
                         })}
                         <div className='flex-grow text-right'>
-                            <span
-                                className='cursor-pointer text-gray-400'
-                                onClick={() => setInviteEmails([])}
-                            >
+                            <span className='cursor-pointer ' onClick={() => setInviteEmails([])}>
                                 Clear all
                             </span>
                         </div>
@@ -86,20 +99,16 @@ export default function EmailInvite({
                 ) : null}
                 <div className='flex w-full items-center justify-between gap-2.5 p-2.5'>
                     <input
-                        className='flex-1 bg-transparent text-sm outline-none dark:text-gray-50'
+                        className='flex-1 bg-transparent text-sm outline-none'
                         {...props}
                         type='text'
                         value={input}
                         onChange={handleInputChange}
+                        onBlur={() => setIsBlur(true)}
                         onKeyDown={handleAddEmail}
                     />
                 </div>
             </div>
-            {error && (
-                <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                    {error}
-                </span>
-            )}
         </div>
     );
 }
