@@ -11,6 +11,7 @@ import { ProjectResponseDataType } from '@/shared/types';
 import DownloadSvg from '@/UI/design/DownloadSvg';
 import GearSvg from '@/UI/design/GearSvg';
 import DownloadFile from '@/UI/DownloadFile';
+import Loader from '@/UI/Loader';
 import Modal from '@/UI/Modal';
 import cn from '@/util/cn';
 
@@ -127,7 +128,12 @@ export default function ProjectDetails() {
                     </div>
                 </Modal>
             )}
-            {project ? (
+            {isFetching && (
+                <div className='relative flex w-full justify-center'>
+                    <Loader />
+                </div>
+            )}
+            {project && (
                 <>
                     <div className='text-lg'>
                         <div className='flex items-center  justify-between font-bold text-customDarkBlue'>
@@ -175,8 +181,6 @@ export default function ProjectDetails() {
                     <ExistingUsersCardLayout userType='customerIds' project={project} />
                     <InviteUsersCardLayout project={project} />
                 </>
-            ) : (
-                <p>Something went wrong</p>
             )}
         </div>
     );
