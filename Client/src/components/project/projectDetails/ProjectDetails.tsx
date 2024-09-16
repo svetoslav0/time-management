@@ -19,7 +19,7 @@ export default function ProjectDetails() {
     const navigate = useNavigate();
     const { id } = useParams<string>();
     const { data: project, error, isFetching } = useFetchProjectById(id);
-    const { completeProject, isCompletedSuccessful } = useCompleteProject(id);
+    const { completeProject, isCompletedSuccessful, isCompletedPending } = useCompleteProject(id);
     const [showActionCompleteModal, setShowActionCompleteModal] = useState(false);
     const [showCompleteModal, setShowCompleteModal] = useState(false);
 
@@ -102,23 +102,36 @@ export default function ProjectDetails() {
                     onClose={() => setShowActionCompleteModal(false)}
                 >
                     <div className='relative flex h-[202px] w-[414px] flex-col items-center justify-evenly '>
-                        <p className='max-w-[239px] text-center text-xl font-bold text-white'>
-                            Are you sure you want to complete this project?
-                        </p>
-                        <div className='flex gap-16'>
-                            <button
-                                onClick={() => onCompleteProject()}
-                                className='h-[32px] w-[67px] rounded-md bg-customBlue text-lg font-bold text-white'
-                            >
-                                Yes
-                            </button>
-                            <button
-                                onClick={() => setShowActionCompleteModal(false)}
-                                className='h-[32px] w-[67px] rounded-md border border-customBlue text-lg font-bold text-white'
-                            >
-                                No
-                            </button>
-                        </div>
+                        {isCompletedPending ? (
+                            <div className='absolute'>
+                                <div className='flex w-32 justify-center'>
+                                    <span className='relative flex h-20 w-20'>
+                                        <span className='h-24 w-24 rounded-full border-b-8 border-t-8 border-gray-200'></span>
+                                        <span className='absolute left-0 top-0 h-24 w-24 animate-spin rounded-full border-b-8 border-t-8 border-blue-500'></span>
+                                    </span>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <p className='max-w-[239px] text-center text-xl font-bold text-white'>
+                                    Are you sure you want to complete this project?
+                                </p>
+                                <div className='flex gap-16'>
+                                    <button
+                                        onClick={() => onCompleteProject()}
+                                        className='h-[32px] w-[67px] rounded-md bg-customBlue text-lg font-bold text-white'
+                                    >
+                                        Yes
+                                    </button>
+                                    <button
+                                        onClick={() => setShowActionCompleteModal(false)}
+                                        className='h-[32px] w-[67px] rounded-md border border-customBlue text-lg font-bold text-white'
+                                    >
+                                        No
+                                    </button>
+                                </div>
+                            </>
+                        )}
                         <div className='absolute -left-9 bottom-2'>
                             <GearSvg width={67.55} height={71.95} />
                         </div>
