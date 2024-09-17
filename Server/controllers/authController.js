@@ -1,5 +1,7 @@
 const router = require("express").Router();
 
+const getJwtToken = require("../middlewares/getUserTokenMiddleware");
+
 const userService = require("../services/userService");
 
 router.get("/", (req, res) => {
@@ -42,6 +44,16 @@ router.post("/logout", (req, res, next) => {
     try {
         res.clearCookie("authCookie");
         res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post("/credentials/validation", getJwtToken, async (req, res, next) => {
+    try {
+        await userService.validateCredentials(req);
+
+        res.status(200).json({ message: "Valid credentials" });
     } catch (error) {
         next(error);
     }
