@@ -10,9 +10,7 @@ const { generateToken } = require("../utils/jwt");
 const UserValidationErrors = require("../errors/userValidationErrors");
 const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
 
-exports.login = async (req) => {
-    const { email, password } = req.body;
-
+const getActiveUserByEmail = async (email) => {
     const user = await User.findOne({ email: email });
 
     if (!user) {
@@ -26,11 +24,34 @@ exports.login = async (req) => {
         );
     }
 
-    const isValid = await bcrypt.compare(password, user.password);
+    return user;
+}
+
+const validatePassword = async (inputPassword, userPassword) => {
+    const isValid = await bcrypt.compare(inputPassword, userPassword);
 
     if (!isValid) {
         throw new UserValidationErrors("Invalid email or password!", 400);
     }
+}
+
+exports.validateCredentials = async (req) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        throw new UserValidationErrors("email and password parameters are required!", 400);
+    }
+
+    const user = await getActiveUserByEmail(email);
+
+    await validatePassword(password, user.password);
+}
+
+exports.login = async (req) => {
+    const { email, password } = req.body;
+
+    const user = await getActiveUserByEmail(email);
+    await validatePassword(password, user.password);
 
     const token = generateToken(user);
 
