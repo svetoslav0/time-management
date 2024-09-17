@@ -8,6 +8,7 @@ const {
 
 const { generateToken } = require("../utils/jwt");
 const UserValidationErrors = require("../errors/userValidationErrors");
+const AuthError = require("../errors/authError");
 const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
 
 const getActiveUserByEmail = async (email) => {
@@ -186,6 +187,10 @@ exports.getSingleUser = async (userId) => {
 exports.restorePassword = async (req) => {
     const { password, confirmPassword } = req.body;
     const userId = req.params.id;
+
+    if (req.userToken.userRole !== "admin" && req.userToken._id !== userId) {
+        throw new AuthError("Action forbidden!", 403);
+    }
 
     if (!password || !confirmPassword) {
         throw new UserValidationErrors(

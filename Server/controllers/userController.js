@@ -53,7 +53,7 @@ router.patch("/:userId/archive", isAdmin, async (req, res, next) => {
   }
 });
 
-router.patch("/:id/password_restore", isAdmin, async (req, res, next) => {
+router.patch("/:id/password_restore", getJwtToken, async (req, res, next) => {
   try {
     await userService.restorePassword(req);
 
