@@ -3,14 +3,11 @@ const User = require("../models/User");
 const isValidDateMoment = require("./validateDateUtil");
 
 const validateProjectData = async ({
-    customerIds,
     projectName,
     startingDate,
     pricePerHour,
     employeeIds,
-    inviteEmails,
 }) => {
-    let customers;
     let employees;
 
     if (!Array.isArray(employeeIds) || employeeIds.length === 0) {
@@ -20,25 +17,12 @@ const validateProjectData = async ({
         );
     }
 
-    if (
-        (!Array.isArray(customerIds) || customerIds.length === 0) &&
-        (!Array.isArray(inviteEmails) || inviteEmails.length === 0)
-    ) {
-        throw new ProjectValidationErrors(
-            "At least one customer ID or invite email is required!",
-            400
-        );
-    }
-
     try {
         const users = await User.find({
-            $or: [
-                { _id: { $in: customerIds }, userRole: "customer" },
-                { _id: { $in: employeeIds }, userRole: "employee" },
-            ],
+            _id: { $in: employeeIds },
+            userRole: "employee",
         });
 
-        customers = users.filter((user) => user.userRole === "customer");
         employees = users.filter((user) => user.userRole === "employee");
     } catch (error) {
         throw new ProjectValidationErrors(
@@ -47,12 +31,7 @@ const validateProjectData = async ({
         );
     }
 
-    if (customers.length !== customerIds.length) {
-        throw new ProjectValidationErrors(
-            "All customer IDs should belong to users with the corresponding role!",
-            400
-        );
-    } else if (employees.length !== employeeIds.length) {
+    if (employees.length !== employeeIds.length) {
         throw new ProjectValidationErrors(
             "All employee IDs should belong to users with the corresponding role!",
             400
