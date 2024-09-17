@@ -96,7 +96,14 @@ exports.sendInvite = async (req) => {
     await isProjectIdValidAndExisting(projectId);
 
     if (!emailToSendInvite || emailToSendInvite.trim().length < 1) {
-        throw new InvitesValidationErrors("No email provided!", 400);
+        throw new InvitesValidationErrors("No inviteEmail parameter provided!", 400);
+    }
+
+    const invite = await Invite.findOne({ projectId, email: emailToSendInvite, expiresOn: { $gt: new Date() } });
+    if (invite) {
+        throw new InvitesValidationErrors(
+            `Email ${emailToSendInvite} already has a valid invite for project ${projectId} and expires on ${invite.expiresOn}`,
+            400);
     }
 
     await sendInvitesToNonExistingUsers(emailToSendInvite, projectId);
