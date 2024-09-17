@@ -9,6 +9,7 @@ const {
 } = require("../utils/validateUserDataUtil");
 const isInviteValid = require("../utils/validationUtils/validateInviteUtil");
 const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
+const deleteExpiredInvites = require("../utils/inviteUtils/deleteExpiredInvites");
 const isProjectIdValidAndExisting = require("../utils/projectUtils/IsProjectIdValidAndExisting");
 const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
@@ -107,6 +108,8 @@ exports.sendInvite = async (req) => {
     }
 
     await sendInvitesToNonExistingUsers(emailToSendInvite, projectId);
+
+    deleteExpiredInvites();
 };
 
 exports.deleteInvite = async (req) => {
