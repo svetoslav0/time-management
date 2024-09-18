@@ -208,7 +208,7 @@ export default function GoogleCreateAcc() {
                                 console.log(credentialResponse);
                             }}
                             onError={() => {
-                                console.log('Login Failed');
+                                toast.error('This Google account is not registered in our system');
                             }}
                         />
                     </div>
