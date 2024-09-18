@@ -12,6 +12,7 @@ export const urlKeys = {
     emailValidation: '/invites/validate',
     inviteRegister: '/invites/register',
     invites: '/invites',
+    credentialsValidation: '/credentials/validation',
 };
 export const queryKeys = {
     customer: 'All Customers',
