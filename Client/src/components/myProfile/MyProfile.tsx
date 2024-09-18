@@ -13,9 +13,9 @@ import capitalizeFirstLetter from '@/util/capitalizeFirstLetter';
 import cn from '@/util/cn';
 
 type FormInputData = {
-    name?: string;
-    email?: string;
-    _id?: string;
+    name: string;
+    email: string;
+    _id: string;
     oldPassword: string;
     newPassword: string;
     confirmNewPassword: string;
@@ -43,19 +43,16 @@ export default function MyProfile() {
         register,
         handleSubmit,
         formState: { errors },
-        reset,
         setValue,
-    } = useForm<FormInputData>({ resolver: yupResolver(changePasswordSchema) });
+    } = useForm({ resolver: yupResolver(changePasswordSchema) });
 
     useEffect(() => {
         if (loginData) {
-            const name =
-                `${capitalizeFirstLetter(loginData.firstName)} ${capitalizeFirstLetter(loginData.lastName)}` ||
-                '';
+            const name = `${capitalizeFirstLetter(loginData.firstName)} ${capitalizeFirstLetter(loginData.lastName)}`;
             setFormInputData({
                 name,
-                email: loginData.email || '',
-                _id: loginData._id || '',
+                email: loginData.email,
+                _id: loginData._id,
                 oldPassword: '',
                 newPassword: '',
                 confirmNewPassword: '',
@@ -93,9 +90,19 @@ export default function MyProfile() {
 
     useEffect(() => {
         if (isSuccess) {
+            setValue('newPassword', '');
+            setValue('oldPassword', '');
+            setValue('confirmNewPassword', '');
+            setFormInputData((prevData) => ({
+                ...prevData,
+                newPassword: '',
+                oldPassword: '',
+                confirmNewPassword: '',
+            }));
+            setIsVisible(false);
             setIsModalOpen(false);
         }
-    }, [isSuccess, reset]);
+    }, [isSuccess, setValue]);
 
     const toggleVisibility = () => setIsVisible((prevData) => !prevData);
 
@@ -166,12 +173,12 @@ export default function MyProfile() {
                                         errors.oldPassword ? 'border border-customRed' : '',
                                         'mb-10 block w-full rounded-xl bg-customDarkWhite p-2.5 text-sm text-customDarkBlue outline-none'
                                     )}
-                                    type='password'
+                                    type={isVisible ? 'text' : 'password'}
                                     {...register('oldPassword')}
                                     name='oldPassword'
-                                    value={formInputData.oldPassword || ''}
+                                    value={formInputData.oldPassword}
                                     onChange={(e) => {
-                                        setValue('oldPassword', e.target.value.trim() || '');
+                                        setValue('oldPassword', e.target.value.trim());
                                         setFormInputData((prevData) => ({
                                             ...prevData,
                                             oldPassword: e.target.value.trim(),
