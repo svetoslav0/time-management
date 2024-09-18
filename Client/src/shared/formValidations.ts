@@ -117,9 +117,9 @@ export const resetPasswordSchema = yup.object().shape({
 });
 
 export const changePasswordSchema = yup.object().shape({
-    name: yup.string().optional(),
-    _id: yup.string().optional(),
-    email: yup.string().optional(),
+    name: yup.string().required(),
+    _id: yup.string().required(),
+    email: yup.string().required(),
     oldPassword: yup
         .string()
         .required('Old password  is required!')
