@@ -12,7 +12,7 @@ export default function useCredentialsValidation() {
         isSuccess: isValidateCredentialsSuccess,
         isError: isValidateCredentialsError,
     } = useMutation({
-        mutationFn: (data: { email: string | undefined; password: string }) =>
+        mutationFn: (data: { email: string; password: string }) =>
             post(urlKeys.credentialsValidation, data),
         onError: () => {
             toast.error('Password is invalid');
