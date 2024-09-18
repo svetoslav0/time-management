@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { AiFillEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 import { useLoginData } from '../auth/AuthContext';
 import useChangePassword from './hooks/useChangePassword';
@@ -10,7 +11,6 @@ import { changePasswordSchema } from '@/shared/formValidations';
 import Modal from '@/UI/Modal';
 import capitalizeFirstLetter from '@/util/capitalizeFirstLetter';
 import cn from '@/util/cn';
-import { AiFillEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 type FormInputData = {
     name?: string;
