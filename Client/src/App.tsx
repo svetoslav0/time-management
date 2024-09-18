@@ -12,6 +12,7 @@ import {
     restrictLoginPage,
 } from './components/guards/guards';
 import RootLayout from './components/layout/RootLayout';
+import MyProfile from './components/myProfile/MyProfile';
 import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
 import ProjectDetails from './components/project/projectDetails/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
@@ -92,6 +93,10 @@ function App() {
                     path: 'dashboard/:id',
                     element: <CustomerProjectDetails />,
                 },
+                {
+                    path: 'profile',
+                    element: <MyProfile />
+                }
             ],
         },
     ]);
