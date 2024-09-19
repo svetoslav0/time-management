@@ -38,7 +38,7 @@ const validateCommonUserDataParams = async (userData) => {
 };
 
 const validateAuthUserDataParams = async (userData) => {
-    const { email, password, confirmPassword } = userData;
+    const { email, password, confirmPassword, isGoogleLogin } = userData;
 
     if (!validateEmail(email)) {
         throw new userValidationErrors(
@@ -47,7 +47,7 @@ const validateAuthUserDataParams = async (userData) => {
         );
     }
 
-    if (password.length < 6) {
+    if (password.length < 6 && !isGoogleLogin) {
         throw new userValidationErrors("Password is not long enough!", 400);
     } else if (confirmPassword !== password) {
         throw new userValidationErrors("Passwords does not match!", 400);

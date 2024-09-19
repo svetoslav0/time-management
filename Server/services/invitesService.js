@@ -62,7 +62,7 @@ exports.createCustomerOnInvite = async (req) => {
         email,
         firstName,
         lastName,
-        password,
+        ...(password && { password }),
         userRole,
         ...(description && { description }),
         companyName,

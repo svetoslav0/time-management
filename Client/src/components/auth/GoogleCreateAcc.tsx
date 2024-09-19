@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -17,6 +18,8 @@ import Loader from '@/UI/Loader';
 
 export default function GoogleCreateAcc() {
     const [isVisible, setIsVisible] = useState(false);
+    const [isGoogleLogin, setIsGoogleLogin] = useState(false);
+    const [credentialResponse, setCredentialResponse] = useState({} as CredentialResponse);
     const { createUser, isSuccess } = useInviteRegister();
     const { id } = useParams<string>();
     const navigate = useNavigate();
@@ -37,14 +40,25 @@ export default function GoogleCreateAcc() {
     const { data: initialData, error, isLoading } = useFetchEmailValidation(id);
 
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
-        data.email = initialData!.email!;
-        const inviteData = { ...data, isGoogleLogin: true, inviteId: id };
-        console.log(inviteData);
-        createUser(inviteData);
+        data.email = initialData!.email;
+        const inviteData = { ...data, inviteId: id };
+        if (isGoogleLogin) {
+            inviteData.isGoogleLogin = true;
+            inviteData.googleToken = credentialResponse.credential;
+            createUser(inviteData);
+        } else {
+            console.log(inviteData.email);
+            createUser(inviteData);
+        }
     };
 
     const toggleVisibility = () => {
         setIsVisible((prevVisibility) => !prevVisibility);
+    };
+
+    const onSuccess = (response: CredentialResponse) => {
+        setIsGoogleLogin(true);
+        setCredentialResponse(response);
     };
 
     useEffect(() => {
@@ -142,30 +156,32 @@ export default function GoogleCreateAcc() {
                         />
                     </>
 
-                    <div className='flex justify-between gap-5'>
-                        <InputComponent
-                            error={errors.password?.message}
-                            register={register}
-                            trigger={trigger}
-                            field='password'
-                            type={isVisible ? 'text' : 'password'}
-                            password={true}
-                            toggleVisibility={toggleVisibility}
-                            isVisible={isVisible}
-                            placeholder='Password'
-                        />
-                        <InputComponent
-                            error={errors.confirmPassword?.message}
-                            register={register}
-                            trigger={trigger}
-                            field='confirmPassword'
-                            type={isVisible ? 'text' : 'password'}
-                            password={true}
-                            toggleVisibility={toggleVisibility}
-                            isVisible={isVisible}
-                            placeholder='Confirm password'
-                        />
-                    </div>
+                    {!isGoogleLogin && (
+                        <div className='flex justify-between gap-5'>
+                            <InputComponent
+                                error={errors.password?.message}
+                                register={register}
+                                trigger={trigger}
+                                field='password'
+                                type={isVisible ? 'text' : 'password'}
+                                password={true}
+                                toggleVisibility={toggleVisibility}
+                                isVisible={isVisible}
+                                placeholder='Password'
+                            />
+                            <InputComponent
+                                error={errors.confirmPassword?.message}
+                                register={register}
+                                trigger={trigger}
+                                field='confirmPassword'
+                                type={isVisible ? 'text' : 'password'}
+                                password={true}
+                                toggleVisibility={toggleVisibility}
+                                isVisible={isVisible}
+                                placeholder='Confirm password'
+                            />
+                        </div>
+                    )}
                     <InputComponent
                         error={errors.description?.message}
                         register={register}
@@ -180,6 +196,24 @@ export default function GoogleCreateAcc() {
                         {/* {loading ? 'Creating...' : 'Create user'} */}
                         Complete your account
                     </button>
+                    {!isGoogleLogin && (
+                        <>
+                            <div className='my-4 flex items-center justify-center'>
+                                <div className='w-1/3 border-t border-gray-300'></div>
+                                <span className='mx-2 text-gray-500'>or</span>
+                                <div className='w-1/3 border-t border-gray-300'></div>
+                            </div>
+                            <div className='self-center'>
+                                <GoogleLogin
+                                    text='continue_with'
+                                    onSuccess={onSuccess}
+                                    onError={() => {
+                                        console.log('Login Failed');
+                                    }}
+                                />
+                            </div>
+                        </>
+                    )}
                 </>
             </form>
         </div>

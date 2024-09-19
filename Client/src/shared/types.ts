@@ -61,15 +61,17 @@ export type CreateUserDataType = {
     firstName: string;
     lastName: string;
     userRole: string;
-    password: string;
+    password?: string;
     description?: string | undefined;
-    confirmPassword: string;
+    confirmPassword?: string;
     experienceLevel?: string | undefined;
     companyName?: string | undefined;
     phoneNumber?: string | undefined;
     address?: string | undefined;
     ref?: string;
     userId?: string;
+    isGoogleLogin?: boolean;
+    googleToken?: string;
 };
 export type EditUserDataType = {
     email: string;

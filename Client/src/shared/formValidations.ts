@@ -44,15 +44,6 @@ export const createUserSchema = yup.object().shape({
 export const createGoogleUserSchema = yup.object().shape({
     firstName: yup.string().required('First name is required'),
     lastName: yup.string().required('Last name is required'),
-    password: yup
-        .string()
-        .min(6, 'Password need to be at least 6 characters')
-        .required('Password is required'),
-    confirmPassword: yup
-        .string()
-        .min(6, 'Password need to be at least 6 characters')
-        .oneOf([yup.ref('password'), undefined], 'Passwords must match')
-        .required('Confirm Password is required'),
     userRole: yup.string().required('User role is required'),
     experienceLevel: yup.string().when('userRole', ([userRole], schema) => {
         return userRole === 'employee'

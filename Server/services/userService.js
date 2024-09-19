@@ -25,8 +25,8 @@ exports.login = async (req) => {
             400
         );
     }
-
-    const isValid = await bcrypt.compare(password, user.password);
+        if (!user.password) throw new UserValidationErrors("Try login with google!", 400);
+        const isValid = await bcrypt.compare(password, user.password);     
 
     if (!isValid) {
         throw new UserValidationErrors("Invalid email or password!", 400);
