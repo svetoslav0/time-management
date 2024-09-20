@@ -12,6 +12,7 @@ import {
     restrictLoginPage,
 } from './components/guards/guards';
 import RootLayout from './components/layout/RootLayout';
+import MyProfile from './components/myProfile/MyProfile';
 import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
 import ProjectDetails from './components/project/projectDetails/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
@@ -22,7 +23,11 @@ function App() {
     const router = createBrowserRouter([
         {
             path: '/',
-            element: <RootLayout />,
+            element: (
+                <AuthContextProvider>
+                    <RootLayout />
+                </AuthContextProvider>
+            ),
             errorElement: <h1>error</h1>,
             children: [
                 {
@@ -88,15 +93,15 @@ function App() {
                     path: 'dashboard/:id',
                     element: <CustomerProjectDetails />,
                 },
+                {
+                    path: 'profile',
+                    element: <MyProfile />
+                }
             ],
         },
     ]);
 
-    return (
-        <AuthContextProvider>
-            <RouterProvider router={router} />
-        </AuthContextProvider>
-    );
+    return <RouterProvider router={router} />;
 }
 
 export default App;

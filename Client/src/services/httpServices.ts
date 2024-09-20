@@ -5,11 +5,12 @@ export default function httpServices() {
     return {
         get: async <V>(
             url: string,
-            params?: Record<string, string | boolean | number>
+            params?: Record<string, string | boolean | number>,
+            responseType: 'json' | 'blob' = 'json'
         ): Promise<V> => {
             const queryString = params ? `?${buildQueryString(params)}` : '';
             const fullUrl = url + queryString;
-            return httpRequest<null, V>({ url: fullUrl, method: 'GET' });
+            return httpRequest<null, V>({ url: fullUrl, method: 'GET' }, responseType);
         },
         post: async <T, V>(url: string, data?: T, headers?: Record<string, string>): Promise<V> => {
             return httpRequest<T, V>({ url, method: 'POST', data, headers });

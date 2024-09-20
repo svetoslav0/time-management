@@ -3,12 +3,13 @@ import { RequestOptions } from '../shared/types';
 import { clearUserData } from '@/util/util';
 
 const host = import.meta.env.VITE_API_BASE_URL;
-// const host = 'http://localhost:3000';
 
-export async function httpRequest<T, V>(options: RequestOptions<T>): Promise<V> {
+export async function httpRequest<T, V>(
+    options: RequestOptions<T>,
+    responseType: 'json' | 'blob' = 'json'
+): Promise<V> {
     const { url, method, data, headers } = options;
     const fetchHeaders = new Headers({
-        // Authorization: 'Bearer /* TOKEN */',
         'Content-Type': 'application/json',
         ...headers,
     });
@@ -41,6 +42,10 @@ export async function httpRequest<T, V>(options: RequestOptions<T>): Promise<V> 
 
         if (response.status === 204) {
             return {} as V;
+        }
+
+        if (responseType === 'blob') {
+            return (await response.blob()) as V;
         }
 
         return response.json();

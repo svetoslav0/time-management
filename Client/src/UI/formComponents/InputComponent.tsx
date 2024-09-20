@@ -5,7 +5,6 @@ import { CiLock, CiMail } from 'react-icons/ci';
 
 import { capitalizeAndFormat } from '../../shared/utils';
 
-
 type InputComponentProps<T extends FieldValues> = {
     error: string | undefined;
     isResponseError?: boolean;
@@ -43,9 +42,9 @@ export default function InputComponent<T extends FieldValues>({
                 <input
                     type={type}
                     id={field}
-                    className={`block w-full ${field === 'description' ? 'h-20 mb-5 placeholder-custom': ''} rounded-xl border border-inputFieldBorderColor border-opacity-50 ${
-                        error || isResponseError ? 'border-red-500' : 'border-gray-300'
-                    } ${(password || field === 'email') && shouldShowIcons === true ? 'pl-10' : ''} bg-gray-100 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500`}
+                    className={`block w-full ${field === 'description' ? 'mb-5 h-20 placeholder-custom' : ''} rounded-xl border border-customBlue  ${
+                        error || isResponseError ? 'border-customRed' : 'border-customBlue'
+                    } ${(password || field === 'email') && shouldShowIcons === true ? 'pl-10' : ''}  p-2.5 text-sm text-customDarkBlue focus:border-customBlue focus:ring-customBlue outline-none`}
                     placeholder={capitalizeAndFormat(field)}
                     {...register(field)}
                     onBlur={() => trigger(field)}
@@ -74,11 +73,6 @@ export default function InputComponent<T extends FieldValues>({
                     </span>
                 )}
             </div>
-            {/* {error && (
-                <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                    {error}
-                </span>
-            )} */}
         </div>
     );
 }

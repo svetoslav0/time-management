@@ -9,11 +9,11 @@ import { Project, ProjectResponseDataType } from '@/shared/types';
 export default function useCompleteProject(id: string | undefined) {
     const { patch } = httpServices();
 
-    const { mutate: completeProject, isSuccess: isCompletedSuccessful } = useMutation<
-        Project,
-        Error,
-        ProjectResponseDataType
-    >({
+    const {
+        mutate: completeProject,
+        isSuccess: isCompletedSuccessful,
+        isPending: isCompletedPending,
+    } = useMutation<Project, Error, ProjectResponseDataType>({
         mutationFn: (data) =>
             patch<ProjectResponseDataType, Project>(urlKeys.completeProject + id, data),
         onSuccess: () => {
@@ -26,5 +26,5 @@ export default function useCompleteProject(id: string | undefined) {
         },
     });
 
-    return { completeProject, isCompletedSuccessful };
+    return { completeProject, isCompletedSuccessful, isCompletedPending };
 }

@@ -6,7 +6,7 @@ export type UserDetails = {
     firstName: string;
     lastName: string;
     userRole: string;
-    status: string;
+    status: 'active' | 'inActive';
     createdAt: string;
     description?: string | undefined;
 };
@@ -49,6 +49,7 @@ export type LoginResponseData = {
     status: string;
     userRole: string;
     _id: string;
+    expire: number;
 };
 
 export type LoginFormDataType = {
@@ -162,6 +163,7 @@ export interface ProjectReport {
     hours: HourTypeFromProjectReport[];
     projectData: ProjectDataFromReport;
     totalPrice: number;
+    totalHours: number;
 }
 
 export interface ProjectDataFromReport {

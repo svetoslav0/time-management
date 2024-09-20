@@ -1,10 +1,11 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { LoginResponseData } from '@/shared/types';
 import { clearUserData, getUserData, setUserData } from '@/util/util';
 
 type AuthContextValue = {
-    loginResponseData: LoginResponseData | undefined;
+    loginData: LoginResponseData | undefined;
     setLoginData: (userData: LoginResponseData) => void;
     clearLoginData: () => void;
 };
@@ -22,10 +23,10 @@ export const useLoginData = () => {
 };
 
 export const AuthContextProvider = ({ children }: PropsWithChildren<object>) => {
+    const navigate = useNavigate();
     const [loginData, setLoginDataRaw] = useState<LoginResponseData | undefined>(() =>
         getUserData()
     );
-    const loginResponseData = loginData;
 
     const setLoginData = (loginResponseData: LoginResponseData) => {
         setLoginDataRaw(loginResponseData);
@@ -37,8 +38,25 @@ export const AuthContextProvider = ({ children }: PropsWithChildren<object>) => 
         clearUserData();
     };
 
+    useEffect(() => {
+        if (loginData && loginData.expire) {
+            const timeToExpire = loginData.expire - Date.now();
+            if (timeToExpire <= 0) {
+                clearLoginData();
+                navigate('/auth/login');
+            } else {
+                const timer = setTimeout(() => {
+                    clearLoginData();
+                    navigate('/auth/login');
+                }, timeToExpire);
+
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [loginData, navigate]);
+
     return (
-        <AuthContext.Provider value={{ loginResponseData, clearLoginData, setLoginData }}>
+        <AuthContext.Provider value={{ loginData, clearLoginData, setLoginData }}>
             {children}
         </AuthContext.Provider>
     );

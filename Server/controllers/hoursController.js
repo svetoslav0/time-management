@@ -19,11 +19,6 @@ router.post("/", isEmployeeOrAdmin, getJwtToken, async (req, res, next) => {
 router.get("/", getJwtToken, async (req, res, next) => {
     try {
         const hours = await hoursService.getAllHours(req);
-
-        if (!hours || hours.length === 0) {
-            throw new HoursValidationErrors("Hours not found", 404);
-        }
-
         res.status(200).json(hours);
     } catch (error) {
         next(error);
