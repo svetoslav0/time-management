@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
+
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -23,6 +24,8 @@ export default function GoogleCreateAcc() {
     const { createUser, isSuccess } = useInviteRegister();
     const { id } = useParams<string>();
     const navigate = useNavigate();
+    const { error, isLoading, data: emailValidationData } = useFetchEmailValidation(id);
+    const [email, setEmail] = useState('');
 
     const {
         register,
@@ -30,6 +33,7 @@ export default function GoogleCreateAcc() {
         trigger,
         formState: { errors },
         reset,
+        setValue,
     } = useForm<CreateUserDataType>({
         resolver: yupResolver(createGoogleUserSchema),
         defaultValues: {
@@ -52,6 +56,7 @@ export default function GoogleCreateAcc() {
             console.log(inviteData.email);
             createUser(inviteData);
         }
+
     };
 
     const toggleVisibility = () => {
@@ -75,6 +80,12 @@ export default function GoogleCreateAcc() {
             navigate('/');
         }
     }, [error, navigate]);
+
+    useEffect(() => {
+        if (emailValidationData && emailValidationData.email) {
+            setEmail(emailValidationData.email);
+        }
+    }, [emailValidationData]);
 
     if (isLoading) {
         return (

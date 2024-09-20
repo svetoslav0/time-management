@@ -1,13 +1,17 @@
 const router = require("express").Router();
 const projectService = require("../services/projectService");
+const reportService = require("../services/reportsService");
 const isAdmin = require("../middlewares/isAdminMiddleware");
 const getJwtToken = require("../middlewares/getUserTokenMiddleware");
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const path = require("path");
 
+const pdfContentType = "application/pdf";
+
 router.get("/logo", async (req, res, next) => {
     res.sendFile(path.join(__dirname, "../assets/timeManagementLogo.png"));
 });
+
 router.post("/", isAdmin, async (req, res, next) => {
     try {
         const project = await projectService.createProject(req);
@@ -49,7 +53,7 @@ router.get("/:id", getJwtToken, async (req, res, next) => {
     }
 });
 
-router.patch("/:id", isAdmin, async (req, res, next) => {
+router.patch("/:id", getJwtToken, isAdmin, async (req, res, next) => {
     try {
         const project = await projectService.updateProject(req);
 
@@ -64,7 +68,13 @@ router.patch("/:id", isAdmin, async (req, res, next) => {
 
 router.get("/:id/report", getJwtToken, async (req, res, next) => {
     try {
-        const report = await projectService.getReport(req);
+        const data = {
+            projectId: req.params.id,
+            userId: req.userToken._id,
+            userRole: req.userToken.userRole,
+        };
+
+        const report = await reportService.collectReportData(data);
         res.status(200).json(report);
     } catch (error) {
         next(error);
@@ -73,8 +83,14 @@ router.get("/:id/report", getJwtToken, async (req, res, next) => {
 
 router.get("/:id/report/pdf", getJwtToken, async (req, res, next) => {
     try {
-        const pdfBuffer = await projectService.getReportPdf(req);
-        res.status(200).contentType('application/pdf').send(pdfBuffer);
+        const pdfBuffer = await reportService.getReportBuffer(
+            req.params.id,
+            req.userToken.userId,
+            req.userToken.userRole);
+
+        res.status(200)
+            .contentType(pdfContentType)
+            .send(pdfBuffer);
     } catch (error) {
         next(error);
     }

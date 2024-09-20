@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Invite = require("../models/Invite");
 
 const UserValidationErrors = require("../errors/userValidationErrors");
 const InvitesValidationErrors = require("../errors/invitesValidationErrors");
@@ -8,9 +9,9 @@ const {
 } = require("../utils/validateUserDataUtil");
 const isInviteValid = require("../utils/validationUtils/validateInviteUtil");
 const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
+const deleteExpiredInvites = require("../utils/inviteUtils/deleteExpiredInvites");
 const isProjectIdValidAndExisting = require("../utils/projectUtils/IsProjectIdValidAndExisting");
 const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
-const Invite = require("../models/Invite");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 
 exports.validateInvite = async (req) => {
@@ -72,6 +73,7 @@ exports.createCustomerOnInvite = async (req) => {
     };
 
     const user = await User.create(newUser);
+    await Invite.findByIdAndDelete(userData.inviteId);
 
     return {
         email: user.email,
@@ -88,13 +90,26 @@ exports.sendInvite = async (req) => {
     const projectId = req.body.projectId;
     const emailToSendInvite = req.body.inviteEmail;
 
+    if (!projectId) {
+        throw new InvitesValidationErrors("No project id provided!", 400);
+    }
+
     await isProjectIdValidAndExisting(projectId);
 
-    if (emailToSendInvite.length < 1) {
-        throw new InvitesValidationErrors("No email provided!", 400);
+    if (!emailToSendInvite || emailToSendInvite.trim().length < 1) {
+        throw new InvitesValidationErrors("No inviteEmail parameter provided!", 400);
+    }
+
+    const invite = await Invite.findOne({ projectId, email: emailToSendInvite, expiresOn: { $gt: new Date() } });
+    if (invite) {
+        throw new InvitesValidationErrors(
+            `Email ${emailToSendInvite} already has a valid invite for project ${projectId} and expires on ${invite.expiresOn}`,
+            400);
     }
 
     await sendInvitesToNonExistingUsers(emailToSendInvite, projectId);
+
+    deleteExpiredInvites();
 };
 
 exports.deleteInvite = async (req) => {

@@ -6,20 +6,20 @@ import CustomersProjects from './customersProjects/CustomersProjects';
 import EmployeeProjects from './employeeProjects/EmployeeProjects';
 
 export default function Dashboard() {
-    const { loginResponseData } = useLoginData();
+    const { loginData } = useLoginData();
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!loginResponseData) {
+        if (!loginData) {
             navigate('/auth/login');
         }
-    }, [loginResponseData, navigate]);
+    }, [loginData, navigate]);
 
     return (
         <>
-            {loginResponseData?.userRole === 'customer' && <CustomersProjects />}
-            {loginResponseData?.userRole === 'employee' && <EmployeeProjects />}
+            {loginData?.userRole === 'customer' && <CustomersProjects />}
+            {loginData?.userRole === 'employee' && <EmployeeProjects />}
         </>
     );
 }

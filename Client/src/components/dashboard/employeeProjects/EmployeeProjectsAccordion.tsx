@@ -43,7 +43,7 @@ export default function EmployeeProjectsAccordion({
                 <div
                     className={cn(
                         'transition-max-height overflow-hidden duration-500 ease-in-out',
-                        isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+                        isOpen ? 'h-full opacity-100' : 'max-h-0 opacity-0'
                     )}
                 >
                     {isOpen && <EmployeeProject projectId={projectId} />}

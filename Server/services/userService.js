@@ -10,7 +10,7 @@ const { generateToken } = require("../utils/jwt");
 const UserValidationErrors = require("../errors/userValidationErrors");
 const AuthError = require("../errors/authError");
 const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
- 
+
 const getActiveUserByEmail = async (email) => {
     const user = await User.findOne({ email: email });
  
@@ -23,14 +23,13 @@ const getActiveUserByEmail = async (email) => {
             "Your account is inactive. Please contact support!",
             400
         );
-    }
- 
+    } 
     return user;
 }
  
 const validatePassword = async (inputPassword, userPassword) => {
     const isValid = await bcrypt.compare(inputPassword, userPassword);
- 
+
     if (!isValid) {
         throw new UserValidationErrors("Invalid email or password!", 400);
     }

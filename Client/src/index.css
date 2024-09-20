@@ -21,11 +21,11 @@ body {
 }
 
 .adminProjectBtn {
-    @apply inline-block rounded-md  px-2 py-1 text-sm font-semibold no-underline outline-none focus:outline-none;
+    @apply inline-block rounded-md  bg-customDarkBlue px-2 py-1 text-center text-lg font-bold text-white no-underline outline-none transition duration-200 ease-out hover:bg-opacity-60 focus:outline-none;
 }
 
 .employeeProjectBtn {
-    @apply inline-block rounded-[10px]  min-w-20 px-2.5 leading-none py-[5px] text-base font-extrabold no-underline outline-none focus:outline-none;
+    @apply inline-block min-w-20  rounded-[10px] px-2.5 py-[5px] text-base font-extrabold leading-none no-underline outline-none focus:outline-none;
 }
 
 input[type='number']::-webkit-outer-spin-button,
