@@ -1,10 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { queryKeys, urlKeys } from '../constants';
+
 import httpServices from '@/services/httpServices';
 
 type EmailValidationResponse = {
     isValid: boolean;
-    email?: string;
+    email: string;
+    _id: string;
+    uuid: string;
+    expiresOn: string;
+    projectId: string;
 };
 
 export default function useFetchEmailValidation(id: string | undefined) {
