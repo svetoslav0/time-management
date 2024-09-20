@@ -49,7 +49,6 @@ export default function GoogleCreateAcc() {
             inviteData.googleToken = credentialResponse.credential;
             createUser(inviteData);
         } else {
-            console.log(inviteData.email);
             createUser(inviteData);
         }
     };
@@ -111,9 +110,11 @@ export default function GoogleCreateAcc() {
                 </div>
 
                 {errors && (
-                    <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                        {errors[Object.keys(errors)[0] as keyof CreateUserDataType]?.message}
-                    </span>
+                    <ul role='alert' className='text-sm text-red-500 dark:text-red-400'>
+                        {Object.keys(errors).map((key) => (
+                            <li key={key}>{errors[key as keyof CreateUserDataType]?.message}</li>
+                        ))}
+                    </ul>
                 )}
 
                 <>

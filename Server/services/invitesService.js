@@ -73,7 +73,7 @@ exports.createCustomerOnInvite = async (req) => {
     };
 
     const user = await User.create(newUser);
-    await Invite.findByIdAndDelete(userData.inviteId);
+    await Invite.findOneAndDelete({ uuid: userData.inviteId });
 
     return {
         email: user.email,
