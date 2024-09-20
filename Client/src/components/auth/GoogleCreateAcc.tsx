@@ -19,7 +19,7 @@ import Loader from '@/UI/Loader';
 export default function GoogleCreateAcc() {
     const [isVisible, setIsVisible] = useState(false);
     const [isGoogleLogin, setIsGoogleLogin] = useState(false);
-    const [credentialResponse, setCredentialResponse] = useState({} as CredentialResponse);
+    const [credentialResponse, setCredentialResponse] = useState<CredentialResponse>({});
     const { createUser, isSuccess } = useInviteRegister();
     const { id } = useParams<string>();
     const navigate = useNavigate();
@@ -40,7 +40,9 @@ export default function GoogleCreateAcc() {
     const { data: initialData, error, isLoading } = useFetchEmailValidation(id);
 
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
-        data.email = initialData!.email;
+        if(initialData){
+            data.email = initialData.email;
+        }
         const inviteData = { ...data, inviteId: id };
         if (isGoogleLogin) {
             inviteData.isGoogleLogin = true;
