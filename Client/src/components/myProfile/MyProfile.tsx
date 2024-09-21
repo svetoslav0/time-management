@@ -109,7 +109,7 @@ export default function MyProfile() {
     return (
         <form className='mt-16' onSubmit={handleSubmit(onSubmit)}>
             <div className='m-auto mt-14 w-2/5 bg-white p-9'>
-                <h2 className='mb-8 text-center text-xl font-extrabold text-customDarkBlue'>My profile information</h2>
+                <h2 className='mb-8 text-center text-2xl font-extrabold text-customDarkBlue'>My profile information</h2>
                 <input
                     className='mb-5 hidden w-full rounded-xl bg-customDarkWhite p-2.5 text-sm text-customDarkBlue outline-none'
                     type='password'
