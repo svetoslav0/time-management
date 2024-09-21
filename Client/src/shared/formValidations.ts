@@ -116,6 +116,25 @@ export const resetPasswordSchema = yup.object().shape({
         .required('Please confirm your password'),
 });
 
+export const changePasswordSchema = yup.object().shape({
+    name: yup.string().required(),
+    _id: yup.string().required(),
+    email: yup.string().required(),
+    oldPassword: yup
+        .string()
+        .required('Old password  is required!')
+        .min(6, 'Old password must be at least 6 characters long'),
+    newPassword: yup
+        .string()
+        .required('New password is required!')
+        .min(6, 'New password must be at least 6 characters long'),
+    confirmNewPassword: yup
+        .string()
+        .min(6, 'Confirm password must be at least 6 characters long')
+        .oneOf([yup.ref('newPassword'), undefined], 'Passwords must match')
+        .required('Confirm password is required!'),
+});
+
 export const hoursFormSchema = yup.object().shape({
     date: yup.string().required('Please select date'),
     hours: yup
