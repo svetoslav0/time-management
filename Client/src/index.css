@@ -21,7 +21,19 @@ body {
 }
 
 .adminProjectBtn {
-    @apply inline-block rounded-md  bg-customDarkBlue px-2 py-1 text-center text-lg font-bold text-white no-underline outline-none transition duration-200 ease-out hover:bg-opacity-60 focus:outline-none;
+    @apply inline-block rounded-md bg-customDarkBlue px-2 py-1 text-center text-lg font-bold text-white no-underline outline-none transition duration-200 ease-out hover:bg-opacity-60 focus:outline-none;
+}
+
+.changePasswordBtn {
+    @apply inline-block rounded-lg bg-customDarkBlue px-3 py-2 text-center text-base font-bold text-white no-underline outline-none transition duration-200 ease-out hover:bg-opacity-60 focus:outline-none;
+}
+
+.changePasswordSecondaryBtn {
+    @apply rounded-[10px] border-[1px] border-customDarkBlue px-6 pb-1.5 pt-1 text-base font-semibold text-customDarkBlue transition duration-300 ease-out hover:border-customGrey hover:bg-customGrey;
+}
+
+.myProfileBtn {
+    @apply inline-block rounded-lg bg-white px-4 py-1 text-lg font-bold text-customDarkBlue no-underline outline-none transition-all duration-300 hover:bg-customGrey hover:text-customDarkBlue focus:outline-none drop-shadow;
 }
 
 .employeeProjectBtn {

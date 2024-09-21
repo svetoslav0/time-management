@@ -107,52 +107,53 @@ export default function MyProfile() {
     const toggleVisibility = () => setIsVisible((prevData) => !prevData);
 
     return (
-        <form className='mt-4' onSubmit={handleSubmit(onSubmit)}>
-            <div className='m-auto mt-14 w-2/4 rounded-2xl  border bg-white p-9 shadow-2xl backdrop-blur-[13.50px]'>
-                <h2 className='mb-8 text-3xl font-bold text-customDarkBlue'>My Profile</h2>
+        <form className='mt-16' onSubmit={handleSubmit(onSubmit)}>
+            <div className='m-auto mt-14 w-2/5 bg-white p-9'>
+                <h2 className='mb-8 text-center text-xl font-extrabold text-customDarkBlue'>My profile information</h2>
                 <input
-                    className='mb-5 hidden  w-2/3 rounded-xl bg-customDarkWhite p-2.5 text-sm text-customDarkBlue outline-none'
+                    className='mb-5 hidden w-full rounded-xl bg-customDarkWhite p-2.5 text-sm text-customDarkBlue outline-none'
                     type='password'
                     {...register('_id')}
                     id='_id'
                     disabled
                     value={formInputData.email}
                 />
-                <label
-                    className='mb-2 block text-lg font-medium text-customDarkBlue dark:text-white'
-                    htmlFor='email'
-                >
-                    Email
-                </label>
-                <input
-                    className='mb-5 block w-2/3 rounded-xl bg-customDarkWhite p-2.5 text-sm text-customDarkBlue outline-none'
-                    type='text'
-                    {...register('email')}
-                    id='email'
-                    disabled
-                    value={formInputData.email}
-                />
-                <label
-                    className='mb-2 block text-lg font-medium text-customDarkBlue dark:text-white'
-                    htmlFor='name'
-                >
-                    Name
-                </label>
-                <input
-                    className='mb-10 block w-2/3 rounded-xl bg-customDarkWhite p-2.5 text-sm text-customDarkBlue outline-none'
-                    type='text'
-                    {...register('name')}
-                    id='name'
-                    disabled
-                    value={formInputData.name}
-                />
-                <button
-                    type='button'
-                    className='primaryBtn w-60'
-                    onClick={() => setIsModalOpen(true)}
-                >
-                    Change password
-                </button>
+                <div className='relative'>
+                    <span className='absolute z-20 top-3.5 ml-5 text-customDarkBlue font-bold text-lg'>
+                        Email
+                    </span>
+                    <input
+                        className='mb-2.5 block w-full rounded-lg p-3.5 text-lg drop-shadow text-customDarkBlue outline-none disabled:bg-white text-right z-10'
+                        type='text'
+                        {...register('email')}
+                        id='email'
+                        disabled
+                        value={formInputData.email}
+                    />
+                </div>
+
+                <div className='relative'>
+                    <span className='absolute z-20 top-3.5 ml-5 text-customDarkBlue font-bold text-lg'>
+                        Name
+                    </span>
+                    <input
+                        className='mb-8 block w-full rounded-lg p-3.5 text-lg drop-shadow text-customDarkBlue outline-none disabled:bg-white text-right z-10'
+                        type='text'
+                        {...register('name')}
+                        id='name'
+                        disabled
+                        value={formInputData.name}
+                    />
+                </div>
+                <div className='flex items-center justify-center'>
+                    <button
+                        type='button'
+                        className='changePasswordBtn bg-customDarkBlue px-20 text-base'
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        Change password
+                    </button>
+                </div>
             </div>
             {isModalOpen && (
                 <div>
@@ -276,12 +277,12 @@ export default function MyProfile() {
                             <div className='flex gap-5'>
                                 <button
                                     type='button'
-                                    className='secondaryBtn w-40'
+                                    className='changePasswordSecondaryBtn w-40'
                                     onClick={() => setIsModalOpen(false)}
                                 >
                                     Close
                                 </button>
-                                <button type='submit' className='primaryBtn w-40'>
+                                <button type='submit' className='changePasswordBtn w-40'>
                                     Submit
                                 </button>
                             </div>

@@ -30,7 +30,7 @@ export function Navigation() {
             <div className='m-auto flex h-[98px] w-[1440px] items-center justify-between text-lg font-bold text-customDarkBlue'>
                 {user && (
                     <>
-                        <Link to={'/profile'} className='primaryBtn ml-20'>
+                        <Link to={'/profile'} className='myProfileBtn ml-20'>
                             My Profile
                         </Link>
                         <ul className='mr-20 flex items-center space-x-20'>
