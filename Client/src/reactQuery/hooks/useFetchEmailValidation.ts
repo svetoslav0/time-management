@@ -5,8 +5,9 @@ import { queryKeys, urlKeys } from '../constants';
 import httpServices from '@/services/httpServices';
 
 type EmailValidationResponse = {
-    _id: string;
+    isValid: boolean;
     email: string;
+    _id: string;
     uuid: string;
     expiresOn: string;
     projectId: string;

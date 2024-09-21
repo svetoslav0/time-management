@@ -1,12 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { GoogleLogin } from '@react-oauth/google';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-import { createUserSchema } from '../../shared/formValidations';
+import { createGoogleUserSchema } from '../../shared/formValidations';
 import { CreateUserDataType } from '../../shared/types';
 import InputComponent from '../../UI/formComponents/InputComponent';
 import useInviteRegister from './hooks/useInviteRegister';
@@ -18,11 +18,11 @@ import Loader from '@/UI/Loader';
 
 export default function GoogleCreateAcc() {
     const [isVisible, setIsVisible] = useState(false);
+    const [isGoogleLogin, setIsGoogleLogin] = useState(false);
+    const [credentialResponse, setCredentialResponse] = useState<CredentialResponse>({});
     const { createUser, isSuccess } = useInviteRegister();
     const { id } = useParams<string>();
     const navigate = useNavigate();
-    const { error, isLoading, data: emailValidationData } = useFetchEmailValidation(id);
-    const [email, setEmail] = useState('');
 
     const {
         register,
@@ -30,21 +30,36 @@ export default function GoogleCreateAcc() {
         trigger,
         formState: { errors },
         reset,
-        setValue,
     } = useForm<CreateUserDataType>({
-        resolver: yupResolver(createUserSchema),
+        resolver: yupResolver(createGoogleUserSchema),
         defaultValues: {
             userRole: 'customer',
         },
     });
 
+    const { data: initialData, error, isLoading } = useFetchEmailValidation(id);
+
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
+        if(initialData){
+            data.email = initialData.email;
+        }
         const inviteData = { ...data, inviteId: id };
-        createUser(inviteData);
+        if (isGoogleLogin) {
+            inviteData.isGoogleLogin = true;
+            inviteData.googleToken = credentialResponse.credential;
+            createUser(inviteData);
+        } else {
+            createUser(inviteData);
+        }
     };
 
     const toggleVisibility = () => {
         setIsVisible((prevVisibility) => !prevVisibility);
+    };
+
+    const onSuccess = (response: CredentialResponse) => {
+        setIsGoogleLogin(true);
+        setCredentialResponse(response);
     };
 
     useEffect(() => {
@@ -59,12 +74,6 @@ export default function GoogleCreateAcc() {
             navigate('/');
         }
     }, [error, navigate]);
-
-    useEffect(() => {
-        if (emailValidationData && emailValidationData.email) {
-            setEmail(emailValidationData.email);
-        }
-    }, [emailValidationData]);
 
     if (isLoading) {
         return (
@@ -95,28 +104,20 @@ export default function GoogleCreateAcc() {
                 className='flex flex-col rounded-3xl border bg-white  p-9 shadow-loginFormShadow'
                 onSubmit={handleSubmit(onSubmit)}
             >
-                <h2 className='mb-6 self-center font-mavenPro text-2xl font-semibold text-welcomeMsgColor'>
-                    Create your account
-                </h2>
+                <div>
+                    <p>Complete account for</p>
+                    <p className='font-bold'>{initialData?.email}</p>
+                </div>
 
                 {errors && (
-                    <span role='alert' className='text-sm text-red-500 dark:text-red-400'>
-                        {errors[Object.keys(errors)[0] as keyof CreateUserDataType]?.message}
-                    </span>
+                    <ul role='alert' className='text-sm text-red-500 dark:text-red-400'>
+                        {Object.keys(errors).map((key) => (
+                            <li key={key}>{errors[key as keyof CreateUserDataType]?.message}</li>
+                        ))}
+                    </ul>
                 )}
 
                 <>
-                    <InputComponent
-                        error={errors.email?.message}
-                        register={register}
-                        trigger={trigger}
-                        field='email'
-                        value={email}
-                        onChange={(e) => {
-                            setValue('email', e.currentTarget.value);
-                            setEmail(e.currentTarget.value);
-                        }}
-                    />
                     <div className='flex justify-between gap-5'>
                         <InputComponent
                             error={errors.firstName?.message}
@@ -158,30 +159,32 @@ export default function GoogleCreateAcc() {
                         />
                     </>
 
-                    <div className='flex justify-between gap-5'>
-                        <InputComponent
-                            error={errors.password?.message}
-                            register={register}
-                            trigger={trigger}
-                            field='password'
-                            type={isVisible ? 'text' : 'password'}
-                            password={true}
-                            toggleVisibility={toggleVisibility}
-                            isVisible={isVisible}
-                            placeholder='Password'
-                        />
-                        <InputComponent
-                            error={errors.confirmPassword?.message}
-                            register={register}
-                            trigger={trigger}
-                            field='confirmPassword'
-                            type={isVisible ? 'text' : 'password'}
-                            password={true}
-                            toggleVisibility={toggleVisibility}
-                            isVisible={isVisible}
-                            placeholder='Confirm password'
-                        />
-                    </div>
+                    {!isGoogleLogin && (
+                        <div className='flex justify-between gap-5'>
+                            <InputComponent
+                                error={errors.password?.message}
+                                register={register}
+                                trigger={trigger}
+                                field='password'
+                                type={isVisible ? 'text' : 'password'}
+                                password={true}
+                                toggleVisibility={toggleVisibility}
+                                isVisible={isVisible}
+                                placeholder='Password'
+                            />
+                            <InputComponent
+                                error={errors.confirmPassword?.message}
+                                register={register}
+                                trigger={trigger}
+                                field='confirmPassword'
+                                type={isVisible ? 'text' : 'password'}
+                                password={true}
+                                toggleVisibility={toggleVisibility}
+                                isVisible={isVisible}
+                                placeholder='Confirm password'
+                            />
+                        </div>
+                    )}
                     <InputComponent
                         error={errors.description?.message}
                         register={register}
@@ -190,28 +193,30 @@ export default function GoogleCreateAcc() {
                     />
                     <button
                         type='submit'
-                        className='mt-6 w-1/3 self-center rounded-lg bg-loginBtnColor px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300'
+                        className='mt-6 w-2/3 self-center rounded-lg bg-loginBtnColor px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300'
                         // disabled={loading}
                     >
                         {/* {loading ? 'Creating...' : 'Create user'} */}
-                        Continue
+                        Complete your account
                     </button>
-                    <div className='my-4 flex items-center justify-center'>
-                        <div className='w-1/3 border-t border-gray-300'></div>
-                        <span className='mx-2 text-gray-500'>or</span>
-                        <div className='w-1/3 border-t border-gray-300'></div>
-                    </div>
-                    <div className='self-center'>
-                        <GoogleLogin
-                            text='continue_with'
-                            onSuccess={(credentialResponse) => {
-                                console.log(credentialResponse);
-                            }}
-                            onError={() => {
-                                console.log('Login Failed');
-                            }}
-                        />
-                    </div>
+                    {!isGoogleLogin && (
+                        <>
+                            <div className='my-4 flex items-center justify-center'>
+                                <div className='w-1/3 border-t border-gray-300'></div>
+                                <span className='mx-2 text-gray-500'>or</span>
+                                <div className='w-1/3 border-t border-gray-300'></div>
+                            </div>
+                            <div className='self-center'>
+                                <GoogleLogin
+                                    text='continue_with'
+                                    onSuccess={onSuccess}
+                                    onError={() => {
+                                        console.log('Login Failed');
+                                    }}
+                                />
+                            </div>
+                        </>
+                    )}
                 </>
             </form>
         </div>

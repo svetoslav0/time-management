@@ -41,6 +41,32 @@ export const createUserSchema = yup.object().shape({
     }),
     description: yup.string(),
 });
+export const createGoogleUserSchema = yup.object().shape({
+    firstName: yup.string().required('First name is required'),
+    lastName: yup.string().required('Last name is required'),
+    userRole: yup.string().required('User role is required'),
+    experienceLevel: yup.string().when('userRole', ([userRole], schema) => {
+        return userRole === 'employee'
+            ? schema.required('Experience is required')
+            : schema.notRequired();
+    }),
+    companyName: yup.string().when('userRole', ([userRole], schema) => {
+        return userRole === 'customer'
+            ? schema.required('Company Name is required')
+            : schema.notRequired();
+    }),
+    phoneNumber: yup.string().when('userRole', ([userRole], schema) => {
+        return userRole === 'customer'
+            ? schema.required('Phone Number is required')
+            : schema.notRequired();
+    }),
+    address: yup.string().when('userRole', ([userRole], schema) => {
+        return userRole === 'customer'
+            ? schema.required('Address is required')
+            : schema.notRequired();
+    }),
+    description: yup.string(),
+});
 export const editUserSchema = yup.object().shape({
     email: yup.string().email('Invalid email format').required('email is required'),
     firstName: yup.string().required('First name is required'),
