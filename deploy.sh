@@ -59,6 +59,11 @@ touch .env.stage
 echo "VITE_API_BASE_URL=$VITE_API_BASE_URL" >> .env.stage
 echo "VITE_GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env.stage
 
+cd ../ssl
+
+echo /etc/ssl/private/test-opshero.site.key >> private.key
+echo /etc/ssl/certs/test-opshero_site.crt >> cert.crt
+
 cd ..
 
 echo "vite build --mode stage"
