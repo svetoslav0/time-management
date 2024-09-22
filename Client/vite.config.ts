@@ -14,8 +14,8 @@ export default defineConfig({
     },
     server: {
         https: {
-          cert: fs.readFileSync('/etc/ssl/certs/test-opshero_site.crt'),
-          key: fs.readFileSync('/etc/ssl/private/test-opshero.site.key'),
+          key: fs.readFileSync(path.resolve(__dirname, 'ssl/private.key')),
+          cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.crt')),
         },
         // Make sure the server is accessible over the local network
         host: '0.0.0.0',
