@@ -61,8 +61,8 @@ echo "VITE_GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env.stage
 
 cd ../ssl
 
-echo /etc/ssl/private/test-opshero.site.key >> private.key
-echo /etc/ssl/certs/test-opshero_site.crt >> cert.crt
+cat /etc/ssl/private/test-opshero.site.key >> private.key
+cat /etc/ssl/certs/test-opshero_site.crt >> cert.crt
 
 cd ..
 
