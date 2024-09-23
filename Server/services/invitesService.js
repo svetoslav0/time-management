@@ -101,7 +101,7 @@ exports.sendInvite = async (req) => {
     }
 
     if (await User.findOne({ email: emailToSendInvite })) {
-        throw new InvitesValidationErrors(`User with email ${emailToSendInvite} already exists and cannot be invited to create new account. If you want to add them in this project, simply use the Customers section`);
+        throw new InvitesValidationErrors(`User with email ${emailToSendInvite} already exists and cannot be invited to create new account. If you want to add them in this project, simply use the Customers section`, 400);
     }
 
     const invite = await Invite.findOne({ projectId, email: emailToSendInvite, expiresOn: { $gt: new Date() } });
