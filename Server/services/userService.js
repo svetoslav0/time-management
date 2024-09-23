@@ -299,7 +299,10 @@ exports.getUsers = async (req) => {
     const users = await User.find(query)
         .select("-password -updatedAt")
         .skip(parsedOffset)
-        .limit(parsedLimit);
+        .limit(parsedLimit)
+        .sort({
+            status: 1,
+        });
  
     const total = await User.countDocuments(query);
  
