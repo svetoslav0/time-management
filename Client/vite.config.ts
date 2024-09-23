@@ -31,5 +31,8 @@ export default ({ mode }) => {
         console.log('Is not dev');
     }
 
+    console.log('value');
+    console.log(process.env.ENV);
+
     return defineConfig(config);
 };
