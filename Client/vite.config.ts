@@ -23,14 +23,13 @@ export default ({ mode }) => {
         }
     };
 
-    // if (process.env.ENV !== 'DEV') {
-    //     delete config.server;
-    // }
-
     console.log('DEBUG:');
-    console.log(process.env.ENV);
-    console.log(process.env);
-    console.log(config.server);
+
+    if (process.env.ENV == 'DEV') {
+        console.log('Is dev');
+    } else {
+        console.log('Is not dev');
+    }
 
     return defineConfig(config);
 };
