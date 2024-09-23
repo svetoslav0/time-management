@@ -9,11 +9,12 @@ const deleteExpiredInvites = async () => {
         const ids = expiredInvites
             .map(x => x._id);
 
-        Invite.deleteMany({ _id: { $in: ids } })
-            .then(() => {
-                console.log(`The following expired Invite IDs were successfully removed: ${ids.join(", ")}`);
-            });
-
+        if (ids.length) {
+            Invite.deleteMany({ _id: { $in: ids } })
+                .then(() => {
+                    console.log(`The following expired Invite IDs were successfully removed: ${ids.join(", ")}`);
+                });
+        }
     } catch (error) {
         console.error("Could not delete expired invites.");
         console.error(error);
