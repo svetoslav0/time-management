@@ -100,6 +100,10 @@ exports.sendInvite = async (req) => {
         throw new InvitesValidationErrors("No inviteEmail parameter provided!", 400);
     }
 
+    if (await User.findOne({ email: emailToSendInvite })) {
+        throw new InvitesValidationErrors(`User with email ${emailToSendInvite} already exists and cannot be invited to create new account. If you want to add them in this project, simply use the Customers section`);
+    }
+
     const invite = await Invite.findOne({ projectId, email: emailToSendInvite, expiresOn: { $gt: new Date() } });
     if (invite) {
         throw new InvitesValidationErrors(
