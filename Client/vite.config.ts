@@ -23,9 +23,9 @@ export default ({ mode }) => {
         }
     };
 
-    if (process.env.ENV !== 'DEV') {
-        delete config.server;
-    }
+    // if (process.env.ENV !== 'DEV') {
+    //     delete config.server;
+    // }
 
     console.log('DEBUG:');
     console.log(process.env.ENV);
