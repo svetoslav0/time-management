@@ -23,12 +23,12 @@ export default ({ mode }) => {
         }
     };
 
-    if (process.env.VITE_ENV !== 'DEV') {
+    if (process.env.ENV !== 'DEV') {
         delete config.server;
     }
 
     console.log('DEBUG:');
-    console.log(process.env.VITE_ENV);
+    console.log(process.env.ENV);
     console.log(process.env);
     console.log(config.server);
 
