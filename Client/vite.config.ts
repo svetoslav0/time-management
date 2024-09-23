@@ -17,6 +17,8 @@ export default ({ mode }) => {
     };
 
     if (process.env.ENV == 'DEV') {
+        console.log('IS DEV!!!');
+
         config['server'] = {
             https: {
                 key: fs.readFileSync(path.resolve(__dirname, 'ssl/private.key')),
