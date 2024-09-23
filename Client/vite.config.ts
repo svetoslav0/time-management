@@ -14,16 +14,17 @@ export default ({ mode }) => {
                 '@': path.join(__dirname, 'src/'),
             },
         },
-    };
-
-    if (process.env.VITE_ENV == 'DEV') {
-        config.server = {
+        server: {
             https: {
                 key: fs.readFileSync(path.resolve(__dirname, 'ssl/private.key')),
                 cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.crt')),
             },
             host: '0.0.0.0',
         }
+    };
+
+    if (process.env.VITE_ENV !== 'DEV') {
+        delete config.server;
     }
 
     return defineConfig(config);
