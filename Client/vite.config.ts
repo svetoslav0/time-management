@@ -27,5 +27,7 @@ export default ({ mode }) => {
         delete config.server;
     }
 
+    console.log(config.server);
+
     return defineConfig(config);
 };
