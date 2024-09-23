@@ -75,7 +75,7 @@ if pm2 list | grep client; then
     pm2 restart client
 else
     echo "No PM2 process for client found. Starting . . ."
-    pm2 start "vite preview --host --port 80 --mode stage" --name client
+    pm2 start "vite preview --debug --host --port 443 --mode stage" --name client
 fi
 
 sleep 10
