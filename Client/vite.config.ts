@@ -17,7 +17,7 @@ export default ({ mode }) => {
     };
 
     if (process.env.ENV == 'DEV') {
-        config.server = {
+        config['server'] = {
             https: {
                 key: fs.readFileSync(path.resolve(__dirname, 'ssl/private.key')),
                     cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.crt')),
@@ -25,6 +25,9 @@ export default ({ mode }) => {
             host: '0.0.0.0',
         }
     }
+
+    console.log('=================== config =================== ');
+    console.log(config);
 
     return defineConfig(config);
 };
