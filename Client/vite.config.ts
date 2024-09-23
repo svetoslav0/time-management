@@ -14,25 +14,17 @@ export default ({ mode }) => {
                 '@': path.join(__dirname, 'src/'),
             },
         },
-        server: {
+    };
+
+    if (process.env.ENV == 'DEV') {
+        config.server = {
             https: {
                 key: fs.readFileSync(path.resolve(__dirname, 'ssl/private.key')),
-                cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.crt')),
+                    cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.crt')),
             },
             host: '0.0.0.0',
         }
-    };
-
-    console.log('DEBUG:');
-
-    if (process.env.ENV == 'DEV') {
-        console.log('Is dev');
-    } else {
-        console.log('Is not dev');
     }
-
-    console.log('value');
-    console.log(process.env.ENV);
 
     return defineConfig(config);
 };
