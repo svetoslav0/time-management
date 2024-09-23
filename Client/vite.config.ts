@@ -21,7 +21,7 @@ export default ({ mode }) => {
         config.server = {
             https: {
                 key: fs.readFileSync(path.resolve(__dirname, 'ssl/private.key')),
-                    cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.crt')),
+                cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.crt')),
             },
             host: '0.0.0.0',
         }

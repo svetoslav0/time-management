@@ -24,6 +24,13 @@ echo "Running npm install . . ."
 npm install
 npm install dotenv
 
+cd ssl
+
+cat /etc/ssl/certs/test-opshero.site.key >> private.key
+cat /etc/ssl/certs/test-opshero_site.crt >> cert.crt
+
+cd ..
+
 pm2 ls
 
 if pm2 list | grep api; then

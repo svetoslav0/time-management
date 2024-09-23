@@ -1,8 +1,12 @@
 require("dotenv").config();
+const https = require("https");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const fs = require("fs");
+const path = require("path");
+
 
 const initializeAdmin = require("./utils/initializeAdmin");
 const generalErrorHandlerMiddleware = require("./middlewares/generalErrorHandlerMiddleware");
@@ -36,6 +40,20 @@ mongoose
     .catch((err) => console.error("MongoDB connection error:", err));
 
 const PORT = process.env.PORT || 5173;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+
+if (process.env.ENV === "DEV") {
+    const options = {
+        key: fs.readFileSync(path.resolve(__dirname, 'ssl/private.key')),
+        cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.crt')),
+    }
+
+    const server = https.createServer(options, app);
+
+    server.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT} (HTTPS)`);
+    });
+} else {
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
