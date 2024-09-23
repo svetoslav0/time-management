@@ -6,6 +6,9 @@ import { defineConfig, loadEnv } from 'vite';
 export default ({ mode }) => {
     process.env = {...process.env, ...loadEnv(mode, process.cwd())};
 
+    console.log('mode');
+    console.log(mode);
+
     let config = {
         plugins: [react()],
         envDir: './environment',
@@ -14,22 +17,14 @@ export default ({ mode }) => {
                 '@': path.join(__dirname, 'src/'),
             },
         },
+        // server: {
+        //     https: {
+        //         key: fs.readFileSync(path.resolve(__dirname, 'ssl/private.key')),
+        //         cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.crt')),
+        //     },
+        //     host: '0.0.0.0',
+        // }
     };
-
-    if (process.env.ENV == 'DEV') {
-        console.log('IS DEV!!!');
-
-        config['server'] = {
-            https: {
-                key: fs.readFileSync(path.resolve(__dirname, 'ssl/private.key')),
-                    cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.crt')),
-            },
-            host: '0.0.0.0',
-        }
-    }
-
-    console.log('=================== config =================== ');
-    console.log(config);
 
     return defineConfig(config);
 };
