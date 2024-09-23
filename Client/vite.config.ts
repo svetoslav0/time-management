@@ -27,6 +27,9 @@ export default ({ mode }) => {
         delete config.server;
     }
 
+    console.log('DEBUG:');
+    console.log(process.env.VITE_ENV);
+    console.log(process.env);
     console.log(config.server);
 
     return defineConfig(config);
