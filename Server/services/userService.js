@@ -7,6 +7,7 @@ const {
 } = require("../utils/validateUserDataUtil");
  
 const { generateToken } = require("../utils/jwt");
+const populateProjectsForUser = require("../utils/populateProjectsForUser");
 const UserValidationErrors = require("../errors/userValidationErrors");
 const AuthError = require("../errors/authError");
 const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
@@ -183,8 +184,11 @@ exports.getSingleUser = async (userId) => {
     if (!user) {
         throw new UserValidationErrors("User not found!", 404);
     }
- 
-    return user;
+
+    const clone = JSON.parse(JSON.stringify(user));
+    clone.projects = await populateProjectsForUser(user);
+
+    return clone;
 };
 exports.restorePassword = async (req) => {
     const { password, confirmPassword } = req.body;
