@@ -30,7 +30,11 @@ export default function useInviteUser({ projectId }: UseInviteUserProps) {
             });
             toast.success('Email was sent successfully!');
         },
-        onError: (error) => toast.error(error.message),
+        onError: (error) => toast.error(error.message, {
+            style: {
+                maxWidth: 600
+            },
+        }),
     });
 
     return { inviteUser, isInviteSuccess, error };

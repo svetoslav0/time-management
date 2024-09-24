@@ -144,7 +144,7 @@ export default function InviteUsersCardLayout({ project }: InviteUsersCardLayout
                         )}
                     >
                         <span className='flex items-center gap-0.5'>
-                            <PlusSvg />
+                            <PlusSvg color='white' />
                             Invite user
                         </span>
                     </button>
