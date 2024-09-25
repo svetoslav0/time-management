@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import useUpdateProject from '../hooks/useUpdateProject';
 import AddExistingUserForm from './AddExistingUserForm';
@@ -75,11 +76,14 @@ export default function ExistingUsersCardLayout({
                                 currentUsers.map((person) => (
                                     <div className='my-4 flex' key={person._id}>
                                         <>
-                                            <div className='ml-6  whitespace-nowrap text-base font-medium '>
-                                                <span className='text-customBlue underline'>
-                                                    {person.firstName} {person.lastName}{' '}
-                                                </span>
-                                                <span>({person.email})</span>
+                                            <div className='ml-6 whitespace-nowrap text-base font-medium cursor-pointer'>
+                                                <Link to={`/admin/users/${person._id}`}>
+                                                    <span className='text-customBlue underline'>
+                                                        {person.firstName} {person.lastName}
+                                                    </span>
+                                                    {' '}
+                                                    <span>({person.email})</span>
+                                                </Link>
                                             </div>
                                             <button
                                                 onClick={() => {
