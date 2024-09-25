@@ -48,6 +48,7 @@ export default function GoogleCreateAcc() {
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
         const inviteData = { ...data, inviteId: id };
         if (isGoogleLoginSuccessful) {
+            inviteData.email = googleEmail;
             inviteData.isGoogleLogin = true;
             inviteData.googleToken = credentialResponse.credential;
             createUser(inviteData);
