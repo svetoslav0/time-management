@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useLoginData } from '../auth/AuthContext';
 import useLogout from '../auth/hooks/useLogout';
@@ -10,13 +10,23 @@ import { User } from '@/shared/types';
 export function Navigation() {
     const { loginData } = useLoginData();
     const { currentUser } = useUser();
+    const location = useLocation();
 
     const logout = useLogout();
     const [user, setUser] = useState<User | undefined>(currentUser);
+    const [isPageInvite, setIsPageInvite] = useState(false);
 
     useEffect(() => {
         setUser(currentUser);
     }, [currentUser, loginData]);
+
+    useEffect(() => {
+        if (location.pathname.includes('invite')) {
+            setIsPageInvite(true);
+        } else {
+            setIsPageInvite(false);
+        }
+    }, [location])
 
     const handleLogout = () => {
         logout();
@@ -28,6 +38,12 @@ export function Navigation() {
             className='bg-gradient-to-b from-customLightBlue to-white'
         >
             <div className='m-auto flex h-[98px] w-[1440px] items-center justify-between text-lg font-bold text-customDarkBlue'>
+                {isPageInvite && (
+                    <Link to={'/'} className='loginNavBtn ml-20'>
+                        Login
+                    </Link>
+                )}
+
                 {user && (
                     <>
                         <Link to={'/profile'} className='myProfileBtn ml-20'>

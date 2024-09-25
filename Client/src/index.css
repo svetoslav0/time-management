@@ -36,6 +36,10 @@ body {
     @apply inline-block rounded-lg bg-white px-4 py-1 text-lg font-bold text-customDarkBlue no-underline outline-none transition-all duration-300 hover:bg-customGrey hover:text-customDarkBlue focus:outline-none drop-shadow;
 }
 
+.loginNavBtn {
+    @apply inline-block rounded-lg bg-white px-4 py-1 text-lg font-bold text-customDarkBlue no-underline outline-none transition-all duration-300 hover:bg-customGrey hover:text-customDarkBlue focus:outline-none drop-shadow;
+}
+
 .employeeProjectBtn {
     @apply inline-block min-w-20  rounded-[10px] px-2.5 py-[5px] text-base font-extrabold leading-none no-underline outline-none focus:outline-none;
 }
