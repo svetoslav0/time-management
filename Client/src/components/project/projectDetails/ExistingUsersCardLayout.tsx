@@ -45,7 +45,7 @@ export default function ExistingUsersCardLayout({
             setIsEdit(false);
         }
     }
-
+    console.log('test', currentUsers.length);
     return (
         <>
             <div
@@ -67,34 +67,39 @@ export default function ExistingUsersCardLayout({
                 >
                     {currentUsers && (
                         <div className='py-5'>
-                            {currentUsers.map((person) => (
-                                <div
-                                    className='my-4 flex'
-                                    key={person._id}
-                                >
-                                    <>
-                                        <div className='ml-6  whitespace-nowrap text-base font-medium '>
-                                            <span className='text-customBlue underline'>
-                                                {person.firstName} {person.lastName}{' '}
-                                            </span>
-                                            <span>({person.email})</span>
-                                        </div>
-                                        <button
-                                            onClick={() => {
-                                                if (isEdit) {
-                                                    removePerson(person);
-                                                }
-                                            }}
-                                            className={cn(
-                                                isEdit ? 'opacity-100' : 'cursor-default opacity-0',
-                                                'ml-1 mt-1 transition duration-300 ease-out'
-                                            )}
-                                        >
-                                            <XSvg />
-                                        </button>
-                                    </>
+                            {currentUsers.length <= 0 ? (
+                                <div className='ml-6  whitespace-nowrap text-base font-medium '>
+                                    <span className='text-customBlue'>No assigned users!</span>
                                 </div>
-                            ))}
+                            ) : (
+                                currentUsers.map((person) => (
+                                    <div className='my-4 flex' key={person._id}>
+                                        <>
+                                            <div className='ml-6  whitespace-nowrap text-base font-medium '>
+                                                <span className='text-customBlue underline'>
+                                                    {person.firstName} {person.lastName}{' '}
+                                                </span>
+                                                <span>({person.email})</span>
+                                            </div>
+                                            <button
+                                                onClick={() => {
+                                                    if (isEdit) {
+                                                        removePerson(person);
+                                                    }
+                                                }}
+                                                className={cn(
+                                                    isEdit
+                                                        ? 'opacity-100'
+                                                        : 'cursor-default opacity-0',
+                                                    'ml-1 mt-1 transition duration-300 ease-out'
+                                                )}
+                                            >
+                                                <XSvg />
+                                            </button>
+                                        </>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     )}
                     <div
