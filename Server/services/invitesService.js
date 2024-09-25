@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Invite = require("../models/Invite");
+const Project = require("../models/Project");
 
 const UserValidationErrors = require("../errors/userValidationErrors");
 const InvitesValidationErrors = require("../errors/invitesValidationErrors");
@@ -73,7 +74,13 @@ exports.createCustomerOnInvite = async (req) => {
     };
 
     const user = await User.create(newUser);
-    await Invite.findOneAndDelete({ uuid: userData.inviteId });
+    const invite = await Invite.findOne({ uuid: userData.inviteId });
+    const project = await Project.findById(invite.projectId);
+
+    project.customerIds.push(user._id);
+    await Project.findByIdAndUpdate(project._id, project);
+
+    await Invite.findByIdAndDelete(invite._id);
 
     return {
         email: user.email,
