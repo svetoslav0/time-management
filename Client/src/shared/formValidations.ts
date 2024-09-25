@@ -42,6 +42,7 @@ export const createUserSchema = yup.object().shape({
     description: yup.string(),
 });
 export const createGoogleUserSchema = yup.object().shape({
+    email: yup.string().email('Invalid email format').required('email is required'),
     firstName: yup.string().required('First name is required'),
     lastName: yup.string().required('Last name is required'),
     userRole: yup.string().required('User role is required'),

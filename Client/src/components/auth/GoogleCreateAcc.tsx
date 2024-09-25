@@ -5,9 +5,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
-import { createGoogleUserSchema } from '../../shared/formValidations';
-import { CreateUserDataType } from '../../shared/types';
+import { createGoogleUserSchema } from '@/shared/formValidations';
+import { CreateUserDataType } from '@/shared/types';
 import InputComponent from '../../UI/formComponents/InputComponent';
 import useInviteRegister from './hooks/useInviteRegister';
 
@@ -18,11 +19,15 @@ import Loader from '@/UI/Loader';
 
 export default function GoogleCreateAcc() {
     const [isVisible, setIsVisible] = useState(false);
-    const [isGoogleLogin, setIsGoogleLogin] = useState(false);
+    const [isGoogleLoginSuccessful, setIsGoogleLoginSuccessful] = useState(false);
     const [credentialResponse, setCredentialResponse] = useState<CredentialResponse>({});
     const { createUser, isSuccess } = useInviteRegister();
     const { id } = useParams<string>();
     const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [googleEmail, setGoogleEmail] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const {
         register,
@@ -30,6 +35,7 @@ export default function GoogleCreateAcc() {
         trigger,
         formState: { errors },
         reset,
+        setValue
     } = useForm<CreateUserDataType>({
         resolver: yupResolver(createGoogleUserSchema),
         defaultValues: {
@@ -40,11 +46,8 @@ export default function GoogleCreateAcc() {
     const { data: initialData, error, isLoading } = useFetchEmailValidation(id);
 
     const onSubmit: SubmitHandler<CreateUserDataType> = (data) => {
-        if(initialData){
-            data.email = initialData.email;
-        }
         const inviteData = { ...data, inviteId: id };
-        if (isGoogleLogin) {
+        if (isGoogleLoginSuccessful) {
             inviteData.isGoogleLogin = true;
             inviteData.googleToken = credentialResponse.credential;
             createUser(inviteData);
@@ -57,9 +60,17 @@ export default function GoogleCreateAcc() {
         setIsVisible((prevVisibility) => !prevVisibility);
     };
 
-    const onSuccess = (response: CredentialResponse) => {
-        setIsGoogleLogin(true);
+    const onSuccessfulGoogleLogin = (response: CredentialResponse) => {
+        setIsGoogleLoginSuccessful(true);
         setCredentialResponse(response);
+
+        const decodedToken = jwtDecode(response.credential as string);
+        setGoogleEmail(decodedToken.email);
+        setFirstName(decodedToken.given_name || '');
+        setLastName(decodedToken.family_name || '');
+
+        setValue('firstName', decodedToken.given_name || '');
+        setValue('lastName', decodedToken.family_name || '');
     };
 
     useEffect(() => {
@@ -74,6 +85,13 @@ export default function GoogleCreateAcc() {
             navigate('/');
         }
     }, [error, navigate]);
+
+    useEffect(() => {
+        if (initialData) {
+            setValue('email', initialData?.email);
+            setEmail(initialData?.email);
+        }
+    }, [initialData]);
 
     if (isLoading) {
         return (
@@ -104,10 +122,16 @@ export default function GoogleCreateAcc() {
                 className='flex flex-col rounded-3xl border bg-white  p-9 shadow-loginFormShadow'
                 onSubmit={handleSubmit(onSubmit)}
             >
-                <div>
-                    <p>Complete account for</p>
-                    <p className='font-bold'>{initialData?.email}</p>
-                </div>
+                <h2 className='mb-6 self-center font-mavenPro text-2xl font-semibold text-welcomeMsgColor'>
+                    Create your account
+                </h2>
+
+                {isGoogleLoginSuccessful &&
+                    <div>
+                        <p>Complete account for</p>
+                        <p className='font-bold'>{googleEmail}</p>
+                    </div>
+                }
 
                 {errors && (
                     <ul role='alert' className='text-sm text-red-500 dark:text-red-400'>
@@ -118,18 +142,41 @@ export default function GoogleCreateAcc() {
                 )}
 
                 <>
+                    {!isGoogleLoginSuccessful &&
+                        <InputComponent
+                            error={errors.email?.message}
+                            register={register}
+                            trigger={trigger}
+                            field='email'
+                            value={email}
+                            onChange={e => {
+                                setValue('email', e.currentTarget.value);
+                                setEmail(e.currentTarget.value);
+                            }}
+                        />
+                    }
                     <div className='flex justify-between gap-5'>
                         <InputComponent
                             error={errors.firstName?.message}
                             register={register}
                             trigger={trigger}
                             field='firstName'
+                            value={firstName}
+                            onChange={e => {
+                                setValue('firstName', e.currentTarget.value);
+                                setFirstName(e.currentTarget.value);
+                            }}
                         />
                         <InputComponent
                             error={errors.lastName?.message}
                             register={register}
                             trigger={trigger}
                             field='lastName'
+                            value={lastName}
+                            onChange={e => {
+                                setValue('lastName', e.currentTarget.value);
+                                setLastName(e.currentTarget.value);
+                            }}
                         />
                     </div>
 
@@ -159,7 +206,7 @@ export default function GoogleCreateAcc() {
                         />
                     </>
 
-                    {!isGoogleLogin && (
+                    {!isGoogleLoginSuccessful && (
                         <div className='flex justify-between gap-5'>
                             <InputComponent
                                 error={errors.password?.message}
@@ -199,7 +246,7 @@ export default function GoogleCreateAcc() {
                         {/* {loading ? 'Creating...' : 'Create user'} */}
                         Complete your account
                     </button>
-                    {!isGoogleLogin && (
+                    {!isGoogleLoginSuccessful && (
                         <>
                             <div className='my-4 flex items-center justify-center'>
                                 <div className='w-1/3 border-t border-gray-300'></div>
@@ -209,7 +256,7 @@ export default function GoogleCreateAcc() {
                             <div className='self-center'>
                                 <GoogleLogin
                                     text='continue_with'
-                                    onSuccess={onSuccess}
+                                    onSuccess={onSuccessfulGoogleLogin}
                                     onError={() => {
                                         console.log('Login Failed');
                                     }}

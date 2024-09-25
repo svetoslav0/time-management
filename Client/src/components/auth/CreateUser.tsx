@@ -233,9 +233,7 @@ export default function CreateUser() {
                         <button
                             type='submit'
                             className='mt-6 w-1/3 self-center rounded-lg bg-loginBtnColor px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300'
-                            // disabled={loading}
                         >
-                            {/* {loading ? 'Creating...' : 'Create user'} */}
                             Create user
                         </button>
                     </>
