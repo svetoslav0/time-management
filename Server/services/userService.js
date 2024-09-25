@@ -69,6 +69,7 @@ exports.login = async (req) => {
             lastName: user.lastName,
             userRole: user.userRole,
             status: user.status,
+            isGoogleUser: user.isGoogleLogin,
             expire,
         },
         token,
@@ -91,7 +92,7 @@ exports.googleLogin = async (req) => {
     }
  
     const token = generateToken(user);
- 
+
     return {
         user: {
             _id: user._id,
@@ -100,6 +101,7 @@ exports.googleLogin = async (req) => {
             lastName: user.lastName,
             userRole: user.userRole,
             status: user.status,
+            isGoogleUser: user.isGoogleLogin,
         },
         token,
     };

@@ -50,6 +50,7 @@ export type LoginResponseData = {
     userRole: string;
     _id: string;
     expire: number;
+    isGoogleUser: boolean;
 };
 
 export type LoginFormDataType = {

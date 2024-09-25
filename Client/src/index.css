@@ -28,6 +28,10 @@ body {
     @apply inline-block rounded-lg bg-customDarkBlue px-3 py-2 text-center text-base font-bold text-white no-underline outline-none transition duration-200 ease-out hover:bg-opacity-60 focus:outline-none;
 }
 
+.changePasswordDisabledBtn {
+    @apply inline-block rounded-lg bg-customDarkBlue px-3 py-2 text-center text-base font-bold text-white no-underline outline-none transition duration-200 ease-out bg-opacity-60 focus:outline-none cursor-not-allowed;
+}
+
 .changePasswordSecondaryBtn {
     @apply rounded-[10px] border-[1px] border-customDarkBlue px-6 pb-1.5 pt-1 text-base font-semibold text-customDarkBlue transition duration-300 ease-out hover:border-customGrey hover:bg-customGrey;
 }

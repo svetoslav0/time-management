@@ -157,14 +157,20 @@ export default function MyProfile() {
                 <div className='flex items-center justify-center'>
                     <button
                         type='button'
-                        className='changePasswordBtn bg-customDarkBlue px-20 text-base'
+                        className={loginData.isGoogleUser ? 'changePasswordDisabledBtn bg-customDarkBlue px-20 text-base' : 'changePasswordBtn bg-customDarkBlue px-20 text-base'}
                         onClick={() => setIsModalOpen(true)}
+                        disabled={loginData.isGoogleUser}
                     >
                         Change password
                     </button>
                 </div>
+                {loginData.isGoogleUser && (
+                    <div className='text-center italic mt-4'>
+                        Google users cannot change their passwords from here.
+                    </div>
+                )}
             </div>
-            {isModalOpen && (
+            {isModalOpen && !loginData.isGoogleUser && (
                 <div>
                     <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                         <div className='w-full'>
