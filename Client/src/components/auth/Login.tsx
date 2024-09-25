@@ -15,6 +15,7 @@ import { loginSchema } from '@/shared/formValidations';
 import { LoginFormDataType, LoginResponseData } from '@/shared/types';
 import InputComponent from '@/UI/formComponents/InputComponent';
 import Loader from '@/UI/Loader';
+import GearSvg from '@/UI/design/GearSvg';
 
 export default function Login() {
     const { login, error, isError, isPending } = useLogin();
@@ -61,6 +62,17 @@ export default function Login() {
     return (
         <div className='flex flex-col items-center justify-center'>
             {isPending && <Loader />}
+
+            <div className='absolute left-[20rem] top-[51rem] -z-10'>
+                <GearSvg />
+            </div>
+            <div className='bot-[45rem] absolute right-[3rem] -z-10'>
+                <GearSvg />
+            </div>
+            <div className='bot-[45rem] absolute left-[-1rem] -z-10 scale-150'>
+                <GearSvg />
+            </div>
+
             <div>
                 <img src={mainLogo} className='mx-auto mb-12 mt-20 scale-50' />
                 <p className='scale-75 self-center font-mavenPro text-xl font-bold text-welcomeMsgColor'>
