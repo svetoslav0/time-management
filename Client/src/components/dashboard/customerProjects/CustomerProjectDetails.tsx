@@ -1,13 +1,16 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import mainLogo from '@/assets/timeManagementLogo.png';
 import useFetchProjectByIdReport from '@/reactQuery/hooks/useFetchProjectByIdReport';
 import DownloadSvg from '@/UI/design/DownloadSvg';
 import GearSvg from '@/UI/design/GearSvg';
 import DownloadFile from '@/UI/DownloadFile';
+import { useLoginData } from '@/components/auth/AuthContext';
 
 export default function CustomerProjectDetails() {
+    const { loginData } = useLoginData();
+    const navigate = useNavigate();
     const { id } = useParams<string>();
     const [isDownloading, setIsDownloading] = useState(false);
     const [shouldDownload, setShouldDownload] = useState(false);
@@ -27,6 +30,13 @@ export default function CustomerProjectDetails() {
     };
 
     const hours = project?.hours || [];
+
+    useEffect(() => {
+        if (!loginData) {
+            navigate('/auth/login');
+        }
+    }, [loginData, navigate]);
+
     return (
         <div className='mb-20 flex flex-col items-center px-4'>
             <div className='fixed left-[-4rem] top-[40rem] -z-10'>

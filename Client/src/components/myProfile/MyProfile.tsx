@@ -11,6 +11,7 @@ import { changePasswordSchema } from '@/shared/formValidations';
 import Modal from '@/UI/Modal';
 import capitalizeFirstLetter from '@/util/capitalizeFirstLetter';
 import cn from '@/util/cn';
+import { useNavigate } from 'react-router-dom';
 
 type FormInputData = {
     name: string;
@@ -23,6 +24,8 @@ type FormInputData = {
 
 export default function MyProfile() {
     const { loginData } = useLoginData();
+    const navigate = useNavigate();
+
     const [isVisible, setIsVisible] = useState(false);
     const [formInputData, setFormInputData] = useState<FormInputData>({
         name: '',
@@ -45,6 +48,12 @@ export default function MyProfile() {
         formState: { errors },
         setValue,
     } = useForm({ resolver: yupResolver(changePasswordSchema) });
+
+    useEffect(() => {
+        if (!loginData) {
+            navigate('/auth/login');
+        }
+    }, [loginData, navigate]);
 
     useEffect(() => {
         if (loginData) {
