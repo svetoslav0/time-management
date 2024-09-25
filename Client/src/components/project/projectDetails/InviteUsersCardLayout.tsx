@@ -71,28 +71,36 @@ export default function InviteUsersCardLayout({ project }: InviteUsersCardLayout
                 >
                     {currentInvites && (
                         <div className='py-5'>
-                            {currentInvites.map((invite) => (
-                                <div className='my-4 flex' key={invite._id}>
-                                    <>
-                                        <div className='ml-6  whitespace-nowrap text-base font-medium '>
-                                            <span>{invite.email}</span>
-                                        </div>
-                                        <button
-                                            onClick={() => {
-                                                if (isEdit) {
-                                                    removePerson(invite);
-                                                }
-                                            }}
-                                            className={cn(
-                                                isEdit ? 'opacity-100' : 'cursor-default opacity-0',
-                                                'ml-1 mt-1 transition duration-300 ease-out'
-                                            )}
-                                        >
-                                            <XSvg />
-                                        </button>
-                                    </>
+                            {currentInvites.length == 0 ? (
+                                <div className='ml-6  whitespace-nowrap text-base font-medium '>
+                                    <div className='font-light italic mt-1.5'>There are no pending invites</div>
                                 </div>
-                            ))}
+                            ) : (
+                                currentInvites.map((invite) => (
+                                    <div className='my-4 flex' key={invite._id}>
+                                        <>
+                                            <div className='ml-6  whitespace-nowrap text-base font-medium '>
+                                                <span>{invite.email}</span>
+                                            </div>
+                                            <button
+                                                onClick={() => {
+                                                    if (isEdit) {
+                                                        removePerson(invite);
+                                                    }
+                                                }}
+                                                className={cn(
+                                                    isEdit
+                                                        ? 'opacity-100'
+                                                        : 'cursor-default opacity-0',
+                                                    'ml-1 mt-1 transition duration-300 ease-out'
+                                                )}
+                                            >
+                                                <XSvg />
+                                            </button>
+                                        </>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     )}
                     <div
