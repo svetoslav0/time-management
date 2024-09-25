@@ -71,11 +71,9 @@ export default function InviteUsersCardLayout({ project }: InviteUsersCardLayout
                 >
                     {currentInvites && (
                         <div className='py-5'>
-                            {currentInvites.length <= 0 ? (
+                            {currentInvites.length == 0 ? (
                                 <div className='ml-6  whitespace-nowrap text-base font-medium '>
-                                    <span className='text-customBlue'>
-                                        No assigned invite emails!
-                                    </span>
+                                    <div className='font-light italic mt-1.5'>There are no pending invites</div>
                                 </div>
                             ) : (
                                 currentInvites.map((invite) => (

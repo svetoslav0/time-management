@@ -45,7 +45,7 @@ export default function ExistingUsersCardLayout({
             setIsEdit(false);
         }
     }
-    console.log('test', currentUsers.length);
+
     return (
         <>
             <div
@@ -67,9 +67,9 @@ export default function ExistingUsersCardLayout({
                 >
                     {currentUsers && (
                         <div className='py-5'>
-                            {currentUsers.length <= 0 ? (
+                            {currentUsers.length == 0 ? (
                                 <div className='ml-6  whitespace-nowrap text-base font-medium '>
-                                    <span className='text-customBlue'>No assigned users!</span>
+                                    <div className='font-light italic mt-1.5'>No assigned users!</div>
                                 </div>
                             ) : (
                                 currentUsers.map((person) => (
