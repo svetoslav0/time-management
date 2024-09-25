@@ -14,8 +14,6 @@ export default function CustomerProjectDetails() {
 
     const { data: project } = useFetchProjectByIdReport(id!);
 
-    console.log(project);
-
     const handleDownload = () => {
         if (!isDownloading) {
             setIsDownloading(true);

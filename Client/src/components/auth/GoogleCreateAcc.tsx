@@ -258,7 +258,7 @@ export default function GoogleCreateAcc() {
                                     text='continue_with'
                                     onSuccess={onSuccessfulGoogleLogin}
                                     onError={() => {
-                                        console.log('Login Failed');
+                                        console.error('Login Failed');
                                     }}
                                 />
                             </div>

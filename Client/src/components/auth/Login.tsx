@@ -55,7 +55,7 @@ export default function Login() {
 
     const onError = () => {
         toast.error('Google login failed');
-        console.log('Google login failed');
+        console.error('Google login failed');
     };
 
     return (

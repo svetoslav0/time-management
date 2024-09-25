@@ -40,7 +40,6 @@ export default function EditUserModal({ isOpen, onClose, user, userState }: Moda
     const { editUser, isSuccess } = useEditUser();
 
     const onSubmit: SubmitHandler<EditUserDataType> = (data) => {
-        console.log(data);
         data.userRole = user.userRole;
         data.status = user.status;
         editUser(data);
