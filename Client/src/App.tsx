@@ -18,6 +18,7 @@ import ProjectDetails from './components/project/projectDetails/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
 import UserPage from './components/UserPage/UserPage';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
+import Error from '@/components/error/Error';
 
 function App() {
     const router = createBrowserRouter([
@@ -28,7 +29,7 @@ function App() {
                     <RootLayout />
                 </AuthContextProvider>
             ),
-            errorElement: <h1>error</h1>,
+            errorElement: <Error />,
             children: [
                 {
                     index: true,
