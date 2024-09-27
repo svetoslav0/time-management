@@ -16,8 +16,9 @@ import MyProfile from './components/myProfile/MyProfile';
 import ProjectAdminDashboard from './components/project/ProjectAdminDashboard';
 import ProjectDetails from './components/project/projectDetails/ProjectDetails';
 import ProjectFormControl from './components/projectForm/ProjectFormControl';
-import UserPage from './components/UserPage/UserPage';
+import UserDetails from './components/UsersDashboard/userDetails/UserDetails';
 import UsersDashboard from './components/UsersDashboard/UsersDashboard';
+
 import Error from '@/components/error/Error';
 
 function App() {
@@ -71,7 +72,7 @@ function App() {
                         },
                         {
                             path: 'users/:id',
-                            element: <UserPage />,
+                            element: <UserDetails />,
                             loader: restrictAdminPages,
                         },
                         {
