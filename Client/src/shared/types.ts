@@ -1,18 +1,24 @@
 import { FieldValues, SubmitHandler, UseFormReturn } from 'react-hook-form';
 
+export type UserStatus = 'active' | 'inactive';
+
 export type UserDetails = {
     _id: string;
     email: string;
     firstName: string;
     lastName: string;
     userRole: string;
-    status: 'active' | 'inActive';
+    status: UserStatus;
     createdAt: string;
     description?: string | undefined;
+    isGoogleLogin: boolean;
+    projects: {_id: string, projectName: string}[]
 };
 
+export type ExperienceLevel = 'Junior' | 'Mid-Level' | 'Senior' | 'Architect';
+
 export type EmployeeDetails = {
-    experienceLevel: string;
+    experienceLevel: ExperienceLevel;
 } & UserDetails;
 
 export type CustomerDetails = {
