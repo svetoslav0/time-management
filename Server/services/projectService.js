@@ -11,6 +11,7 @@ const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
 const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
 const getInvitesByProjectId = require("../utils/inviteUtils/getInvitesByProjectId");
+const deleteExpiredInvites = require("../utils/inviteUtils/deleteExpiredInvites");
 
 exports.createProject = async (req) => {
     const projectData = req.body;
@@ -42,6 +43,8 @@ exports.createProject = async (req) => {
 exports.getProjects = async (req) => {
     const { status, employeeId } = req.query;
     const userId = req.userToken._id;
+
+    deleteExpiredInvites();
 
     if (employeeId) {
         if (!validateObjectId(employeeId)) {
@@ -81,6 +84,8 @@ exports.getSingleProject = async (req) => {
     const projectId = req.params.id;
     const userId = req.userToken._id;
     const userRole = req.userToken.userRole;
+
+    deleteExpiredInvites();
 
     const project = await getProjectByRoleIfNotAdmin(projectId, userId, userRole);
     const projectInvites = await getInvitesByProjectId(projectId);

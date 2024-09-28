@@ -80,7 +80,11 @@ export default function InviteUsersCardLayout({ project }: InviteUsersCardLayout
                                     <div className='my-4 flex' key={invite._id}>
                                         <>
                                             <div className='ml-6  whitespace-nowrap text-base font-medium '>
-                                                <span>{invite.email}</span>
+                                                <span>{invite.email}
+                                                    <span className='italic font-light text-slate-700'>
+                                                        &nbsp;(Expires on {new Date(invite.expiresOn).toLocaleDateString("en-UK")})
+                                                    </span>
+                                                </span>
                                             </div>
                                             <button
                                                 onClick={() => {

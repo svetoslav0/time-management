@@ -2,7 +2,6 @@ const Invite = require("../../models/Invite");
 
 const deleteExpiredInvites = async () => {
     try {
-
         const expiredInvites = await Invite
             .find({expiresOn: {$lt: new Date()}});
 
