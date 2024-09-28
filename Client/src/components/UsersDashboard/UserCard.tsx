@@ -23,7 +23,7 @@ export default function UserCard({ user }: { user: UserDetails }) {
                     <div>
                         <p
                             className={cn(
-                                user.status === 'active' ? 'text-customGreen' : 'text-customRed',
+                                user.status === 'active' ? 'text-customGreen' : 'text-customOrange',
                                 'text-center text-lg font-normal'
                             )}
                         >

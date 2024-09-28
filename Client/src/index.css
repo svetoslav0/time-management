@@ -4,6 +4,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .autofill-unActiveText:-webkit-autofill {
+        -webkit-text-fill-color: #163851;
+    }
+
+    .autofill-activeText:-webkit-autofill {
+        -webkit-text-fill-color: #a0a0a0;
+    }
+
+    .activeInput {
+        @apply autofill-activeText;
+        @apply autofill:shadow-[inset_0_0_0px_1000px_#fff];
+    }
+
+    .unActiveInput {
+        @apply autofill-unActiveText;
+        @apply autofill:shadow-[inset_0_0_0px_1000px_#fff];
+    }
+}
+
 body {
     @apply font-mavenPro;
 }
@@ -29,7 +49,7 @@ body {
 }
 
 .changePasswordDisabledBtn {
-    @apply inline-block rounded-lg bg-customDarkBlue px-3 py-2 text-center text-base font-bold text-white no-underline outline-none transition duration-200 ease-out bg-opacity-60 focus:outline-none cursor-not-allowed;
+    @apply inline-block cursor-not-allowed rounded-lg bg-customDarkBlue bg-opacity-60 px-3 py-2 text-center text-base font-bold text-white no-underline outline-none transition duration-200 ease-out focus:outline-none;
 }
 
 .changePasswordSecondaryBtn {
@@ -37,11 +57,11 @@ body {
 }
 
 .myProfileBtn {
-    @apply inline-block rounded-lg bg-white px-4 py-1 text-lg font-bold text-customDarkBlue no-underline outline-none transition-all duration-300 hover:bg-customGrey hover:text-customDarkBlue focus:outline-none drop-shadow;
+    @apply inline-block rounded-lg bg-white px-4 py-1 text-lg font-bold text-customDarkBlue no-underline outline-none drop-shadow transition-all duration-300 hover:bg-customGrey hover:text-customDarkBlue focus:outline-none;
 }
 
 .loginNavBtn {
-    @apply inline-block rounded-lg bg-white px-4 py-1 text-lg font-bold text-customDarkBlue no-underline outline-none transition-all duration-300 hover:bg-customGrey hover:text-customDarkBlue focus:outline-none drop-shadow;
+    @apply inline-block rounded-lg bg-white px-4 py-1 text-lg font-bold text-customDarkBlue no-underline outline-none drop-shadow transition-all duration-300 hover:bg-customGrey hover:text-customDarkBlue focus:outline-none;
 }
 
 .employeeProjectBtn {

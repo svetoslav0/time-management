@@ -22,6 +22,8 @@ export default {
                 customDarkGray: '#7d7d7d',
                 customDarkWhite: '#efefef',
                 customRed: '#ff6363',
+                customOrange: '#FF974D',
+                customGreyText: '#A0A0A0'
             },
             boxShadow: {
                 loginFormShadow: '0px 0px 18.5px -2px #0000001C',
@@ -57,13 +59,13 @@ export default {
             addUtilities(newUtilities, ['responsive', 'hover']);
             addUtilities(
                 {
-                  '.text-hoursDescription': {
-                    fontSize: '14px',
-                    lineHeight: '16.45px',
-                  },
+                    '.text-hoursDescription': {
+                        fontSize: '14px',
+                        lineHeight: '16.45px',
+                    },
                 },
                 ['responsive', 'hover']
-              );
+            );
         },
     ],
 };
