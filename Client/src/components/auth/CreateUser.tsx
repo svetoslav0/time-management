@@ -229,6 +229,7 @@ export default function CreateUser() {
                             register={register}
                             trigger={trigger}
                             field='description'
+                            type='textarea'
                         />
                         <button
                             type='submit'
