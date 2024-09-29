@@ -35,7 +35,7 @@ export default function GoogleCreateAcc() {
         trigger,
         formState: { errors },
         reset,
-        setValue
+        setValue,
     } = useForm<CreateUserDataType>({
         resolver: yupResolver(createGoogleUserSchema),
         defaultValues: {
@@ -127,12 +127,12 @@ export default function GoogleCreateAcc() {
                     Create your account
                 </h2>
 
-                {isGoogleLoginSuccessful &&
+                {isGoogleLoginSuccessful && (
                     <div>
                         <p>Complete account for</p>
                         <p className='font-bold'>{googleEmail}</p>
                     </div>
-                }
+                )}
 
                 {errors && (
                     <ul role='alert' className='text-sm text-red-500 dark:text-red-400'>
@@ -143,19 +143,19 @@ export default function GoogleCreateAcc() {
                 )}
 
                 <>
-                    {!isGoogleLoginSuccessful &&
+                    {!isGoogleLoginSuccessful && (
                         <InputComponent
                             error={errors.email?.message}
                             register={register}
                             trigger={trigger}
                             field='email'
                             value={email}
-                            onChange={e => {
+                            onChange={(e) => {
                                 setValue('email', e.currentTarget.value);
                                 setEmail(e.currentTarget.value);
                             }}
                         />
-                    }
+                    )}
                     <div className='flex justify-between gap-5'>
                         <InputComponent
                             error={errors.firstName?.message}
@@ -163,7 +163,7 @@ export default function GoogleCreateAcc() {
                             trigger={trigger}
                             field='firstName'
                             value={firstName}
-                            onChange={e => {
+                            onChange={(e) => {
                                 setValue('firstName', e.currentTarget.value);
                                 setFirstName(e.currentTarget.value);
                             }}
@@ -174,7 +174,7 @@ export default function GoogleCreateAcc() {
                             trigger={trigger}
                             field='lastName'
                             value={lastName}
-                            onChange={e => {
+                            onChange={(e) => {
                                 setValue('lastName', e.currentTarget.value);
                                 setLastName(e.currentTarget.value);
                             }}
@@ -238,6 +238,7 @@ export default function GoogleCreateAcc() {
                         register={register}
                         trigger={trigger}
                         field='description'
+                        type='textarea'
                     />
                     <button
                         type='submit'
