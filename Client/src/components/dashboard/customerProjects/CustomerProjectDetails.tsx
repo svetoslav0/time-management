@@ -53,13 +53,13 @@ export default function CustomerProjectDetails() {
             </div>
             <div className='relative -mt-8 mb-8 w-3/4 font-medium text-customBlue'>
                 <div className='flex'>
-                    <p className='min-w-[150px]'>Employee Name:</p>
+                    <p className='min-w-[150px]'>Employee(s):</p>
                     <span className='ml-2 text-customDarkBlue'>
                         {project?.projectData.employeeNames.join(', ')}
                     </span>
                 </div>
                 <div className='flex'>
-                    <p className='min-w-[150px]'>Client Name:</p>
+                    <p className='min-w-[150px]'>Client(s):</p>
                     <span className='ml-2 text-customDarkBlue'>
                         {project?.projectData.customerNames}
                     </span>
@@ -73,16 +73,16 @@ export default function CustomerProjectDetails() {
                 <div className='flex'>
                     <p className='min-w-[150px]'>Price per hour:</p>
                     <span className='ml-2 text-customDarkBlue'>
-                        ${project?.projectData.pricePerHours}
+                        ${project?.projectData.pricePerHours ?? 0}
                     </span>
                 </div>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Total price:</p>
-                    <span className='ml-2 text-customDarkBlue'>${project?.totalPrice}</span>
+                    <span className='ml-2 text-customDarkBlue'>${project?.totalPrice ?? 0}</span>
                 </div>
                 <div className='flex'>
-                    <p className='min-w-[150px]'>Total price:</p>
-                    <span className='ml-2 text-customDarkBlue'>{project?.totalHours} hours</span>
+                    <p className='min-w-[150px]'>Total hours:</p>
+                    <span className='ml-2 text-customDarkBlue'>{project?.hours.reduce((a, b) => a + b.hours, 0) ?? 0} hours</span>
                 </div>
                 <div className='absolute -top-4 right-4'>
                     <button
@@ -128,6 +128,12 @@ export default function CustomerProjectDetails() {
                     </tbody>
                 </table>
             </div>
+
+            {project?.hours?.length === 0
+                ? (<div className='text-orange-700 italic mt-5'>
+                    *No hours were logged for this project
+                </div>)
+                : (<></>)}
         </div>
     );
 }

@@ -61,13 +61,6 @@ exports.collectReportData = async (data) => {
         "firstName"
     );
 
-    if (!hours || hours.length === 0) {
-        throw new ProjectValidationErrors(
-            "Could not generate report for the specified project. No hours logged.",
-            404
-        );
-    }
-
     const totalPrice = hours.reduce(
         (total, hour) => total + hour.hours * project.pricePerHour,
         0
@@ -79,7 +72,7 @@ exports.collectReportData = async (data) => {
                 (employee) => employee.firstName + " " + employee.lastName
             ),
             customerNames: project.customerIds.map(
-                (customer) => customer.firstName
+                (customer) => customer.firstName + " " + customer.lastName
             ),
             projectName: project.projectName,
             startingDate: formatDate(project.startingDate),
