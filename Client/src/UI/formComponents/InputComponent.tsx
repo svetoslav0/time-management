@@ -37,19 +37,34 @@ export default function InputComponent<T extends FieldValues>({
             <label
                 htmlFor={field}
                 className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-            />
+            >
+                {capitalizeAndFormat(field)}
+            </label>
             <div className='relative'>
-                <input
-                    type={type}
-                    id={field}
-                    className={`block w-full ${field === 'description' ? 'mb-5 h-20 placeholder-custom' : ''} rounded-xl border border-customBlue  ${
-                        error || isResponseError ? 'border-customRed' : 'border-customBlue'
-                    } ${(password || field === 'email') && shouldShowIcons === true ? 'pl-10' : ''}  p-2.5 text-sm text-customDarkBlue focus:border-customBlue focus:ring-customBlue outline-none`}
-                    placeholder={capitalizeAndFormat(field)}
-                    {...register(field)}
-                    onBlur={() => trigger(field)}
-                    {...props}
-                />
+                {type === 'textarea' ? (
+                    <textarea
+                        id={field}
+                        className={`mb-5 block h-24 w-full rounded-xl border border-customBlue placeholder-custom ${
+                            error ? 'border-customRed' : 'border-customBlue'
+                        } p-2.5 text-sm text-customDarkBlue outline-none focus:border-customBlue focus:ring-customBlue`}
+                        placeholder={capitalizeAndFormat(field)}
+                        {...register(field)}
+                        onBlur={() => trigger(field)}
+                        {...props}
+                    />
+                ) : (
+                    <input
+                        type={type}
+                        id={field}
+                        className={`block w-full  rounded-xl border border-customBlue ${
+                            error ? 'border-customRed' : 'border-customBlue'
+                        } ${(password || field === 'email') && shouldShowIcons === true ? 'pl-10' : ''} p-2.5 text-sm text-customDarkBlue outline-none focus:border-customBlue focus:ring-customBlue`}
+                        placeholder={capitalizeAndFormat(field)}
+                        {...register(field)}
+                        onBlur={() => trigger(field)}
+                        {...props}
+                    />
+                )}
                 {password && (
                     <span
                         onClick={toggleVisibility}
@@ -73,6 +88,7 @@ export default function InputComponent<T extends FieldValues>({
                     </span>
                 )}
             </div>
+            {error && <span className='text-sm text-red-500'>{error}</span>}
         </div>
     );
 }
