@@ -73,4 +73,18 @@ router.patch("/:userId/unarchive", isAdmin, async (req, res, next) => {
   }
 });
 
+router.post("/validate_email/:email", async (req, res, next) => {
+  try {
+    const exists = await userService.isUserExisting(req.params.email);
+
+    if (exists) {
+      return res.status(200).json({ isExisting: true });
+    }
+
+    return res.status(404).json({ isExisting: false });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
