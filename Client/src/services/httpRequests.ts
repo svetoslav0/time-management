@@ -3,7 +3,6 @@ import { RequestOptions } from '../shared/types';
 import { clearUserData } from '@/util/util';
 
 const host = import.meta.env.VITE_API_BASE_URL;
-
 export async function httpRequest<T, V>(
     options: RequestOptions<T>,
     responseType: 'json' | 'blob' = 'json'
