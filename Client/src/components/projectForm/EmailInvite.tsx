@@ -30,7 +30,7 @@ export default function EmailInvite({
     ...props
 }: UserSelectorProps) {
     const [input, setInput] = useState<string>('');
-    const [isBlur, setIsBlur] = useState(false);
+    const [isInputFocused, setIsInputFocused] = useState(false);
 
     const { register } = useFormContext();
 
@@ -39,45 +39,61 @@ export default function EmailInvite({
     };
 
     const handleAddEmail = useCallback(
-        (e: React.KeyboardEvent<HTMLInputElement>) => {
-            const target = e.target as HTMLInputElement;
-
-            if (e.code === 'Space' && isValidEmail(target.value.trim())) {
-                setInviteEmails((emails) => [...emails, target.value.trim()]);
+        (email: string) => {
+            if (isValidEmail(email.trim())) {
+                setInviteEmails((emails) => [...emails, email.trim()]);
                 setInput('');
             }
         },
         [setInviteEmails, setInput]
     );
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const target = e.target as HTMLInputElement;
+        if (e.code === 'Space') {
+            handleAddEmail(target.value);
+        }
+    };
+
     const handleRemoveEmail = (emailToRemove: string) => {
         setInviteEmails(inviteEmails.filter((email) => email !== emailToRemove));
     };
 
+    const handleBlur = () => {
+        setIsInputFocused(false);
+        if (input && isValidEmail(input.trim())) {
+            handleAddEmail(input);
+        }
+    };
+
+    const handleFocus = () => {
+        setIsInputFocused(true);
+    };
+
     useEffect(() => {
-        if (selectedError.length === 0 && isBlur) {
+        if (selectedError.length === 0 && !isInputFocused) {
             setError('inviteEmails', { message: 'Please add invite email' });
         } else {
             clearErrors('inviteEmails');
         }
-    }, [selectedError, isBlur, setError, clearErrors]);
+    }, [selectedError, isInputFocused, setError, clearErrors]);
 
     return (
         <div className='place-items-center'>
             <div
                 className={cn(
                     error ? 'border-customRed' : 'border-customBlue',
-                    'relative w-full rounded-xl border  text-sm'
+                    'relative w-full rounded-xl border text-sm'
                 )}
             >
                 <input value={inviteEmails} id={field} {...register(field)} className='hidden' />
                 {inviteEmails.length ? (
-                    <div className='relative flex w-full flex-wrap gap-2 rounded-md  p-2.5'>
+                    <div className='relative flex w-full flex-wrap gap-2 rounded-md p-2.5'>
                         {inviteEmails.map((email) => {
                             return (
                                 <div
                                     key={email}
-                                    className='flex w-fit items-center gap-2  px-3  text-customDarkBlue'
+                                    className='flex w-fit items-center gap-2 px-3 text-customDarkBlue'
                                 >
                                     <span>{email}</span>
                                     <div
@@ -104,8 +120,9 @@ export default function EmailInvite({
                         type='text'
                         value={input}
                         onChange={handleInputChange}
-                        onBlur={() => setIsBlur(true)}
-                        onKeyDown={handleAddEmail}
+                        onKeyDown={handleKeyDown}
+                        onBlur={handleBlur}
+                        onFocus={handleFocus}
                     />
                 </div>
             </div>
