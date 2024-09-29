@@ -256,7 +256,7 @@ exports.updateUserStatus = async (req, newStatus) => {
 };
  
 exports.getUsers = async (req) => {
-    const { status, userRole, limit = 100, offset = 0 } = req.query;
+    const { status, userRole, email, accountType, limit = 100, offset = 0 } = req.query;
  
     const query = {};
     const parsedLimit = parseInt(limit, 10);
@@ -296,6 +296,16 @@ exports.getUsers = async (req) => {
  
     if (userRole) {
         query.userRole = userRole;
+    }
+
+    if (email) {
+        query.email = email;
+    }
+
+    if (accountType) {
+        if (accountType === "google") {
+            query.isGoogleLogin = true;
+        }
     }
  
     const users = await User.find(query)
