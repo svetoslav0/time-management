@@ -65,6 +65,7 @@ export default function GoogleCreateAcc() {
     };
 
     const onSuccessfulGoogleLogin = async (response: CredentialResponse) => {
+        const host = import.meta.env.VITE_API_BASE_URL;
         try {
             const decodedToken = jwtDecode(response.credential as string) as JwtPayload & {
                 email?: string;
@@ -72,8 +73,7 @@ export default function GoogleCreateAcc() {
                 family_name?: string;
             };
             const userEmail = decodedToken.email || '';
-
-            const res = await fetch(urlKeys.emailCheck(userEmail), {
+            const res = await fetch(host + urlKeys.emailCheck(userEmail), {
                 method: 'POST',
             });
 

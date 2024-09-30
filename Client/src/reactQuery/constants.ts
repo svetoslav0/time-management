@@ -13,7 +13,7 @@ export const urlKeys = {
     inviteRegister: '/invites/register',
     invites: '/invites',
     credentialsValidation: '/credentials/validation',
-    emailCheck: (userEmail: string) => `http://localhost:3000/users/validate_email/${userEmail}`,
+    emailCheck: (userEmail: string) => `/users/validate_email/${userEmail}`,
 };
 export const queryKeys = {
     customer: 'All Customers',
