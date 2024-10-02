@@ -14,7 +14,8 @@ import cn from '@/util/cn';
 import { useNavigate } from 'react-router-dom';
 
 type FormInputData = {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     _id: string;
     oldPassword: string;
@@ -28,7 +29,8 @@ export default function MyProfile() {
 
     const [isVisible, setIsVisible] = useState(false);
     const [formInputData, setFormInputData] = useState<FormInputData>({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         _id: '',
         oldPassword: '',
@@ -57,9 +59,9 @@ export default function MyProfile() {
 
     useEffect(() => {
         if (loginData) {
-            const name = `${capitalizeFirstLetter(loginData.firstName)} ${capitalizeFirstLetter(loginData.lastName)}`;
             setFormInputData({
-                name,
+                firstName: capitalizeFirstLetter(loginData.firstName),
+                lastName: capitalizeFirstLetter(loginData.lastName),
                 email: loginData.email,
                 _id: loginData._id,
                 oldPassword: '',
@@ -68,7 +70,8 @@ export default function MyProfile() {
             });
             setValue('_id', loginData._id);
             setValue('email', loginData.email);
-            setValue('name', name);
+            setValue('firstName', loginData.firstName);
+            setValue('lastName', loginData.lastName);
         }
     }, [loginData, setValue]);
 
@@ -143,17 +146,32 @@ export default function MyProfile() {
 
                 <div className='relative'>
                     <span className='absolute z-20 top-3.5 ml-5 text-customDarkBlue font-bold text-lg'>
-                        Name
+                        First name
+                    </span>
+                    <input
+                        className='mb-2.5 block w-full rounded-lg p-3.5 text-lg drop-shadow text-customDarkBlue outline-none disabled:bg-white text-right z-10'
+                        type='text'
+                        {...register('firstName')}
+                        id='firstName'
+                        disabled
+                        value={formInputData.firstName}
+                    />
+                </div>
+
+                <div className='relative'>
+                    <span className='absolute z-20 top-3.5 ml-5 text-customDarkBlue font-bold text-lg'>
+                        Last name
                     </span>
                     <input
                         className='mb-8 block w-full rounded-lg p-3.5 text-lg drop-shadow text-customDarkBlue outline-none disabled:bg-white text-right z-10'
                         type='text'
-                        {...register('name')}
-                        id='name'
+                        {...register('lastName')}
+                        id='lastName'
                         disabled
-                        value={formInputData.name}
+                        value={formInputData.lastName}
                     />
                 </div>
+
                 <div className='flex items-center justify-center'>
                     <button
                         type='button'
