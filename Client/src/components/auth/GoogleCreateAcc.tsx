@@ -18,8 +18,6 @@ import GearSvg from '@/UI/design/GearSvg';
 import Loader from '@/UI/Loader';
 import { urlKeys } from '@/reactQuery/constants';
 
-import httpServices from '../../services/httpServices';
-
 export default function GoogleCreateAcc() {
     const [isVisible, setIsVisible] = useState(false);
     const [isGoogleLoginSuccessful, setIsGoogleLoginSuccessful] = useState(false);
@@ -213,6 +211,7 @@ export default function GoogleCreateAcc() {
                                 trigger={trigger}
                                 field='companyName'
                                 placeholder='Company Name'
+                                labelName='Company Name'
                             />
                             <InputComponent
                                 error={errors.phoneNumber?.message}
@@ -220,6 +219,7 @@ export default function GoogleCreateAcc() {
                                 trigger={trigger}
                                 field='phoneNumber'
                                 placeholder='Phone Number'
+                                labelName='Phone Number'
                             />
                         </div>
                         <InputComponent
@@ -254,6 +254,7 @@ export default function GoogleCreateAcc() {
                                 toggleVisibility={toggleVisibility}
                                 isVisible={isVisible}
                                 placeholder='Confirm password'
+                                labelName='Confirm password'
                             />
                         </div>
                     )}

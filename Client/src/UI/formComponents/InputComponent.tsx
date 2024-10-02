@@ -30,6 +30,7 @@ export default function InputComponent<T extends FieldValues>({
     toggleVisibility,
     isVisible,
     shouldShowIcons,
+    labelName,
     ...props
 }: InputComponentProps<T>) {
     return (
@@ -38,7 +39,7 @@ export default function InputComponent<T extends FieldValues>({
                 htmlFor={field}
                 className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
             >
-                {capitalizeAndFormat(field)}
+                {capitalizeAndFormat(labelName ?? field)}
             </label>
             <div className='relative'>
                 {type === 'textarea' ? (
