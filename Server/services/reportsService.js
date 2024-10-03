@@ -72,8 +72,11 @@ exports.collectReportData = async (data) => {
         "firstName",
     );
 
-    if (hours.length < 1) {
-        throw new ProjectValidationErrors(`No hours recorded for the project ${project.projectName} in the selected period from ${startDate} to ${endDate}.`);
+    if (hours.length < 1 && startDate && endDate) {
+        throw new ProjectValidationErrors(`No hours recorded for the project ${project.projectName} in the selected period from ${startDate} to ${endDate}!`);
+    }
+    else if (hours.length < 1) {
+        throw new ProjectValidationErrors(`No hours recorded for the project ${project.projectName}!`);
     }
 
     const totalPrice = hours.reduce(
