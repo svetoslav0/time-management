@@ -10,11 +10,23 @@ const ReportSchema = new Schema({
     bytes: {
         type: String,
         required: true,
-    }
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    startDate: {
+        type: Date,
+        required: true
+    },
+    endDate: {
+        type: Date,
+        required: true
+    },
 },
-{
-    timestamps: true,
-});
+    {
+        timestamps: true,
+    });
 
 const Report = mongoose.model("Report", ReportSchema);
 module.exports = Report;
