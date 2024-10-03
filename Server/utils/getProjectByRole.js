@@ -17,7 +17,7 @@ const getProjectByRole = async (projectId, userId, userRole) => {
     );
 };
 
-const getProjectByRoleIfNotAdmin = async (projectId, userRole, userId) => {
+const getProjectByRoleIfNotAdmin = async (projectId, userId, userRole) => {
     if (!validateObjectId(projectId)) {
         throw new ProjectValidationErrors("Invalid project ID format!", 400);
     }
