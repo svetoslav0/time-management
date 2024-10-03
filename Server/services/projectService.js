@@ -120,10 +120,6 @@ exports.updateProject = async (req) => {
         new: true,
     });
 
-    if (project.status === "completed") {
-        await getReportBuffer(project._id, req.userToken.userId, req.userToken.userRole);
-    }
-
     if (emailsToCheck) {
         await sendInvitesToNonExistingUsers(emailsToCheck, projectId);
     }
