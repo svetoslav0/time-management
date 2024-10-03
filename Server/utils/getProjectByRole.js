@@ -26,7 +26,7 @@ const getProjectByRoleIfNotAdmin = async (projectId, userId, userRole) => {
     if (userRole === "admin") {
         project = await Project.findById(projectId).populate(
             "customerIds employeeIds",
-            "firstName"
+            "firstName lastName"
         );
     } else {
         project = await getProjectByRole(projectId, userId, userRole);

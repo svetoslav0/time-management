@@ -54,18 +54,22 @@ exports.collectReportData = async (data) => {
     const project = await getProjectByRoleIfNotAdmin(
         projectId,
         userId,
-        userRole
+        userRole,
     );
 
-    const hours = await Hours.find({
-        projectId,
-        date: {
-            $gte: new Date(startDate),
-            $lte: new Date(endDate),
-        }
-    }).populate(
+    const query = { projectId };
+
+    if (startDate) {
+        query.date = { ...query.date, $gte: new Date(startDate) };
+    }
+    
+    if (endDate) {
+        query.date = { ...query.date, $lte: new Date(endDate) }; 
+    }
+
+    const hours = await Hours.find(query).populate(
         "userId",
-        "firstName"
+        "firstName",
     );
 
     const totalPrice = hours.reduce(
@@ -78,10 +82,10 @@ exports.collectReportData = async (data) => {
     return {
         projectData: {
             employeeNames: project.employeeIds.map(
-                (employee) => employee.firstName + " " + employee.lastName
+                (employee) => `${employee.firstName} ${employee.lastName}`
             ),
             customerNames: project.customerIds.map(
-                (customer) => customer.firstName + " " + customer.lastName
+                (customer) => `${customer.firstName} ${customer.lastName}`
             ),
             projectName: project.projectName,
             startingDate: formatDate(project.startingDate),
