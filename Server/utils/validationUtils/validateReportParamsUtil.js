@@ -25,8 +25,10 @@ const validateReportParams = async (name, projectId, startDate, endDate) => {
     if (!startDate) {
         throw new ProjectValidationErrors("StartDate parameter is required!");
     }
-    
-    if (await validateDate(startDate)) {
+
+    const isStartDateValid = await validateDate(startDate);
+
+    if (!isStartDateValid) {
         throw new ProjectValidationErrors(`StartDate has invalid value: ${startDate}`);
     }
 
@@ -34,7 +36,9 @@ const validateReportParams = async (name, projectId, startDate, endDate) => {
         throw new ProjectValidationErrors("EndDate parameter is required!");
     }
 
-    if (await validateDate(endDate)) {
+    const isEndDateValid = await validateDate(endDate);
+
+    if (!isEndDateValid) {
         throw new ProjectValidationErrors(`EndDate has invalid value: ${endDate}`);
     }
 };

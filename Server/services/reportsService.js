@@ -62,15 +62,19 @@ exports.collectReportData = async (data) => {
     if (startDate) {
         query.date = { ...query.date, $gte: new Date(startDate) };
     }
-    
+
     if (endDate) {
-        query.date = { ...query.date, $lte: new Date(endDate) }; 
+        query.date = { ...query.date, $lte: new Date(endDate) };
     }
 
     const hours = await Hours.find(query).populate(
         "userId",
         "firstName",
     );
+
+    if (hours.length < 1) {
+        throw new ProjectValidationErrors(`No hours recorded for the project ${project.projectName} in the selected period from ${startDate} to ${endDate}.`);
+    }
 
     const totalPrice = hours.reduce(
         (total, hour) => total + hour.hours * project.pricePerHour,
