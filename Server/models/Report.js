@@ -7,11 +7,11 @@ const ReportSchema = new Schema({
         ref: "Project",
         required: true,
     },
-    bytes: {
+    name: {
         type: String,
         required: true,
     },
-    name: {
+    bytes: {
         type: String,
         required: true,
     },
