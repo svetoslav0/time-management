@@ -163,6 +163,7 @@ exports.getSingleReport = async (req) => {
     }
 
     return report;
+}
 
 exports.deleteReport = async (req) => {
     const reportId = req.params.id;
