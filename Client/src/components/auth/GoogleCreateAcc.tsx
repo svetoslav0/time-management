@@ -17,6 +17,9 @@ import useFetchEmailValidation from '@/reactQuery/hooks/useFetchEmailValidation'
 import GearSvg from '@/UI/design/GearSvg';
 import Loader from '@/UI/Loader';
 import { urlKeys } from '@/reactQuery/constants';
+import useFetchUserEmailValidation from '@/reactQuery/hooks/useFetchUserEmailValidation';
+
+import httpServices from '@/services/httpServices';
 
 export default function GoogleCreateAcc() {
     const [isVisible, setIsVisible] = useState(false);
@@ -29,6 +32,8 @@ export default function GoogleCreateAcc() {
     const [googleEmail, setGoogleEmail] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+
+    const { post } = httpServices();
 
     const {
         register,
@@ -71,25 +76,28 @@ export default function GoogleCreateAcc() {
             };
             const userEmail = decodedToken.email || '';
 
-            const res = await fetch(urlKeys.emailCheck(userEmail), {
-                method: 'POST',
-            });
+            post(`/users/validate_email/${userEmail}`)
+                .then(res => {
+                    const isExisting = res.isExisting;
 
-            const { isExisting } = await res.json();
+                    if (isExisting) {
+                        toast.error('Such user already exists');
+                        return;
+                    }
 
-            if (isExisting) {
-                toast.error('Such user already exists');
-                return;
-            }
+                    setIsGoogleLoginSuccessful(true);
+                    setCredentialResponse(response);
+                    setGoogleEmail(userEmail || '');
+                    setFirstName(decodedToken.given_name || '');
+                    setLastName(decodedToken.family_name || '');
 
-            setIsGoogleLoginSuccessful(true);
-            setCredentialResponse(response);
-            setGoogleEmail(userEmail || '');
-            setFirstName(decodedToken.given_name || '');
-            setLastName(decodedToken.family_name || '');
-
-            setValue('firstName', decodedToken.given_name || '');
-            setValue('lastName', decodedToken.family_name || '');
+                    setValue('firstName', decodedToken.given_name || '');
+                    setValue('lastName', decodedToken.family_name || '');
+                })
+                .catch(err => {
+                    console.error('Error checking email:', err);
+                    toast.error('Something went wrong. Please try again.');
+                });
         } catch (error) {
             console.error('Error checking email:', error);
             toast.error('Something went wrong. Please try again.');

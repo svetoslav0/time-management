@@ -77,11 +77,7 @@ router.post("/validate_email/:email", async (req, res, next) => {
   try {
     const exists = await userService.isUserExisting(req.params.email);
 
-    if (exists) {
-      return res.status(200).json({ isExisting: true });
-    }
-
-    return res.status(404).json({ isExisting: false });
+    return res.status(200).json({ isExisting: !!exists });
   } catch (error) {
     next(error);
   }
