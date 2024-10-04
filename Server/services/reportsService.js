@@ -72,6 +72,7 @@ exports.collectReportData = async (data) => {
     const hours = await Hours.find(query).populate("userId", "firstName");
 
     if (hours.length < 1 && startDate && endDate) {
+
         throw new ReportValidationErrors(
             `No hours recorded for the project ${project.projectName} in the selected period from ${startDate} to ${endDate}!`,
             404
@@ -146,6 +147,22 @@ exports.createReport = async (req) => {
         endDate: report.endDate,
     };
 };
+
+
+exports.getSingleReport = async (req) => {
+    const reportId = req.params.id;
+
+    if (!validateObjectId(reportId)) {
+        throw new ReportValidationErrors("Such report was not found“", 404);
+    }
+
+    const report = await Report.findById(reportId);
+
+    if (!report) {
+        throw new ReportValidationErrors("Such report was not found“", 404);
+    }
+
+    return report;
 
 exports.deleteReport = async (req) => {
     const reportId = req.params.id;
