@@ -1,45 +1,45 @@
 const Project = require("../../models/Project");
 
-const ProjectValidationErrors = require("../../errors/projectsValidationErrors");
+const ReportValidationErrors = require("../../errors/reportsValidationErrors");
 const { validateObjectId } = require("../validateObjectIdUtil");
 const validateDate = require("../validateDateUtil");
 
 const validateReportParams = async (name, projectId, startDate, endDate) => {
     if (!name) {
-        throw new ProjectValidationErrors("Name parameter is required!");
+        throw new ReportValidationErrors("Name parameter is required!", 400);
     }
 
     if (!projectId) {
-        throw new ProjectValidationErrors("ProjectId parameter is required!");
+        throw new ReportValidationErrors("ProjectId parameter is required!", 400);
     }
 
     if (!validateObjectId(projectId)) {
-        throw new ProjectValidationErrors(`ProjectId parameter is invalid: ${projectId}`);
+        throw new ReportValidationErrors(`ProjectId parameter is invalid: ${projectId}`, 400);
     }
 
     const projectExists = await Project.findById(projectId);
     if (!projectExists) {
-        throw new ProjectValidationErrors(`ProjectId does not exist: ${projectId}`);
+        throw new ReportValidationErrors(`ProjectId does not exist: ${projectId}`, 404);
     }
 
     if (!startDate) {
-        throw new ProjectValidationErrors("StartDate parameter is required!");
+        throw new ReportValidationErrors("StartDate parameter is required!", 400);
     }
 
     const isStartDateValid = await validateDate(startDate);
 
     if (!isStartDateValid) {
-        throw new ProjectValidationErrors(`StartDate has invalid value: ${startDate}`);
+        throw new ReportValidationErrors(`StartDate has invalid value: ${startDate}`, 400);
     }
 
     if (!endDate) {
-        throw new ProjectValidationErrors("EndDate parameter is required!");
+        throw new ReportValidationErrors("EndDate parameter is required!", 400);
     }
 
     const isEndDateValid = await validateDate(endDate);
 
     if (!isEndDateValid) {
-        throw new ProjectValidationErrors(`EndDate has invalid value: ${endDate}`);
+        throw new ReportValidationErrors(`EndDate has invalid value: ${endDate}`, 400);
     }
 };
 

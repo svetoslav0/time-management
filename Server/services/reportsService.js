@@ -110,7 +110,10 @@ exports.collectReportData = async (data) => {
     };
 };
 
-exports.createReport = async (name, projectId, startDate, endDate, userId, userRole) => {
+exports.createReport = async (req) => {
+    const { name, projectId, startDate, endDate } = req.body;
+    const { userId, userRole } = req.userToken;
+
     await validateReportParams(name, projectId, startDate, endDate);
 
     const buffer = await generateReportBuffer(projectId, userId, userRole, startDate, endDate);
