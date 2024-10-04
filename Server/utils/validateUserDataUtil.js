@@ -91,6 +91,8 @@ const roleBasedUserValidation = async (userData) => {
     userData;
 
   switch (userRole) {
+    case "admin":
+      break;
     case "employee":
       const validExperienceLevels = [
         "Junior",
