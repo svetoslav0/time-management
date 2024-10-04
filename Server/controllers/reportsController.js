@@ -8,10 +8,18 @@ router.post("/", isAdmin, getJwtToken, async (req, res, next) => {
     try {
         const report = await reportService.createReport(req);
 
-        res.status(200)
-            .json(report);
+        res.status(200).json(report);
+    } catch (error) {
+        next(error);
     }
-    catch (error) {
+});
+
+router.get("/:id", isAdmin, async (req, res, next) => {
+    try {
+        const report = await reportService.getSingleReport(req);
+
+        res.status(200).json(report);
+    } catch (error) {
         next(error);
     }
 });
