@@ -9,6 +9,8 @@ const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const validateReportParams = require("../utils/validationUtils/validateReportParamsUtil");
 const formatDate = require("../utils/formatDateUtil");
 const generatePdf = require("../utils/generatePdfUtil");
+const { validateObjectId } = require("../utils/validateObjectIdUtil");
+const ReportValidationErrors = require("../errors/reportsValidationErrors");
 
 const base64encoding = "base64";
 
@@ -22,7 +24,7 @@ exports.getReportBuffer = async (projectId, userId, userRole) => {
     //report = await this.saveOrUpdateReportBuffer(projectId, userId, userRole);
 
     return Buffer.from(report.bytes, base64encoding);
-}
+};
 
 exports.saveOrUpdateReportBuffer = async (projectId, userId, userRole) => {
     const report = await Report.findOne({ projectId });
@@ -41,12 +43,13 @@ exports.saveOrUpdateReportBuffer = async (projectId, userId, userRole) => {
     return await Report.findByIdAndUpdate(
         report._id,
         {
-            bytes: base
+            bytes: base,
         },
         {
             new: true,
-        });
-}
+        }
+    );
+};
 
 exports.collectReportData = async (data) => {
     const { projectId, userId, userRole, startDate, endDate } = data;
@@ -54,7 +57,7 @@ exports.collectReportData = async (data) => {
     const project = await getProjectByRoleIfNotAdmin(
         projectId,
         userId,
-        userRole,
+        userRole
     );
 
     const query = { projectId };
@@ -67,16 +70,16 @@ exports.collectReportData = async (data) => {
         query.date = { ...query.date, $lte: new Date(endDate) };
     }
 
-    const hours = await Hours.find(query).populate(
-        "userId",
-        "firstName",
-    );
+    const hours = await Hours.find(query).populate("userId", "firstName");
 
     if (hours.length < 1 && startDate && endDate) {
-        throw new ProjectValidationErrors(`No hours recorded for the project ${project.projectName} in the selected period from ${startDate} to ${endDate}!`);
-    }
-    else if (hours.length < 1) {
-        throw new ProjectValidationErrors(`No hours recorded for the project ${project.projectName}!`);
+        throw new ProjectValidationErrors(
+            `No hours recorded for the project ${project.projectName} in the selected period from ${startDate} to ${endDate}!`
+        );
+    } else if (hours.length < 1) {
+        throw new ProjectValidationErrors(
+            `No hours recorded for the project ${project.projectName}!`
+        );
     }
 
     const totalPrice = hours.reduce(
@@ -116,7 +119,13 @@ exports.createReport = async (req) => {
 
     await validateReportParams(name, projectId, startDate, endDate);
 
-    const buffer = await generateReportBuffer(projectId, userId, userRole, startDate, endDate);
+    const buffer = await generateReportBuffer(
+        projectId,
+        userId,
+        userRole,
+        startDate,
+        endDate
+    );
 
     const base = Buffer.from(buffer).toString(base64encoding);
 
@@ -125,7 +134,7 @@ exports.createReport = async (req) => {
         bytes: base,
         name: name,
         startDate: startDate,
-        endDate: endDate
+        endDate: endDate,
     });
 
     return {
@@ -133,17 +142,38 @@ exports.createReport = async (req) => {
         name: report.name,
         projectId: report.projectId,
         startDate: report.startDate,
-        endDate: report.endDate
+        endDate: report.endDate,
     };
 };
 
-const generateReportBuffer = async (projectId, userId, userRole, startDate, endDate) => {
+exports.deleteReport = async (req) => {
+    const reportId = req.params.id;
+
+    if (!validateObjectId(reportId)) {
+        throw new ReportValidationErrors("Such report was not found", 404);
+    }
+    const deletedReport = await Report.findByIdAndDelete(reportId);
+
+    if (!deletedReport) {
+        throw new ReportValidationErrors("Such report was not found", 404);
+    }
+
+    return deletedReport;
+};
+
+const generateReportBuffer = async (
+    projectId,
+    userId,
+    userRole,
+    startDate,
+    endDate
+) => {
     const reportData = await this.collectReportData({
         projectId,
         userId,
         userRole,
         startDate,
-        endDate
+        endDate,
     });
 
     const templatePath = path.join(
@@ -158,7 +188,10 @@ const shouldRegenerateReport = async (projectId, reportId) => {
     const report = await Report.findById(reportId);
     const reportUpdatedAtDate = new Date(report.updatedAt);
 
-    const updatedReportHours = await Hours.find({ projectId, updatedAt: { $gt: reportUpdatedAtDate } });
+    const updatedReportHours = await Hours.find({
+        projectId,
+        updatedAt: { $gt: reportUpdatedAtDate },
+    });
 
     return updatedReportHours.length > 0;
 };
