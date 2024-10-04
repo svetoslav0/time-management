@@ -5,7 +5,6 @@ const Hours = require("../models/Hours");
 
 const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
 
-const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const validateReportParams = require("../utils/validationUtils/validateReportParamsUtil");
 const formatDate = require("../utils/formatDateUtil");
 const generatePdf = require("../utils/generatePdfUtil");
@@ -73,12 +72,14 @@ exports.collectReportData = async (data) => {
     const hours = await Hours.find(query).populate("userId", "firstName");
 
     if (hours.length < 1 && startDate && endDate) {
-        throw new ProjectValidationErrors(
-            `No hours recorded for the project ${project.projectName} in the selected period from ${startDate} to ${endDate}!`
+        throw new ReportValidationErrors(
+            `No hours recorded for the project ${project.projectName} in the selected period from ${startDate} to ${endDate}!`,
+            404
         );
     } else if (hours.length < 1) {
-        throw new ProjectValidationErrors(
-            `No hours recorded for the project ${project.projectName}!`
+        throw new ReportValidationErrors(
+            `No hours recorded for the project ${project.projectName}!`,
+            404
         );
     }
 
