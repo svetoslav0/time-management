@@ -1,4 +1,5 @@
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
+const ReportValidationErrors = require("../errors/reportsValidationErrors");
 const UserValidationErrors = require("../errors/userValidationErrors");
 const HoursValidationErrors = require("../errors/hoursValidationErrors");
 const InvitesValidationErrors = require("../errors/invitesValidationErrors");
@@ -21,6 +22,8 @@ const generalErrorHandlerMiddleware = (err, req, res, next) => {
     } else if (err instanceof HoursValidationErrors) {
         return res.status(err.statusCode).json({ message: err.message });
     } else if (err instanceof InvitesValidationErrors) {
+        return res.status(err.statusCode).json({ message: err.message });
+    } else if (err instanceof ReportValidationErrors) {
         return res.status(err.statusCode).json({ message: err.message });
     } else if (err instanceof AuthError) {
         return res.status(err.statusCode).json({ message: err.message });

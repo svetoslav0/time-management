@@ -86,7 +86,8 @@ router.get("/:id/report/pdf", getJwtToken, async (req, res, next) => {
         const pdfBuffer = await reportService.getReportBuffer(
             req.params.id,
             req.userToken.userId,
-            req.userToken.userRole);
+            req.userToken.userRole,
+        );
 
         res.status(200)
             .contentType(pdfContentType)
@@ -95,4 +96,5 @@ router.get("/:id/report/pdf", getJwtToken, async (req, res, next) => {
         next(error);
     }
 });
+
 module.exports = router;

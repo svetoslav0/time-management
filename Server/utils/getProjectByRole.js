@@ -17,7 +17,7 @@ const getProjectByRole = async (projectId, userId, userRole) => {
     );
 };
 
-const getProjectByRoleIfNotAdmin = async (projectId, userRole, userId) => {
+const getProjectByRoleIfNotAdmin = async (projectId, userId, userRole) => {
     if (!validateObjectId(projectId)) {
         throw new ProjectValidationErrors("Invalid project ID format!", 400);
     }
@@ -26,7 +26,7 @@ const getProjectByRoleIfNotAdmin = async (projectId, userRole, userId) => {
     if (userRole === "admin") {
         project = await Project.findById(projectId).populate(
             "customerIds employeeIds",
-            "firstName"
+            "firstName lastName"
         );
     } else {
         project = await getProjectByRole(projectId, userId, userRole);
