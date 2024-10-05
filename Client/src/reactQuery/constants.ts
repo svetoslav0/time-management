@@ -13,6 +13,7 @@ export const urlKeys = {
     inviteRegister: '/invites/register',
     invites: '/invites',
     credentialsValidation: '/credentials/validation',
+    report: '/reports'
 };
 export const queryKeys = {
     customer: 'All Customers',
