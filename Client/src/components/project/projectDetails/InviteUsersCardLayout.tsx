@@ -144,7 +144,7 @@ export default function InviteUsersCardLayout({ project }: InviteUsersCardLayout
                     </div>
                 </div>
             </div>
-            <div className='mb-20 mt-5'>
+            <div className='mb-10 mt-5'>
                 {isInvite ? (
                     <CustomersInviteForm project={project} setIsInvite={setIsInvite} />
                 ) : (
