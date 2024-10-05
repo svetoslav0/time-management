@@ -41,7 +41,7 @@ exports.getAllHours = async (req) => {
         const adminFilter = projectId ? { projectId } : {};
         return Hours.find(adminFilter)
             .populate({ path: "projectId", select: "projectName" })
-            .populate({ path: "userId", select: "email" });
+            .populate({ path: "userId", select: "email firstName lastName" });
     }
 
     if (userRole === "employee") {
