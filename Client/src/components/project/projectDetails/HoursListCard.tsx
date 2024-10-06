@@ -5,7 +5,7 @@ import cn from '@/util/cn';
 
 export default function HoursListCard({ projectId }: { projectId: string }) {
     const { data: projectHours } = useFetchAllHoursByProject({ projectId });
-    console.log(projectHours)
+
     return (
         <div className='mb-16  shadow-xl rounded-2xl overflow-hidden'>
             <p className='text-xl mb-4 text-center font-semibold'>Logged hours</p>

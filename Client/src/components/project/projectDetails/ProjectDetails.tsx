@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import useCompleteProject from '../hooks/useCompleteProject';
 import ExistingUsersCardLayout from './ExistingUsersCardLayout';
+import GenerateReport from './GenerateReport';
 import HoursListCard from './HoursListCard';
 import InviteUsersCardLayout from './InviteUsersCardLayout';
 
@@ -154,6 +155,7 @@ export default function ProjectDetails() {
                             <p>Project name: {project.projectName}</p>
                             <p>Start Date: {dayjs(project.startingDate).format('DD.MM.YY')}</p>
                             <p>Price: ${project.pricePerHour}/h</p>
+                            {id && <GenerateReport projectId={id} />}
                             {project.status === 'inProgress' ? (
                                 <button
                                     className='primaryBtn'

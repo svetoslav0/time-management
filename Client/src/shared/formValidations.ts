@@ -1,3 +1,4 @@
+import dayjs, { Dayjs } from 'dayjs';
 import * as yup from 'yup';
 
 export const loginSchema = yup.object().shape({
@@ -172,4 +173,26 @@ export const hoursFormSchema = yup.object().shape({
         .required('Please add time')
         .transform((value, originalValue) => (originalValue === '' ? undefined : value)),
     notes: yup.string().required('Please add note'),
+});
+
+export const generateReportSchema = yup.object().shape({
+    name: yup.string().required('Report name is required!'),
+    startDate: yup
+        .mixed<Dayjs | ''>()
+        .nullable()
+        .test(
+            'is-dayjs',
+            'Please select a valid starting date',
+            (value) => value === null || dayjs.isDayjs(value)
+        )
+        .required('Please select starting date'),
+    endDate: yup
+        .mixed<Dayjs | ''>()
+        .nullable()
+        .test(
+            'is-dayjs',
+            'Please select a valid ending date',
+            (value) => value === null || dayjs.isDayjs(value)
+        )
+        .required('Please select ending date')
 });
