@@ -6,8 +6,6 @@ const getJwtToken = require("../middlewares/getUserTokenMiddleware");
 const ProjectValidationErrors = require("../errors/projectsValidationErrors");
 const path = require("path");
 
-const pdfContentType = "application/pdf";
-
 router.get("/logo", async (req, res, next) => {
     res.sendFile(path.join(__dirname, "../assets/timeManagementLogo.png"));
 });
@@ -81,20 +79,5 @@ router.get("/:id/report", getJwtToken, async (req, res, next) => {
     }
 });
 
-router.get("/:id/report/pdf", getJwtToken, async (req, res, next) => {
-    try {
-        const pdfBuffer = await reportService.getReportBuffer(
-            req.params.id,
-            req.userToken.userId,
-            req.userToken.userRole,
-        );
-
-        res.status(200)
-            .contentType(pdfContentType)
-            .send(pdfBuffer);
-    } catch (error) {
-        next(error);
-    }
-});
 
 module.exports = router;
