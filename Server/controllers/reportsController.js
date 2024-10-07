@@ -26,9 +26,13 @@ router.get('/', getJwtToken, async (req, res, next) => {
     }
 });
 
-router.get("/:id", isAdmin, async (req, res, next) => {
+router.get("/:id/metadata", getJwtToken, isAdmin, async (req, res, next) => {
     try {
-        const report = await reportService.getSingleReport(req);
+        const report = await reportService.getSingleReport(
+            req.params.id,
+            req.userToken.userId,
+            req.userToken.userRole,
+        );
 
         res.status(200).json(report);
     } catch (error) {
