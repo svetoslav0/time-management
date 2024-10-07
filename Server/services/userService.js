@@ -19,14 +19,14 @@ const getActiveUserByEmail = async (email) => {
         throw new UserValidationErrors("Invalid email or password!", 400);
     }
  
-    if (user.status == "inactive") {
+    if (user.status === "inactive") {
         throw new UserValidationErrors(
             "Your account is inactive. Please contact support!",
             400
         );
     } 
     return user;
-}
+};
  
 const validatePassword = async (inputPassword, userPassword) => {
     const isValid = await bcrypt.compare(inputPassword, userPassword);
@@ -34,7 +34,56 @@ const validatePassword = async (inputPassword, userPassword) => {
     if (!isValid) {
         throw new UserValidationErrors("Invalid email or password!", 400);
     }
-}
+};
+
+const updateUserForAdminRole = async (req) => {
+    const userId = req.params.id;
+    const userData = req.body;
+
+    await validateUserDataOnUserUpdate(userId, userData);
+
+    delete userData.password;
+    delete userData.email;
+
+    const user = await User.findById(userId);
+
+    Object.assign(user, userData);
+    await user.save();
+
+    return {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userRole: user.userRole,
+    };
+};
+
+const updateUserForNonAdminRole = async (req) => {
+    const userId = req.params.id;
+    const userData = req.body;
+
+    if (userId !== req.userToken._id) {
+        throw new UserValidationErrors("Access denied!", 403);
+    }
+
+    let user = await User.findById(userId);
+
+    if (userData.firstName) {
+        user = Object.assign(user, { firstName: userData.firstName });
+    }
+
+    if (userData.lastName) {
+        user = Object.assign(user, { lastName: userData.lastName });
+    }
+
+    await user.save();
+    return {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userRole: user.userRole,
+    }
+};
  
 exports.validateCredentials = async (req) => {
     const { email, password } = req.body;
@@ -157,25 +206,13 @@ exports.createUser = async (req) => {
 };
  
 exports.editUser = async (req) => {
-    const userId = req.params.id;
-    const userData = req.body;
- 
-    await validateUserDataOnUserUpdate(userId, userData);
- 
-    delete userData.password;
-    delete userData.email;
- 
-    const user = await User.findById(userId).exec();
- 
-    Object.assign(user, userData);
-    await user.save();
- 
-    return {
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        userRole: user.userRole,
-    };
+    const userRole = req.userToken.userRole;
+
+    if (userRole === 'admin') {
+        return await updateUserForAdminRole(req);
+    }
+
+    return await updateUserForNonAdminRole(req);
 };
  
 exports.getSingleUser = async (userId) => {

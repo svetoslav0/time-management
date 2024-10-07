@@ -34,7 +34,7 @@ router.get("/:id", getJwtToken, async (req, res, next) => {
   }
 });
 
-router.patch("/:id", isAdmin, async (req, res, next) => {
+router.patch("/:id", getJwtToken, async (req, res, next) => {
   try {
     const user = await userService.editUser(req);
 
