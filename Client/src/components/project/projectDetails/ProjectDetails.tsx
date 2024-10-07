@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import useCompleteProject from '../hooks/useCompleteProject';
 import ExistingUsersCardLayout from './ExistingUsersCardLayout';
+import GeneratedReports from './GeneratedReports';
 import GenerateReport from './GenerateReport';
 import HoursListCard from './HoursListCard';
 import InviteUsersCardLayout from './InviteUsersCardLayout';
@@ -197,6 +198,7 @@ export default function ProjectDetails() {
                     <ExistingUsersCardLayout userType='customerIds' project={project} />
                     <InviteUsersCardLayout project={project} />
                     {id && <HoursListCard projectId={id} />}
+                    {id && <GeneratedReports projectId={id} />}
                 </>
             )}
         </div>
