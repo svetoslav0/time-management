@@ -1,6 +1,7 @@
 const path = require("path");
 
 const Report = require("../models/Report");
+const Project = require("../models/Project");
 const Hours = require("../models/Hours");
 
 const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
@@ -151,30 +152,27 @@ exports.createReport = async (req) => {
 
 exports.getReports = async (req) => {
     const userRole = req.userToken.userRole;
+    const projectId = req.query.projectId;
 
-    switch (userRole) {
-        case 'admin':
-            const projectId = req.query.projectId;
-
-            if (!projectId) {
-                throw new ReportValidationError("projectId parameter is required!", 400);
-            }
-
-            await isProjectIdValidAndExisting(projectId);
-
-            const reports = await Report
-                .find({ projectId: projectId })
-                .select("-bytes");
-
-            return {
-                reports
-            };
-        case 'customer':
-            throw new ReportValidationError("Not implemented for this type of user!", 405);
-            break;
-        default:
-            throw new ReportValidationError("Not implemented for this type of user!", 405);
+    if (userRole === 'employee') {
+        throw new ReportValidationError("Not implemented for this type of user!", 405);
     }
+
+    if (!projectId) {
+        throw new ReportValidationError("projectId parameter is required!", 400);
+    }
+
+    await isProjectIdValidAndExisting(
+        projectId,
+        userRole === 'customer' ? req.userToken._id : null);
+
+    const reports = await Report
+        .find({ projectId: projectId })
+        .select("-bytes");
+
+    return {
+        reports
+    };
 }
 
 exports.getSingleReport = async (req) => {

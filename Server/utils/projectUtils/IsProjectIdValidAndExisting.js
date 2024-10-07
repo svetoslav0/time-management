@@ -4,7 +4,7 @@ const ProjectValidationErrors = require("../../errors/projectsValidationErrors")
 const InvitesValidationErrors = require("../../errors/invitesValidationErrors");
 const { validateObjectId } = require("../validateObjectIdUtil");
 
-const isProjectIdValidAndExisting = async (projectId) => {
+const isProjectIdExistingAndAccessible = async (projectId, userId = null) => {
     if (!validateObjectId(projectId)) {
         throw new ProjectValidationErrors(
             `Invalid project ID format: ${projectId}`,
@@ -12,7 +12,7 @@ const isProjectIdValidAndExisting = async (projectId) => {
         );
     }
 
-    const project = await Project.findById(projectId).select('_id');
+    const project = await Project.findById(projectId);
 
     if (!project) {
         throw new InvitesValidationErrors(
@@ -20,6 +20,12 @@ const isProjectIdValidAndExisting = async (projectId) => {
             400
         );
     }
+
+    if (userId) {
+        if (!project.employeeIds.includes(userId) && !project.customerIds.includes(userId)) {
+            throw new ProjectValidationErrors("Inaccessible item", 403);
+        }
+    }
 };
 
-module.exports = isProjectIdValidAndExisting;
+module.exports = isProjectIdExistingAndAccessible;
