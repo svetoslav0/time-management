@@ -13,8 +13,8 @@ const AuthError = require("../errors/authError");
 const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
 
 const getActiveUserByEmail = async (email) => {
-    const user = await User.findOne({ email: email });
- 
+    const user = await User.findOne({ email: new RegExp(`^${email}$`, 'i') });
+
     if (!user) {
         throw new UserValidationErrors("Invalid email or password!", 400);
     }
@@ -53,7 +53,9 @@ exports.login = async (req) => {
  
     const user = await getActiveUserByEmail(email);
   
-    if (!user.password) throw new UserValidationErrors("Try login with google!", 400);
+    if (!user.password) {
+        throw new UserValidationErrors("Try login with google!", 400);
+    }
     
     await validatePassword(password, user.password);
  
