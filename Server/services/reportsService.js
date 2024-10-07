@@ -51,7 +51,7 @@ exports.collectReportData = async (data) => {
         query.date = { ...query.date, $lte: new Date(endDate) };
     }
 
-    const hours = await Hours.find(query).populate("userId", "firstName");
+    const hours = await Hours.find(query).populate("userId", "firstName").sort({ date: -1 });
 
     if (hours.length < 1 && startDate && endDate) {
 
