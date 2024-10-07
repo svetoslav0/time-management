@@ -26,4 +26,6 @@ export const queryKeys = {
     hours: 'Hours',
     isValidEmail: 'IsValidEmail',
     pdf: 'PDF',
+    reports: 'Reports',
+    all: 'All'
 };

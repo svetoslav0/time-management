@@ -12,7 +12,7 @@ export type UserDetails = {
     createdAt: string;
     description?: string | undefined;
     isGoogleLogin: boolean;
-    projects: {_id: string, projectName: string}[]
+    projects: { _id: string; projectName: string }[];
 };
 
 export type ExperienceLevel = 'Junior' | 'Mid-Level' | 'Senior' | 'Architect';
@@ -189,3 +189,15 @@ export interface HourTypeFromProjectReport {
     id: string;
     notes: string;
 }
+
+export type GeneratedReportsType = {
+    reports: {
+        createdAt: string;
+        endDate: string;
+        name: string;
+        projectId: string;
+        startDate: string;
+        updatedAt: string;
+        _id: string;
+    }[];
+};
