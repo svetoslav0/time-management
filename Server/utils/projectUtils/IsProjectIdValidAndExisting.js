@@ -7,7 +7,7 @@ const { validateObjectId } = require("../validateObjectIdUtil");
 const isProjectIdValidAndExisting = async (projectId) => {
     if (!validateObjectId(projectId)) {
         throw new ProjectValidationErrors(
-            "Invalid project ID format",
+            `Invalid project ID format: ${projectId}`,
             400
         );
     }
@@ -16,7 +16,7 @@ const isProjectIdValidAndExisting = async (projectId) => {
 
     if (!project) {
         throw new InvitesValidationErrors(
-            "Project with the provided ID does not exist!",
+            `Project with the provided ID does not exist: ${projectId}`,
             400
         );
     }

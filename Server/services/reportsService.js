@@ -9,7 +9,8 @@ const validateReportParams = require("../utils/validationUtils/validateReportPar
 const formatDate = require("../utils/formatDateUtil");
 const generatePdf = require("../utils/generatePdfUtil");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
-const ReportValidationErrors = require("../errors/reportsValidationErrors");
+const ReportValidationError = require("../errors/reportsValidationErrors");
+const isProjectIdValidAndExisting = require("../utils/projectUtils/IsProjectIdValidAndExisting");
 
 const base64encoding = "base64";
 
@@ -73,12 +74,12 @@ exports.collectReportData = async (data) => {
 
     if (hours.length < 1 && startDate && endDate) {
 
-        throw new ReportValidationErrors(
+        throw new ReportValidationError(
             `No hours recorded for the project ${project.projectName} in the selected period from ${startDate} to ${endDate}!`,
             404
         );
     } else if (hours.length < 1) {
-        throw new ReportValidationErrors(
+        throw new ReportValidationError(
             `No hours recorded for the project ${project.projectName}!`,
             404
         );
@@ -101,7 +102,7 @@ exports.collectReportData = async (data) => {
             ),
             projectName: project.projectName,
             startingDate: formatDate(project.startingDate),
-            pricePerHours: project.pricePerHour,
+            pricePerHour: project.pricePerHour,
         },
         hours: hours.map((hour) => ({
             id: hour._id,
@@ -148,18 +149,45 @@ exports.createReport = async (req) => {
     };
 };
 
+exports.getReports = async (req) => {
+    const userRole = req.userToken.userRole;
+
+    switch (userRole) {
+        case 'admin':
+            const projectId = req.query.projectId;
+
+            if (!projectId) {
+                throw new ReportValidationError("projectId parameter is required!", 400);
+            }
+
+            await isProjectIdValidAndExisting(projectId);
+
+            const reports = await Report
+                .find({ projectId: projectId })
+                .select("-bytes");
+
+            return {
+                reports
+            };
+        case 'customer':
+            throw new ReportValidationError("Not implemented for this type of user!", 405);
+            break;
+        default:
+            throw new ReportValidationError("Not implemented for this type of user!", 405);
+    }
+}
 
 exports.getSingleReport = async (req) => {
     const reportId = req.params.id;
 
     if (!validateObjectId(reportId)) {
-        throw new ReportValidationErrors("Such report was not found“", 404);
+        throw new ReportValidationError("Such report was not found“", 404);
     }
 
     const report = await Report.findById(reportId);
 
     if (!report) {
-        throw new ReportValidationErrors("Such report was not found“", 404);
+        throw new ReportValidationError("Such report was not found“", 404);
     }
 
     return report;
@@ -169,12 +197,12 @@ exports.deleteReport = async (req) => {
     const reportId = req.params.id;
 
     if (!validateObjectId(reportId)) {
-        throw new ReportValidationErrors("Such report was not found", 404);
+        throw new ReportValidationError("Such report was not found", 404);
     }
     const deletedReport = await Report.findByIdAndDelete(reportId);
 
     if (!deletedReport) {
-        throw new ReportValidationErrors("Such report was not found", 404);
+        throw new ReportValidationError("Such report was not found", 404);
     }
 
     return deletedReport;
