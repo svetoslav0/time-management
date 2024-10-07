@@ -19,6 +19,7 @@ router.post("/", isEmployeeOrAdmin, getJwtToken, async (req, res, next) => {
 router.get("/", getJwtToken, async (req, res, next) => {
     try {
         const hours = await hoursService.getAllHours(req);
+        
         res.status(200).json(hours);
     } catch (error) {
         next(error);
