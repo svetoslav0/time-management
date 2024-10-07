@@ -15,41 +15,21 @@ const isProjectIdValidAndExisting = require("../utils/projectUtils/IsProjectIdVa
 
 const base64encoding = "base64";
 
-exports.getReportBuffer = async (projectId, userId, userRole) => {
-    let report = await Report.findOne({ projectId });
+exports.getReportBuffer = async (recordId, userId, userRole) => {
+    const isIdValid = validateObjectId(recordId);
 
-    //if (report && !await shouldRegenerateReport(projectId, report._id)) {
-    //return Buffer.from(report.bytes, base64encoding);
-    //}
-
-    //report = await this.saveOrUpdateReportBuffer(projectId, userId, userRole);
-
-    return Buffer.from(report.bytes, base64encoding);
-};
-
-exports.saveOrUpdateReportBuffer = async (projectId, userId, userRole) => {
-    const report = await Report.findOne({ projectId });
-
-    const buffer = await generateReportBuffer(projectId, userId, userRole);
-
-    const base = Buffer.from(buffer).toString(base64encoding);
-
-    if (!report) {
-        return await Report.create({
-            projectId: projectId,
-            bytes: base,
-        });
+    if(!isIdValid){
+        throw new ReportValidationError("Invalid recordId parameter!", 400);
     }
 
-    return await Report.findByIdAndUpdate(
-        report._id,
-        {
-            bytes: base,
-        },
-        {
-            new: true,
-        }
-    );
+    let report = await Report.findById(recordId);
+    
+    if(!report)
+    {
+        throw new ReportValidationError("No report was found for the specified Id!", 404);
+    }
+
+    return Buffer.from(report.bytes, base64encoding);
 };
 
 exports.collectReportData = async (data) => {
@@ -227,16 +207,4 @@ const generateReportBuffer = async (
     );
 
     return await generatePdf(reportData, templatePath);
-};
-
-const shouldRegenerateReport = async (projectId, reportId) => {
-    const report = await Report.findById(reportId);
-    const reportUpdatedAtDate = new Date(report.updatedAt);
-
-    const updatedReportHours = await Hours.find({
-        projectId,
-        updatedAt: { $gt: reportUpdatedAtDate },
-    });
-
-    return updatedReportHours.length > 0;
 };
