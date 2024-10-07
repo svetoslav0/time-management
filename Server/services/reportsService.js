@@ -155,20 +155,20 @@ exports.getReports = async (req) => {
     };
 }
 
-exports.getSingleReport = async (req) => {
-    const reportId = req.params.id;
-
+exports.getSingleReport = async (reportId, userId, userRole) => {
     if (!validateObjectId(reportId)) {
-        throw new ReportValidationError("Such report was not found“", 404);
+        throw new ReportValidationError("Invalid reportId parameter!", 400);
     }
 
-    const report = await Report.findById(reportId);
+    const reportProjectId = await Report.findById(reportId, 'projectId');
 
-    if (!report) {
-        throw new ReportValidationError("Such report was not found“", 404);
+    if (!reportProjectId) {
+        throw new ReportValidationError("Such report was not found", 404);
     }
 
-    return report;
+    const result = this.collectReportData(reportProjectId, userId, userRole );
+
+    return result;
 }
 
 exports.deleteReport = async (req) => {
