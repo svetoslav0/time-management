@@ -41,7 +41,8 @@ exports.getAllHours = async (req) => {
         const adminFilter = projectId ? { projectId } : {};
         return Hours.find(adminFilter)
             .populate({ path: "projectId", select: "projectName" })
-            .populate({ path: "userId", select: "email firstName lastName" });
+            .populate({ path: "userId", select: "email firstName lastName" })
+            .sort({ date: -1 });
     }
 
     if (userRole === "employee") {
@@ -78,7 +79,8 @@ exports.getAllHours = async (req) => {
 
     return await Hours.find(filter)
         .populate({ path: "projectId", select: "projectName" })
-        .populate({ path: "userId", select: "email" });
+        .populate({ path: "userId", select: "email" })
+        .sort({ date: -1 });
 };
 
 exports.logHours = async (req) => {
