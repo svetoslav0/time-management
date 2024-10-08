@@ -176,7 +176,7 @@ export interface ProjectReport {
 export interface ProjectDataFromReport {
     customerNames: string[];
     employeeNames: string[];
-    pricePerHours: number;
+    pricePerHour: number;
     projectName: string;
     startingDate: string;
 }
