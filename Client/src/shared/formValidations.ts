@@ -144,10 +144,18 @@ export const resetPasswordSchema = yup.object().shape({
         .required('Please confirm your password'),
 });
 
+export const changeNamesSchema = yup.object().shape({
+    firstName: yup
+        .string()
+        .required('First name is required')
+        .min(3, 'First name must be at least 3 characters long'),
+    lastName: yup
+        .string()
+        .required('Last name is required')
+        .min(3, 'Last name must be at least 3 characters long'),
+});
+
 export const changePasswordSchema = yup.object().shape({
-    name: yup.string().required(),
-    _id: yup.string().required(),
-    email: yup.string().required(),
     oldPassword: yup
         .string()
         .required('Old password  is required!')
@@ -194,5 +202,5 @@ export const generateReportSchema = yup.object().shape({
             'Please select a valid ending date',
             (value) => value === null || dayjs.isDayjs(value)
         )
-        .required('Please select ending date')
+        .required('Please select ending date'),
 });

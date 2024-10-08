@@ -18,7 +18,7 @@ function UserProjects({
     return (
         <div className='grid grid-cols-2 mt-14 gap-4'>
             {projects.map((project) => (
-                <div className='flex  border-collapse overflow-hidden rounded-2xl border-[1px] border-l-0 border-white transition duration-200 ease-out hover:border-customBlue '>
+                <div key={project._id} className='flex  border-collapse overflow-hidden rounded-2xl border-[1px] border-l-0 border-white transition duration-200 ease-out hover:border-customBlue '>
                     <div className='h-full w-[9px] bg-customBlue'></div>
                     <div className='ml-2 w-full text-lg flex justify-between'>
                         <p className='mt-5 font-bold text-customDarkBlue'>
