@@ -26,7 +26,7 @@ router.get('/', getJwtToken, async (req, res, next) => {
     }
 });
 
-router.get("/:id/metadata", getJwtToken, isAdmin, async (req, res, next) => {
+router.get("/:id/metadata", getJwtToken, async (req, res, next) => {
     try {
         const report = await reportService.getSingleReport(
             req.params.id,

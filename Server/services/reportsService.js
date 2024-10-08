@@ -166,9 +166,7 @@ exports.getSingleReport = async (reportId, userId, userRole) => {
         throw new ReportValidationError("Such report was not found", 404);
     }
 
-    const result = this.collectReportData(reportProjectId, userId, userRole );
-
-    return result;
+    return this.collectReportData(reportProjectId, userId, userRole);
 }
 
 exports.deleteReport = async (req) => {
