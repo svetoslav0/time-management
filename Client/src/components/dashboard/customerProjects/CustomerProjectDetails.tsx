@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import mainLogo from '@/assets/timeManagementLogo.png';
+import { useLoginData } from '@/components/auth/AuthContext';
 import useFetchProjectByIdReport from '@/reactQuery/hooks/useFetchProjectByIdReport';
 import DownloadSvg from '@/UI/design/DownloadSvg';
 import GearSvg from '@/UI/design/GearSvg';
 import DownloadFile from '@/UI/DownloadFile';
-import { useLoginData } from '@/components/auth/AuthContext';
 
 export default function CustomerProjectDetails() {
     const { loginData } = useLoginData();
@@ -73,7 +73,7 @@ export default function CustomerProjectDetails() {
                 <div className='flex'>
                     <p className='min-w-[150px]'>Price per hour:</p>
                     <span className='ml-2 text-customDarkBlue'>
-                        ${project?.projectData.pricePerHours ?? 0}
+                        ${project?.projectData.pricePerHour ?? 0}
                     </span>
                 </div>
                 <div className='flex'>
