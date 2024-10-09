@@ -198,6 +198,8 @@ const generateReportBuffer = async (
         endDate,
     });
 
+    reportData.projectData.employeeNames = [...new Set(reportData.hours.map(x => x.employeeName))];
+
     const templatePath = path.join(
         __dirname,
         "../templates/projectReport/projectReportTemplate.hbs"
