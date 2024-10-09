@@ -1,108 +1,129 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Report</title>
-    <style>
-        /* Basic Reset */
-        * {
+    <head>
+        <meta charset="utf-8">
+        <title>Report</title>
+        <style>
+            * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        @page {
+            }
+            @page {
             size: landscape;
-        }
-        body {
-            font-family: 'Arial', sans-serif;
+            }
+            body {
+            font-family: "Arial", sans-serif;
             font-size: 14px;
             line-height: 1.6;
             color: #333;
             padding: 20px;
             background-color: #fafafa;
-        }
-        .header {
+            }
+            .header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             margin-bottom: 20px;
             border-bottom: 2px solid #ddd;
             padding-bottom: 10px;
-        }
-        .header img {
+            }
+            .header img {
             max-width: 100px;
             height: auto;
-        }
-        h1 {
+            }
+            h1 {
             font-size: 24px;
             color: #2c3e50;
-        }
-        p {
+            }
+            p {
             margin-bottom: 10px;
-        }
-        table {
+            color: rgba(0, 140, 255);
+            }
+            strong {
+            color: black;
+            }
+            table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            table th,
+            table td {
+            padding: 12px;
             text-align: left;
-        }
-        th {
-            background-color: #f8f8f8;
+            }
+
+            table thead {
+            background-color: rgba(0, 140, 255);
+            color: white;
+            }
+            table tbody tr {
+            background-color: white;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            }
+            table tbody tr:nth-child(even) {
+            background-color: #e6f2ff;
+            }
+
+            table tbody tr td {
             font-weight: bold;
-            color: #444;
-        }
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .summary {
+            color: #333;
+            }
+
+            .summary {
             margin-top: 20px;
             padding: 15px;
             background-color: #f8f8f8;
             border-radius: 5px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        .summary p {
+            }
+            .summary p {
             margin-bottom: 5px;
             font-weight: bold;
-        }
-        .summary span {
-            color: #296fc0;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <img src="http://localhost:3000/projects/logo" alt="Logo">
-        <h1>{{projectData.projectName}}</h1>
-    </div>
-    <p>Starting Date: <strong>{{projectData.startingDate}}</strong></p>
-    <p>Customers: <strong>{{#each projectData.customerNames}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</strong></p>
-    <p>Employees: <strong>{{#each projectData.employeeNames}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</strong></p>
+            }
+            .summary span {
+            color: black;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <img src="http://localhost:3000/projects/logo" alt="Logo">
+            <h1>{{projectData.projectName}}</h1>
+        </div>
+        <p>Starting Date: <strong>{{projectData.startingDate}}</strong></p>
+        <p>Customers: <strong>{{#each
+                projectData.customerNames}}{{this}}{{#unless @last}},
+                {{/unless}}{{/each}}</strong></p>
+        <p>Employees: <strong>{{#each
+                projectData.employeeNames}}{{this}}{{#unless @last}},
+                {{/unless}}{{/each}}</strong></p>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Employee</th>
-                <th>Hours</th>
-                <th>Notes</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{generateHoursTable hours}}
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Employee</th>
+                    <th>Hours</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{generateHoursTable hours}}
+            </tbody>
+        </table>
 
-    <div class="summary">
-        <p>Total Hours: <span>{{totalHours}}</span></p>
-        <p>Price per Hour: <span>${{projectData.pricePerHour}}</span></p>
-        <p>Total Price: <span>${{totalPrice}}</span></p>
-    </div>
-</body>
+        <div class="summary">
+            <p>Total Hours: <span>{{totalHours}}</span></p>
+            <p>Price per Hour: <span>${{projectData.pricePerHour}}</span></p>
+            <p>Total Price: <span>${{totalPrice}}</span></p>
+        </div>
+    </body>
 </html>
