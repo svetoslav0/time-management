@@ -9,8 +9,8 @@ import { ProjectReport } from '@/shared/types';
 const { get } = httpServices();
 
 export default function useFetchProjectByIdReport(id: string) {
-    const queryKey = [queryKeys.projects, id];
-    const generatedUrl = `${urlKeys.projects}/${id}/report`;
+    const queryKey = [queryKeys.reports, id];
+    const generatedUrl = `${urlKeys.report}/${id}/metadata`;
 
     const { data, error, isLoading, isFetching, refetch } = useQuery<ProjectReport>({
         queryKey,
