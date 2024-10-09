@@ -27,9 +27,15 @@ export default function CustomerProjectReport() {
                     <table className='w-full'>
                         <thead>
                             <tr className='bg-customBlue text-white'>
-                                <th scope='col' className='w-32 p-4 text-left'>From</th>
-                                <th scope='col' className='w-32 p-4 text-left'>To</th>
-                                <th scope='col' className='p-4 text-left'>Name</th>
+                                <th scope='col' className='w-32 p-4 text-left'>
+                                    From
+                                </th>
+                                <th scope='col' className='w-32 p-4 text-left'>
+                                    To
+                                </th>
+                                <th scope='col' className='p-4 text-left'>
+                                    Name
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -37,7 +43,7 @@ export default function CustomerProjectReport() {
                                 generatedReports.reports.map((report, index) => (
                                     <tr
                                         key={index}
-                                        onClick={() => navigate(`/dashboard/${report._id}`)}
+                                        onClick={() => navigate(`/reports/${report._id}`)}
                                         className={`${index % 2 === 0 ? 'bg-white' : 'bg-customDarkTableGrey shadow-TrInsetShadow'} min-h-12 cursor-pointer`}
                                     >
                                         <td className='w-32 p-4 text-base font-bold text-customDarkBlue'>
@@ -57,7 +63,8 @@ export default function CustomerProjectReport() {
                                         colSpan={3}
                                         className='p-4 text-center text-base font-bold text-customDarkBlue '
                                     >
-                                        No reports are available for this project. Please check back later.
+                                        No reports are available for this project. Please check back
+                                        later.
                                     </td>
                                 </tr>
                             )}

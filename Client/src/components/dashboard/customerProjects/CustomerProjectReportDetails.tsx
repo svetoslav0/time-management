@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -8,7 +9,7 @@ import DownloadSvg from '@/UI/design/DownloadSvg';
 import GearSvg from '@/UI/design/GearSvg';
 import DownloadFile from '@/UI/DownloadFile';
 
-export default function CustomerProjectDetails() {
+export default function CustomerProjectReportDetails() {
     const { loginData } = useLoginData();
     const navigate = useNavigate();
     const { id } = useParams<string>();
@@ -54,14 +55,16 @@ export default function CustomerProjectDetails() {
             <div className='relative -mt-8 mb-8 w-3/4 font-medium text-customBlue'>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Employee(s):</p>
-                    <span className='ml-2 text-customDarkBlue'>
-                        {project?.projectData.employeeNames.join(', ')}
+                    <span className='ml-2 capitalize text-customDarkBlue'>
+                        {[...new Set(project?.hours.map((person) => person.employeeName))].join(
+                            ', '
+                        )}
                     </span>
                 </div>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Client(s):</p>
-                    <span className='ml-2 text-customDarkBlue'>
-                        {project?.projectData.customerNames}
+                    <span className='ml-2 capitalize text-customDarkBlue'>
+                        {project?.projectData.customerNames.join(', ')}
                     </span>
                 </div>
                 <div className='flex'>
@@ -82,7 +85,9 @@ export default function CustomerProjectDetails() {
                 </div>
                 <div className='flex'>
                     <p className='min-w-[150px]'>Total hours:</p>
-                    <span className='ml-2 text-customDarkBlue'>{project?.hours.reduce((a, b) => a + b.hours, 0) ?? 0} hours</span>
+                    <span className='ml-2 text-customDarkBlue'>
+                        {project?.hours.reduce((a, b) => a + b.hours, 0) ?? 0} hours
+                    </span>
                 </div>
                 <div className='absolute -top-4 right-4'>
                     <button
@@ -105,7 +110,7 @@ export default function CustomerProjectDetails() {
                         <tr className='bg-customBlue text-white'>
                             <th className='p-4 text-left'>Date</th>
                             <th className='w-3/5 p-4 text-left'>Task</th>
-                            <th className='p-4 text-left'>Total hours</th>
+                            <th className='w-16 text-nowrap p-4 text-left'>Total hours</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -114,10 +119,10 @@ export default function CustomerProjectDetails() {
                                 key={index}
                                 className={`${index % 2 === 0 ? 'bg-white' : 'bg-customDarkTableGrey shadow-TrInsetShadow'} min-h-12`}
                             >
-                                <td className='p-4 text-base font-bold text-welcomeMsgColor'>
-                                    {row.date}
+                                <td className='w-28 py-4 pl-4 text-base font-bold text-welcomeMsgColor'>
+                                    {dayjs(row.date).format('DD.MM.YYYY')}
                                 </td>
-                                <td className='p-4 font-medium text-welcomeMsgColor text-hoursDescription'>
+                                <td className='max-w-[700px] overflow-hidden p-4 font-medium text-welcomeMsgColor text-hoursDescription'>
                                     {row.notes}
                                 </td>
                                 <td className='p-4 text-base font-bold text-welcomeMsgColor'>
@@ -129,11 +134,13 @@ export default function CustomerProjectDetails() {
                 </table>
             </div>
 
-            {project?.hours?.length === 0
-                ? (<div className='text-orange-700 italic mt-5'>
+            {project?.hours?.length === 0 ? (
+                <div className='mt-5 italic text-orange-700'>
                     *No hours were logged for this project
-                </div>)
-                : (<></>)}
+                </div>
+            ) : (
+                <></>
+            )}
         </div>
     );
 }
