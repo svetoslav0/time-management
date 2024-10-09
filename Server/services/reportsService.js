@@ -1,7 +1,6 @@
 const path = require("path");
 
 const Report = require("../models/Report");
-const Project = require("../models/Project");
 const Hours = require("../models/Hours");
 
 const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
@@ -51,7 +50,7 @@ exports.collectReportData = async (data) => {
         query.date = { ...query.date, $lte: new Date(endDate) };
     }
 
-    const hours = await Hours.find(query).populate("userId", "firstName").sort({ date: -1 });
+    const hours = await Hours.find(query).populate("userId", "firstName lastName").sort({ date: -1 });
 
     if (hours.length < 1 && startDate && endDate) {
 
@@ -87,7 +86,7 @@ exports.collectReportData = async (data) => {
         },
         hours: hours.map((hour) => ({
             id: hour._id,
-            employeeName: hour.userId.firstName,
+            employeeName: `${hour.userId.firstName} ${hour.userId.lastName}`,
             date: formatDate(hour.date),
             hours: hour.hours,
             notes: hour.notes,
