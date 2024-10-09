@@ -109,6 +109,7 @@ export default function CustomerProjectReportDetails() {
                     <thead>
                         <tr className='bg-customBlue text-white'>
                             <th className='p-4 text-left'>Date</th>
+                            <th className='p-4 text-left'>Employee</th>
                             <th className='w-3/5 p-4 text-left'>Task</th>
                             <th className='w-16 text-nowrap p-4 text-left'>Total hours</th>
                         </tr>
@@ -122,7 +123,10 @@ export default function CustomerProjectReportDetails() {
                                 <td className='w-28 py-4 pl-4 text-base font-bold text-welcomeMsgColor'>
                                     {dayjs(row.date).format('DD.MM.YYYY')}
                                 </td>
-                                <td className='max-w-[700px] overflow-hidden p-4 font-medium text-welcomeMsgColor text-hoursDescription'>
+                                <td className='w-28 py-4 pl-4 text-base font-bold text-welcomeMsgColor'>
+                                    {row.employeeName}
+                                </td>
+                                <td className='max-w-[500px] overflow-hidden p-4 font-medium text-welcomeMsgColor text-hoursDescription'>
                                     {row.notes}
                                 </td>
                                 <td className='p-4 text-base font-bold text-welcomeMsgColor'>
