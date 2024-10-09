@@ -160,13 +160,13 @@ exports.getSingleReport = async (reportId, userId, userRole) => {
         throw new ReportValidationError("Invalid reportId parameter!", 400);
     }
 
-    const reportProjectId = await Report.findById(reportId, 'projectId');
+    const report = await Report.findById(reportId, 'projectId startDate endDate');
 
-    if (!reportProjectId) {
+    if (!report) {
         throw new ReportValidationError("Such report was not found", 404);
     }
 
-    return this.collectReportData(reportProjectId, userId, userRole);
+    return this.collectReportData(report, userId, userRole, report.startDate, report.endDate);
 }
 
 exports.deleteReport = async (req) => {
