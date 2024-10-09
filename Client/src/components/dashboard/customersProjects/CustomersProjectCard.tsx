@@ -52,10 +52,7 @@ export default function CustomersProjectCard({ project }: CustomersProjectCardPr
                 </div>
 
                 <div className='absolute bottom-[22px] right-[53px]'>
-                    <Link
-                        to={`${project.status === 'completed' ? '/dashboard/' : '/reports/'}${project._id}`}
-                        className='secondaryBtn'
-                    >
+                    <Link to={`/dashboard/${project._id}`} className='secondaryBtn'>
                         Details
                     </Link>
                 </div>
