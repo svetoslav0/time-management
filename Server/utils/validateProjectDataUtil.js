@@ -5,7 +5,10 @@ const isValidDateMoment = require("./validateDateUtil");
 const validateProjectData = async ({
     projectName,
     startingDate,
-    pricePerHour,
+    pricePerHourForJunior,
+    pricePerHourForMid,
+    pricePerHourForSenior,
+    pricePerHourForArchitect,
     employeeIds,
 }) => {
     let employees;
@@ -45,19 +48,31 @@ const validateProjectData = async ({
         );
     } else if (!startingDate) {
         throw new ProjectValidationErrors("Starting Date is missing!", 400);
-    } else if (!pricePerHour) {
-        throw new ProjectValidationErrors("Price per hour is missing!", 400);
-    } else if (!Number(pricePerHour)) {
-        throw new ProjectValidationErrors(
-            "Price per hour has non-numeric value!",
-            400
-        );
-    } else if (Number(pricePerHour) <= 0) {
-        throw new ProjectValidationErrors(
-            "Price per hour has a negative numeric value!",
-            400
-        );
     }
+
+    const priceRoles = {
+        "Price for Junior": pricePerHourForJunior,
+        "Price for Mid": pricePerHourForMid,
+        "Price for Senior": pricePerHourForSenior,
+        "Price for Architect": pricePerHourForArchitect,
+    };
+
+    for (const [role, price] of Object.entries(priceRoles)) {
+        if (price === undefined || price === null) {
+            throw new ProjectValidationErrors(`${role} is missing!`, 400);
+        } else if (isNaN(Number(price))) {
+            throw new ProjectValidationErrors(
+                `${role} has a non-numeric value!`,
+                400
+            );
+        } else if (Number(price) <= 0) {
+            throw new ProjectValidationErrors(
+                `${role} has a negative or zero numeric value!`,
+                400
+            );
+        }
+    }
+
     const isValidDate = await isValidDateMoment(startingDate);
     if (!isValidDate) {
         throw new ProjectValidationErrors(
