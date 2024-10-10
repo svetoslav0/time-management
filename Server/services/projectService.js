@@ -134,7 +134,10 @@ exports.updateProject = async (req) => {
         customerIds: project.customerIds,
         projectName: project.projectName,
         startingDate: project.startingDate,
-        pricePerHour: project.pricePerHour,
+        pricePerHourForJunior: project.pricePerHourForJunior,
+        pricePerHourForMid: project.pricePerHourForMid,
+        pricePerHourForSenior: project.pricePerHourForSenior,
+        pricePerHourForArchitect: project.pricePerHourForArchitect,
         employeeIds: project.employeeIds,
     };
 };
