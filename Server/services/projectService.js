@@ -22,7 +22,10 @@ exports.createProject = async (req) => {
         customerIds: projectData.customerIds,
         projectName: projectData.projectName,
         startingDate: projectData.startingDate,
-        pricePerHour: projectData.pricePerHour,
+        pricePerHourForJunior: projectData.pricePerHourForJunior,
+        pricePerHourForMid: projectData.pricePerHourForMid,
+        pricePerHourForSenior: projectData.pricePerHourForSenior,
+        pricePerHourForArchitect: projectData.pricePerHourForArchitect,
         employeeIds: projectData.employeeIds,
     });
 
@@ -35,7 +38,10 @@ exports.createProject = async (req) => {
         customerIds: project.customerIds,
         projectName: project.projectName,
         startingDate: project.startingDate,
-        pricePerHour: project.pricePerHour,
+        pricePerHourForJunior: project.pricePerHourForJunior,
+        pricePerHourForMid: project.pricePerHourForMid,
+        pricePerHourForSenior: project.pricePerHourForSenior,
+        pricePerHourForArchitect: project.pricePerHourForArchitect,
         employeeIds: project.employeeIds,
     };
 };
