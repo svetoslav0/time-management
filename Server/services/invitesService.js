@@ -2,8 +2,7 @@ const User = require("../models/User");
 const Invite = require("../models/Invite");
 const Project = require("../models/Project");
 
-const UserValidationErrors = require("../errors/userValidationErrors");
-const InvitesValidationErrors = require("../errors/invitesValidationErrors");
+const ApiException = require("../errors/ApiException");
 
 const {
     validateUserDataOnUserCreate,
@@ -18,9 +17,7 @@ const { validateObjectId } = require("../utils/validateObjectIdUtil");
 exports.validateInvite = async (req) => {
     const inviteUUID = req.params.id;
 
-    const invite = isInviteValid(inviteUUID);
-
-    return invite;
+    return isInviteValid(inviteUUID);
 };
 
 exports.createCustomerOnInvite = async (req) => {
@@ -28,7 +25,7 @@ exports.createCustomerOnInvite = async (req) => {
     userData.userRole = "customer";
 
     if (!userData.inviteId) {
-        throw new UserValidationErrors("Invite id is required!", 400);
+        throw new ApiException("Invite id is required!", 400);
     }
     await isInviteValid(userData.inviteId);
 
@@ -36,7 +33,7 @@ exports.createCustomerOnInvite = async (req) => {
         const googleToken = userData.googleToken;
 
         if (!googleToken) {
-            throw new UserValidationErrors(
+            throw new ApiException(
                 "googleToken parameter is missing",
                 401
             );
@@ -98,22 +95,22 @@ exports.sendInvite = async (req) => {
     const emailToSendInvite = req.body.inviteEmail;
 
     if (!projectId) {
-        throw new InvitesValidationErrors("No project id provided!", 400);
+        throw new ApiException("No project id provided!", 400);
     }
 
     await isProjectIdValidAndExisting(projectId);
 
     if (!emailToSendInvite || emailToSendInvite.trim().length < 1) {
-        throw new InvitesValidationErrors("No inviteEmail parameter provided!", 400);
+        throw new ApiException("No inviteEmail parameter provided!", 400);
     }
 
     if (await User.findOne({ email: emailToSendInvite })) {
-        throw new InvitesValidationErrors(`User with email ${emailToSendInvite} already exists and cannot be invited to create new account. If you want to add them in this project, simply use the Customers section`, 400);
+        throw new ApiException(`User with email ${emailToSendInvite} already exists and cannot be invited to create new account. If you want to add them in this project, simply use the Customers section`, 400);
     }
 
     const invite = await Invite.findOne({ projectId, email: emailToSendInvite, expiresOn: { $gt: new Date() } });
     if (invite) {
-        throw new InvitesValidationErrors(
+        throw new ApiException(
             `Email ${emailToSendInvite} already has a valid invite for project ${projectId} and expires on ${invite.expiresOn}`,
             400);
     }
@@ -127,13 +124,13 @@ exports.deleteInvite = async (req) => {
     const inviteId = req.params.id;
 
     if (!validateObjectId(inviteId)) {
-        throw new InvitesValidationErrors("Invalid invite ID“", 404);
+        throw new ApiException("Invalid invite ID“", 404);
     }
 
     const deletedInvite = await Invite.findByIdAndDelete(inviteId);
 
     if (!deletedInvite) {
-        throw new InvitesValidationErrors("Invalid invite ID", 404);
+        throw new ApiException("Invalid invite ID", 404);
     }
 
     return deletedInvite;

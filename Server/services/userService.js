@@ -8,19 +8,18 @@ const {
  
 const { generateToken } = require("../utils/jwt");
 const populateProjectsForUser = require("../utils/populateProjectsForUser");
-const UserValidationErrors = require("../errors/userValidationErrors");
-const AuthError = require("../errors/authError");
+const ApiException = require("../errors/ApiException");
 const { verifyGoogleToken } = require("../utils/verifyGoogleTokenUtil");
 
 const getActiveUserByEmail = async (email) => {
     const user = await User.findOne({ email: new RegExp(`^${email}$`, 'i') });
 
     if (!user) {
-        throw new UserValidationErrors("Invalid email or password!", 400);
+        throw new ApiException("Invalid email or password!", 400);
     }
  
     if (user.status === "inactive") {
-        throw new UserValidationErrors(
+        throw new ApiException(
             "Your account is inactive. Please contact support!",
             400
         );
@@ -32,7 +31,7 @@ const validatePassword = async (inputPassword, userPassword) => {
     const isValid = await bcrypt.compare(inputPassword, userPassword);
 
     if (!isValid) {
-        throw new UserValidationErrors("Invalid email or password!", 400);
+        throw new ApiException("Invalid email or password!", 400);
     }
 };
 
@@ -63,7 +62,7 @@ const updateUserForNonAdminRole = async (req) => {
     const userData = req.body;
 
     if (userId !== req.userToken._id) {
-        throw new UserValidationErrors("Access denied!", 403);
+        throw new ApiException("Access denied!", 403);
     }
 
     let user = await User.findById(userId);
@@ -89,7 +88,7 @@ exports.validateCredentials = async (req) => {
     const { email, password } = req.body;
  
     if (!email || !password) {
-        throw new UserValidationErrors("email and password parameters are required!", 400);
+        throw new ApiException("email and password parameters are required!", 400);
     }
  
     const user = await getActiveUserByEmail(email);
@@ -103,7 +102,7 @@ exports.login = async (req) => {
     const user = await getActiveUserByEmail(email);
   
     if (!user.password) {
-        throw new UserValidationErrors("Try login with google!", 400);
+        throw new ApiException("Try login with google!", 400);
     }
     
     await validatePassword(password, user.password);
@@ -135,11 +134,11 @@ exports.googleLogin = async (req) => {
     const user = await User.findOne({ email: payload.email });
  
     if (!user) {
-        throw new UserValidationErrors("Such user was not found", 401);
+        throw new ApiException("Such user was not found", 401);
     }
  
     if (!user.isGoogleLogin) {
-        throw new UserValidationErrors("Such user was not found", 405);
+        throw new ApiException("Such user was not found", 405);
     }
  
     const token = generateToken(user);
@@ -217,13 +216,13 @@ exports.editUser = async (req) => {
  
 exports.getSingleUser = async (userId) => {
     if (!validateObjectId(userId)) {
-        throw new UserValidationErrors("Invalid user ID!", 400);
+        throw new ApiException("Invalid user ID!", 400);
     }
  
     const user = await User.findById(userId).select("-password");
  
     if (!user) {
-        throw new UserValidationErrors("User not found!", 404);
+        throw new ApiException("User not found!", 404);
     }
 
     const clone = JSON.parse(JSON.stringify(user));
@@ -236,31 +235,31 @@ exports.restorePassword = async (req) => {
     const userId = req.params.id;
  
     if (req.userToken.userRole !== "admin" && req.userToken._id !== userId) {
-        throw new AuthError("Action forbidden!", 403);
+        throw new ApiException("Action forbidden!", 403);
     }
  
     if (!password || !confirmPassword) {
-        throw new UserValidationErrors(
+        throw new ApiException(
             "Both password and confirmPassword are required!",
             400
         );
     }
  
     if (password.length < 6) {
-        throw new UserValidationErrors(
+        throw new ApiException(
             "Password must be at least 6 characters long!",
             400
         );
     }
  
     if (password !== confirmPassword) {
-        throw new UserValidationErrors("Passwords do not match!", 400);
+        throw new ApiException("Passwords do not match!", 400);
     }
  
     const user = await User.findById(userId);
  
     if (!user) {
-        throw new UserValidationErrors("User not found!", 404);
+        throw new ApiException("User not found!", 404);
     }
  
     user.password = password;
@@ -271,7 +270,7 @@ exports.updateUserStatus = async (req, newStatus) => {
     const userId = req.params.userId;
  
     if (!validateObjectId(userId)) {
-        throw new UserValidationErrors("Invalid user ID!", 400);
+        throw new ApiException("Invalid user ID!", 400);
     }
  
     const updatedUser = await User.findByIdAndUpdate(
@@ -281,7 +280,7 @@ exports.updateUserStatus = async (req, newStatus) => {
     );
  
     if (!updatedUser) {
-        throw new UserValidationErrors("User does not exist!", 404);
+        throw new ApiException("User does not exist!", 404);
     }
  
     return {
@@ -302,28 +301,28 @@ exports.getUsers = async (req) => {
     const parsedOffset = parseInt(offset, 10);
  
     if (isNaN(parsedLimit) || parsedLimit <= 0 || parsedLimit > 100) {
-        throw new UserValidationErrors(
+        throw new ApiException(
             "Limit value must be greater than 0 and not greater than 100!",
             400
         );
     }
  
     if (isNaN(parsedOffset) || parsedOffset < 0) {
-        throw new UserValidationErrors(
+        throw new ApiException(
             "Offset value must not be below 0!",
             400
         );
     }
  
     if (status && !["active", "inactive"].includes(status)) {
-        throw new UserValidationErrors(
+        throw new ApiException(
             "Invalid status. Status can only be 'active' or 'inactive'.",
             400
         );
     }
  
     if (userRole && !["admin", "employee", "customer"].includes(userRole)) {
-        throw new UserValidationErrors(
+        throw new ApiException(
             "Invalid user role. Roles can only be either 'employee', or 'customer'.",
             400
         );

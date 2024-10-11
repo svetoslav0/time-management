@@ -9,7 +9,7 @@ const validateReportParams = require("../utils/validationUtils/validateReportPar
 const formatDate = require("../utils/formatDateUtil");
 const generatePdf = require("../utils/generatePdfUtil");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
-const ReportValidationError = require("../errors/reportsValidationErrors");
+const ApiException = require("../errors/ApiException");
 const isProjectIdValidAndExisting = require("../utils/projectUtils/IsProjectIdValidAndExisting");
 
 const base64encoding = "base64";
@@ -18,14 +18,14 @@ exports.getReportBuffer = async (recordId, userId, userRole) => {
     const isIdValid = validateObjectId(recordId);
 
     if(!isIdValid){
-        throw new ReportValidationError("Invalid recordId parameter!", 400);
+        throw new ApiException("Invalid recordId parameter!", 400);
     }
 
     let report = await Report.findById(recordId);
     
     if(!report)
     {
-        throw new ReportValidationError("No report was found for the specified Id!", 404);
+        throw new ApiException("No report was found for the specified Id!", 404);
     }
 
     return Buffer.from(report.bytes, base64encoding);
@@ -54,12 +54,12 @@ exports.collectReportData = async (data) => {
 
     if (hours.length < 1 && startDate && endDate) {
 
-        throw new ReportValidationError(
+        throw new ApiException(
             `No hours recorded for the project ${project.projectName} in the selected period from ${startDate} to ${endDate}!`,
             404
         );
     } else if (hours.length < 1) {
-        throw new ReportValidationError(
+        throw new ApiException(
             `No hours recorded for the project ${project.projectName}!`,
             404
         );
@@ -134,11 +134,11 @@ exports.getReports = async (req) => {
     const projectId = req.query.projectId;
 
     if (userRole === 'employee') {
-        throw new ReportValidationError("Not implemented for this type of user!", 405);
+        throw new ApiException("Not implemented for this type of user!", 405);
     }
 
     if (!projectId) {
-        throw new ReportValidationError("projectId parameter is required!", 400);
+        throw new ApiException("projectId parameter is required!", 400);
     }
 
     await isProjectIdValidAndExisting(
@@ -156,13 +156,13 @@ exports.getReports = async (req) => {
 
 exports.getSingleReport = async (reportId, userId, userRole) => {
     if (!validateObjectId(reportId)) {
-        throw new ReportValidationError("Invalid reportId parameter!", 400);
+        throw new ApiException("Invalid reportId parameter!", 400);
     }
 
     const report = await Report.findById(reportId, 'projectId startDate endDate');
 
     if (!report) {
-        throw new ReportValidationError("Such report was not found", 404);
+        throw new ApiException("Such report was not found", 404);
     }
 
     return this.collectReportData(report, userId, userRole, report.startDate, report.endDate);
@@ -172,12 +172,12 @@ exports.deleteReport = async (req) => {
     const reportId = req.params.id;
 
     if (!validateObjectId(reportId)) {
-        throw new ReportValidationError("Such report was not found", 404);
+        throw new ApiException("Such report was not found", 404);
     }
     const deletedReport = await Report.findByIdAndDelete(reportId);
 
     if (!deletedReport) {
-        throw new ReportValidationError("Such report was not found", 404);
+        throw new ApiException("Such report was not found", 404);
     }
 
     return deletedReport;

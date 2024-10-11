@@ -1,4 +1,4 @@
-const ProjectValidationErrors = require("../errors/projectsValidationErrors");
+const ApiException = require("../errors/ApiException");
 const User = require("../models/User");
 const isValidDateMoment = require("./validateDateUtil");
 
@@ -14,7 +14,7 @@ const validateProjectData = async ({
     let employees;
 
     if (!Array.isArray(employeeIds) || employeeIds.length === 0) {
-        throw new ProjectValidationErrors(
+        throw new ApiException(
             "At least one employee ID is required!",
             400
         );
@@ -28,26 +28,26 @@ const validateProjectData = async ({
 
         employees = users.filter((user) => user.userRole === "employee");
     } catch (error) {
-        throw new ProjectValidationErrors(
+        throw new ApiException(
             "Error occurred while fetching users from database!",
             500
         );
     }
 
     if (employees.length !== employeeIds.length) {
-        throw new ProjectValidationErrors(
+        throw new ApiException(
             "All employee IDs should belong to users with the corresponding role!",
             400
         );
     } else if (!projectName) {
-        throw new ProjectValidationErrors("Project Name is missing!", 400);
+        throw new ApiException("Project Name is missing!", 400);
     } else if (projectName.length < 2) {
-        throw new ProjectValidationErrors(
+        throw new ApiException(
             "Project Name is not long enough!",
             400
         );
     } else if (!startingDate) {
-        throw new ProjectValidationErrors("Starting Date is missing!", 400);
+        throw new ApiException("Starting Date is missing!", 400);
     }
 
     const priceRoles = {
@@ -59,14 +59,14 @@ const validateProjectData = async ({
 
     for (const [role, price] of Object.entries(priceRoles)) {
         if (price === undefined || price === null) {
-            throw new ProjectValidationErrors(`${role} is missing!`, 400);
+            throw new ApiException(`${role} is missing!`, 400);
         } else if (isNaN(Number(price))) {
-            throw new ProjectValidationErrors(
+            throw new ApiException(
                 `${role} has a non-numeric value!`,
                 400
             );
         } else if (Number(price) <= 0) {
-            throw new ProjectValidationErrors(
+            throw new ApiException(
                 `${role} has a negative or zero numeric value!`,
                 400
             );
@@ -75,7 +75,7 @@ const validateProjectData = async ({
 
     const isValidDate = await isValidDateMoment(startingDate);
     if (!isValidDate) {
-        throw new ProjectValidationErrors(
+        throw new ApiException(
             "Starting Date is in incorrect format, it must be YYYY-MM-DD!",
             400
         );
@@ -84,7 +84,7 @@ const validateProjectData = async ({
 
 const validateProjectStatus = async (status) => {
     if (!["inProgress", "completed"].includes(status)) {
-        throw new ProjectValidationErrors(
+        throw new ApiException(
             "Invalid status. Valid options are: inProgress, completed",
             400
         );

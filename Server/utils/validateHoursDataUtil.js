@@ -2,7 +2,7 @@ const Project = require("../models/Project");
 
 const { validateObjectId } = require("./validateObjectIdUtil");
 const isValidDateMoment = require("./validateDateUtil");
-const HoursValidationErrors = require("../errors/hoursValidationErrors");
+const ApiException = require("../errors/ApiException");
 
 const validateHourDataOnLogHours = async ({
     projectId,
@@ -12,15 +12,15 @@ const validateHourDataOnLogHours = async ({
     userId,
 }) => {
     if (!validateObjectId(projectId)) {
-        throw new HoursValidationErrors("Invalid project ID!", 400);
+        throw new ApiException("Invalid project ID!", 400);
     }
 
     if (!validateObjectId(userId)) {
-        throw new HoursValidationErrors("Invalid user ID!", 400);
+        throw new ApiException("Invalid user ID!", 400);
     }
 
     if (typeof hours !== "number" || hours < 0.5 || hours > 8) {
-        throw new HoursValidationErrors(
+        throw new ApiException(
             "Hours must be a number between 0.5 and 8!",
             400
         );
@@ -28,14 +28,14 @@ const validateHourDataOnLogHours = async ({
 
     const isValidDate = await isValidDateMoment(date);
     if (!isValidDate) {
-        throw new HoursValidationErrors(
+        throw new ApiException(
             "Invalid date format! Date must be YYYY-MM-DD!",
             400
         );
     }
 
     if (!notes || notes.trim() === "") {
-        throw new HoursValidationErrors("Notes cannot be empty!", 400);
+        throw new ApiException("Notes cannot be empty!", 400);
     }
 
     let project;
@@ -43,7 +43,7 @@ const validateHourDataOnLogHours = async ({
     project = await Project.findById(projectId);
 
     if (!project) {
-        throw new HoursValidationErrors(
+        throw new ApiException(
             "Project with that ID does not exist!",
             400
         );

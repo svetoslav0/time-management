@@ -1,4 +1,4 @@
-const userValidationErrors = require("../errors/userValidationErrors");
+const ApiException = require("../errors/ApiException");
 const User = require("../models/User");
 const { validateEmail } = require("./validateEmailUtil");
 
@@ -17,7 +17,7 @@ const checkUserDataFieldsExistence = async (userData, isUpdate = false) => {
     const errorMessage = `One or more required fields are missing: ${missingFields.join(
       ", "
     )}!`;
-    throw new userValidationErrors(errorMessage, 400);
+    throw new ApiException(errorMessage, 400);
   }
 };
 
@@ -27,11 +27,11 @@ const validateCommonUserDataParams = async (userData) => {
   const validRoles = ["admin", "employee", "customer"];
 
   if (!validRoles.includes(userRole)) {
-    throw new userValidationErrors("User role does not exist!", 400);
+    throw new ApiException("User role does not exist!", 400);
   } else if (firstName.length < 2) {
-    throw new userValidationErrors("First name is not long enough!", 400);
+    throw new ApiException("First name is not long enough!", 400);
   } else if (lastName.length < 2) {
-    throw new userValidationErrors("Last name is not long enough!", 400);
+    throw new ApiException("Last name is not long enough!", 400);
   }
 };
 
@@ -39,7 +39,7 @@ const validateAuthUserDataParams = async (userData) => {
   const { email, password, confirmPassword, isGoogleLogin } = userData;
 
   if (!validateEmail(email)) {
-    throw new userValidationErrors(
+    throw new ApiException(
       "The email address you entered is not valid!",
       400
     );
@@ -47,9 +47,9 @@ const validateAuthUserDataParams = async (userData) => {
 
   if (!isGoogleLogin) {
     if (password.length < 6) {
-      throw new userValidationErrors("Password is not long enough!", 400);
+      throw new ApiException("Password is not long enough!", 400);
     } else if (confirmPassword !== password) {
-      throw new userValidationErrors("Passwords does not match!", 400);
+      throw new ApiException("Passwords does not match!", 400);
     }
   }
 };
@@ -60,7 +60,7 @@ const validateUserDataOnUserCreate = async (userData) => {
   doesUserExist = await User.findOne({ email: userData.email });
 
   if (doesUserExist) {
-    throw new userValidationErrors("User exists!", 400);
+    throw new ApiException("User exists!", 400);
   }
 
   await checkUserDataFieldsExistence(userData);
@@ -75,7 +75,7 @@ const validateUserDataOnUserUpdate = async (id, userData) => {
   doesUserIdExists = await User.findById({ _id: id });
 
   if (!doesUserIdExists) {
-    throw new userValidationErrors(
+    throw new ApiException(
       "User with the provided ID does not exist!",
       400
     );
@@ -101,12 +101,12 @@ const roleBasedUserValidation = async (userData) => {
         "Architect",
       ];
       if (!experienceLevel) {
-        throw new userValidationErrors(
+        throw new ApiException(
           "Experience level is required for employees!",
           400
         );
       } else if (!validExperienceLevels.includes(experienceLevel)) {
-        throw new userValidationErrors(
+        throw new ApiException(
           `Invalid experience level. Valid options are: ${validExperienceLevels.join(
             ", "
           )}!`,
@@ -116,26 +116,26 @@ const roleBasedUserValidation = async (userData) => {
       break;
     case "customer":
       if (!companyName) {
-        throw new userValidationErrors(
+        throw new ApiException(
           "Company name is required for customers!",
           400
         );
       }
       if (!phoneNumber) {
-        throw new userValidationErrors(
+        throw new ApiException(
           "Phone number is required for customers!",
           400
         );
       }
       if (!address) {
-        throw new userValidationErrors(
+        throw new ApiException(
           "Address is required for customers!",
           400
         );
       }
       break;
     default:
-      throw new userValidationErrors("Invalid user role specified!", 400);
+      throw new ApiException("Invalid user role specified!", 400);
   }
 };
 

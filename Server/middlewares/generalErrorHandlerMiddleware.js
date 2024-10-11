@@ -1,13 +1,6 @@
-const ProjectValidationErrors = require("../errors/projectsValidationErrors");
-const ReportValidationErrors = require("../errors/reportsValidationErrors");
-const UserValidationErrors = require("../errors/userValidationErrors");
-const HoursValidationErrors = require("../errors/hoursValidationErrors");
-const InvitesValidationErrors = require("../errors/invitesValidationErrors");
-const AuthError = require("../errors/authError");
+const ApiException = require("../errors/ApiException");
 
 const generalErrorHandlerMiddleware = (err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-
     console.error("Error appeared in server:", {
         error: err,
         method: req.method,
@@ -15,21 +8,13 @@ const generalErrorHandlerMiddleware = (err, req, res, next) => {
         body: req.body,
     });
 
-    if (err instanceof UserValidationErrors) {
-        return res.status(err.statusCode).json({ message: err.message });
-    } else if (err instanceof ProjectValidationErrors) {
-        return res.status(err.statusCode).json({ message: err.message });
-    } else if (err instanceof HoursValidationErrors) {
-        return res.status(err.statusCode).json({ message: err.message });
-    } else if (err instanceof InvitesValidationErrors) {
-        return res.status(err.statusCode).json({ message: err.message });
-    } else if (err instanceof ReportValidationErrors) {
-        return res.status(err.statusCode).json({ message: err.message });
-    } else if (err instanceof AuthError) {
-        return res.status(err.statusCode).json({ message: err.message });
+    if (err instanceof ApiException) {
+        return res.status(err.statusCode)
+            .json({message: err.message});
     }
 
-    res.status(500).json({ message: "Internal server error!" });
+    res.status(500)
+        .json({ message: "Internal server error!" });
 };
 
 module.exports = generalErrorHandlerMiddleware;

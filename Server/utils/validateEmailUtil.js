@@ -1,6 +1,6 @@
 const validator = require("validator");
 
-const ProjectValidationErrors = require("../errors/projectsValidationErrors");
+const ApiException = require("../errors/ApiException");
 const validateEmail = (email) => {
     return validator.isEmail(email);
 };
@@ -12,7 +12,7 @@ const validateInviteEmails = async (inviteEmails) => {
         );
 
         if (invalidEmails.length > 0) {
-            throw new ProjectValidationErrors(
+            throw new ApiException(
                 `Invalid email(s) found: ${invalidEmails.join(", ")}`,
                 400
             );

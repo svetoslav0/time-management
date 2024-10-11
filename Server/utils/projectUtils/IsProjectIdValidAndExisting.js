@@ -1,12 +1,11 @@
 const Project = require("../../models/Project");
 
-const ProjectValidationErrors = require("../../errors/projectsValidationErrors");
-const InvitesValidationErrors = require("../../errors/invitesValidationErrors");
+const ApiException = require("../../errors/ApiException");
 const { validateObjectId } = require("../validateObjectIdUtil");
 
 const isProjectIdExistingAndAccessible = async (projectId, userId = null) => {
     if (!validateObjectId(projectId)) {
-        throw new ProjectValidationErrors(
+        throw new ApiException(
             `Invalid project ID format: ${projectId}`,
             400
         );
@@ -15,7 +14,7 @@ const isProjectIdExistingAndAccessible = async (projectId, userId = null) => {
     const project = await Project.findById(projectId);
 
     if (!project) {
-        throw new InvitesValidationErrors(
+        throw new ApiException(
             `Project with the provided ID does not exist: ${projectId}`,
             400
         );
@@ -23,7 +22,7 @@ const isProjectIdExistingAndAccessible = async (projectId, userId = null) => {
 
     if (userId) {
         if (!project.employeeIds.includes(userId) && !project.customerIds.includes(userId)) {
-            throw new ProjectValidationErrors("Inaccessible item", 403);
+            throw new ApiException("Inaccessible item", 403);
         }
     }
 };

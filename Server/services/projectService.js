@@ -6,7 +6,7 @@ const {
     validateProjectData,
     validateProjectStatus,
 } = require("../utils/validateProjectDataUtil");
-const ProjectValidationErrors = require("../errors/projectsValidationErrors");
+const ApiException = require("../errors/ApiException");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
 const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
@@ -30,7 +30,7 @@ exports.createProject = async (req) => {
     });
 
     if (projectData.inviteEmails) {
-        sendInvitesToNonExistingUsers(projectData.inviteEmails, project._id);
+        await sendInvitesToNonExistingUsers(projectData.inviteEmails, project._id);
     }
 
     return {
@@ -54,7 +54,7 @@ exports.getProjects = async (req) => {
 
     if (employeeId) {
         if (!validateObjectId(employeeId)) {
-            throw new ProjectValidationErrors('Invalid employee ID format', 400);
+            throw new ApiException('Invalid employee ID format', 400);
         }
     }
 
@@ -108,7 +108,7 @@ exports.updateProject = async (req) => {
     const emailsToCheck = projectData.inviteEmails;
 
     if (!projectData.status) {
-        throw new ProjectValidationErrors('No status provided!', 400);
+        throw new ApiException('No status provided!', 400);
     }
 
     await validateProjectStatus(projectData.status);
