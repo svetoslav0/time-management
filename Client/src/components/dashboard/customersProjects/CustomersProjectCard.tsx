@@ -45,10 +45,6 @@ export default function CustomersProjectCard({ project }: CustomersProjectCardPr
                             {dayjs(project.startingDate).format('DD.MM.YY')}
                         </span>
                     </div>
-                    <div className='text-base text-customDarkBlue'>
-                        <span className='font-semibold '>Price: </span>
-                        <span className='font-medium'>${project.pricePerHour}/h</span>
-                    </div>
                 </div>
 
                 <div className='absolute bottom-[22px] right-[53px]'>
