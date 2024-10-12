@@ -11,6 +11,7 @@ const generatePdf = require("../utils/generatePdfUtil");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const ApiException = require("../errors/ApiException");
 const isProjectIdValidAndExisting = require("../utils/projectUtils/IsProjectIdValidAndExisting");
+const calculateReportTotalPrice = require("../utils/reports/calculateReportTotalPrice");
 
 const base64encoding = "base64";
 
@@ -65,11 +66,7 @@ exports.collectReportData = async (data) => {
         );
     }
 
-    const totalPrice = hours.reduce(
-        (total, hour) => total + hour.hours * project.pricePerHour,
-        0
-    );
-
+    const totalPrice = calculateReportTotalPrice(hours, project);
     const totalHours = hours.reduce((total, { hours = 0 }) => total + hours, 0);
 
     return {

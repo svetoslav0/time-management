@@ -12,6 +12,10 @@ const hoursSchema = new Schema({
         ref: "User",
         required: true,
     },
+    userExperience: {
+        type: String,
+        required: true,
+    },
     date: {
         type: Date,
         required: true,

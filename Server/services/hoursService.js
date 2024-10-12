@@ -1,5 +1,6 @@
 const ApiException = require("../errors/ApiException");
 const Hours = require("../models/Hours");
+const Users = require("../models/User");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 
 const {
@@ -92,12 +93,19 @@ exports.logHours = async (req) => {
 
     const { projectId, userId, date, hours, notes } = hourData;
 
+    let experience = "Architect";
+    if (req.userToken.userRole === "employee") {
+        const user = await Users.findById(req.userToken._id);
+        experience = user.experienceLevel;
+    }
+
     const loggedHours = await Hours.create({
         projectId,
         userId,
         date,
         hours,
         notes,
+        userExperience: experience,
     });
 
     if (!loggedHours) {
