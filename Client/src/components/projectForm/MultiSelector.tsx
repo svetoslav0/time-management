@@ -15,10 +15,12 @@ type UserSelectorProps = {
     selectedError: string[];
     setError: UseFormSetError<ProjectFormDataType>;
     clearErrors: UseFormClearErrors<ProjectFormDataType>;
+    handleError?: boolean;
 } & ComponentPropsWithoutRef<'input'>;
 
 export default function MultiSelector({
     usersList,
+    handleError = true,
     selectedUsers,
     setSelectedUsers,
     error,
@@ -43,21 +45,23 @@ export default function MultiSelector({
     });
 
     useEffect(() => {
-        if (selectedError.length === 0 && isBlur) {
-            setError(field, {
-                type: 'value',
-                message: `Please select ${field === 'customerIds' ? 'Customer' : 'Employee'}`,
-            });
-        } else {
-            clearErrors(field);
+        if (handleError) {
+            if (selectedError.length === 0 && isBlur) {
+                setError(field, {
+                    type: 'value',
+                    message: `Please select ${field === 'customerIds' ? 'Customer' : 'Employee'}`,
+                });
+            } else {
+                clearErrors(field);
+            }
         }
-    }, [selectedError, isBlur, setError, field, clearErrors]);
+    }, [selectedError, isBlur, setError, field, clearErrors, handleError]);
 
     return (
         <div className='place-items-center'>
             <div
                 className={cn(
-                    error ? 'border-customRed' : 'border-customBlue',
+                    error && handleError ? 'border-customRed' : 'border-customBlue',
                     'relative w-full rounded-xl border text-sm '
                 )}
             >

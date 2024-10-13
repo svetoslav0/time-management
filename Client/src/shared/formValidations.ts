@@ -123,29 +123,9 @@ export const projectFormSchema = yup.object().shape({
         .min(1, 'At least one employee must be selected')
         .of(yup.string().required())
         .required('At least one employee must be selected'),
-    customerIds: yup
-        .array()
-        .of(yup.string().required())
-        .test(
-            'customer-or-email',
-            'At least one customer or email must be selected',
-            function (value) {
-                const { inviteEmails } = this.parent;
-                return (value && value.length > 0) || (inviteEmails && inviteEmails.length > 0);
-            }
-        ),
+        customerIds: yup.array().of(yup.string()),
     startingDate: yup.string().required('Please select date'),
-    inviteEmails: yup
-        .array()
-        .of(yup.string().email('Must be a valid email').required())
-        .test(
-            'email-or-customer',
-            'At least one email or customer must be added',
-            function (value) {
-                const { customerIds } = this.parent;
-                return (value && value.length > 0) || (customerIds && customerIds.length > 0);
-            }
-        ),
+    inviteEmails: yup.array().of(yup.string().email('Must be a valid email')),
 });
 
 export const resetPasswordSchema = yup.object().shape({
