@@ -98,11 +98,26 @@ export const editUserSchema = yup.object().shape({
 
 export const projectFormSchema = yup.object().shape({
     projectName: yup.string().required('Project name is required!'),
-    pricePerHour: yup
+    pricePerHourForJunior: yup
         .number()
-        .required('Price per hour is required!')
-        .positive('Price must be bigger then 0')
-        .typeError('Price per hour must be a number'),
+        .required('Junior price per hour is required!')
+        .positive('Junior price must be bigger then 0')
+        .typeError('Junior price per hour must be a number'),
+    pricePerHourForMid: yup
+        .number()
+        .required('Mid price per hour is required!')
+        .positive('Mid price must be bigger then 0')
+        .typeError('Mid price per hour must be a number'),
+    pricePerHourForSenior: yup
+        .number()
+        .required('Senior price per hour is required!')
+        .positive('Senior price must be bigger then 0')
+        .typeError('Senior price per hour must be a number'),
+    pricePerHourForArchitect: yup
+        .number()
+        .required('Architect price per hour is required!')
+        .positive('Architect price must be bigger then 0')
+        .typeError('Architect price per hour must be a number'),
     employeeIds: yup
         .array()
         .min(1, 'At least one employee must be selected')
