@@ -204,3 +204,26 @@ export const generateReportSchema = yup.object().shape({
         )
         .required('Please select ending date'),
 });
+
+export const changePricesSchema = yup.object().shape({
+    pricePerHourForJunior: yup
+        .number()
+        .required('Junior price per hour is required and must be a number!')
+        .positive('Junior price must be bigger then 0')
+        .typeError('Junior price per hour is required and must be a number!'),
+    pricePerHourForMid: yup
+        .number()
+        .required('Mid price per hour is required and must be a number!')
+        .positive('Mid price must be bigger then 0')
+        .typeError('Mid price per hour is required and must be a number!'),
+    pricePerHourForSenior: yup
+        .number()
+        .required('Senior price per hour is required and must be a number!')
+        .positive('Senior price must be bigger then 0')
+        .typeError('Senior price per hour is required and must be a number!'),
+    pricePerHourForArchitect: yup
+        .number()
+        .required('Architect price per hour is required and must be a number!')
+        .positive('Architect price must be bigger then 0')
+        .typeError('Architect price per hour is required and must be a number!'),
+});
