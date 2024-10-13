@@ -5,11 +5,17 @@ export type CustomerProps = Record<
     string
 >;
 
+export type PricesType = {
+    pricePerHourForJunior: number ;
+    pricePerHourForMid: number ;
+    pricePerHourForSenior: number ;
+    pricePerHourForArchitect: number ;
+};
+
 export type ProjectFormDataType = {
     projectName: string;
-    pricePerHour: number;
     employeeIds: string[];
     customerIds?: string[];
     startingDate: string;
     inviteEmails?: string[];
-};
+} & PricesType;
