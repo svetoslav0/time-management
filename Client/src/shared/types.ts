@@ -154,7 +154,10 @@ export type InvitesProjectData = {
 export type ProjectDataType = {
     _id?: string;
     projectName: string;
-    pricePerHour: number;
+    pricePerHourForArchitect: number;
+    pricePerHourForJunior: number;
+    pricePerHourForMid: number;
+    pricePerHourForSenior: number;
     employeeIds: UserData[];
     customerIds: UserData[];
     startingDate: string;
