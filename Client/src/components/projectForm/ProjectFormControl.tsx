@@ -251,6 +251,7 @@ export default function ProjectFormControl() {
                             selectedError={
                                 selectedCustomer.length > 0 ? selectedCustomer : inviteEmails
                             }
+                            handleError={false}
                         />
 
                         <MultiSelector
@@ -272,16 +273,10 @@ export default function ProjectFormControl() {
 
                         <div className='col-span-2'>
                             <EmailInvite
-                                error={errors.inviteEmails?.message}
                                 inviteEmails={inviteEmails}
                                 setInviteEmails={setInviteEmails}
                                 field='inviteEmails'
                                 placeholder='Invite customers via email'
-                                selectedError={
-                                    selectedCustomer.length > 0 ? selectedCustomer : inviteEmails
-                                }
-                                setError={setError}
-                                clearErrors={clearErrors}
                             />
                         </div>
                     </div>

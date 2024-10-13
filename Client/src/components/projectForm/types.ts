@@ -6,16 +6,16 @@ export type CustomerProps = Record<
 >;
 
 export type PricesType = {
-    pricePerHourForJunior: number ;
-    pricePerHourForMid: number ;
-    pricePerHourForSenior: number ;
-    pricePerHourForArchitect: number ;
+    pricePerHourForJunior: number;
+    pricePerHourForMid: number;
+    pricePerHourForSenior: number;
+    pricePerHourForArchitect: number;
 };
 
 export type ProjectFormDataType = {
     projectName: string;
     employeeIds: string[];
-    customerIds?: string[];
+    customerIds?: (string | undefined)[];
     startingDate: string;
-    inviteEmails?: string[];
+    inviteEmails?: (string | undefined)[];
 } & PricesType;

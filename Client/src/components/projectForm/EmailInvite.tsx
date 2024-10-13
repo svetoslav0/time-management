@@ -1,17 +1,12 @@
-import { ComponentPropsWithoutRef, useCallback, useEffect, useState } from 'react';
-import { UseFormClearErrors, useFormContext, UseFormSetError } from 'react-hook-form';
+import { ComponentPropsWithoutRef, useCallback, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import cn from '../../util/cn';
-import { ProjectFormDataType } from './types';
 
 type UserSelectorProps = {
     inviteEmails: string[];
     setInviteEmails: React.Dispatch<React.SetStateAction<string[]>>;
-    error: string | undefined;
     field: string;
-    selectedError: string[];
-    setError: UseFormSetError<ProjectFormDataType>;
-    clearErrors: UseFormClearErrors<ProjectFormDataType>;
 } & ComponentPropsWithoutRef<'input'>;
 
 const isValidEmail = (email: string): boolean => {
@@ -22,15 +17,10 @@ const isValidEmail = (email: string): boolean => {
 export default function EmailInvite({
     inviteEmails,
     setInviteEmails,
-    error,
     field,
-    selectedError,
-    setError,
-    clearErrors,
     ...props
 }: UserSelectorProps) {
     const [input, setInput] = useState<string>('');
-    const [isInputFocused, setIsInputFocused] = useState(false);
 
     const { register } = useFormContext();
 
@@ -60,30 +50,16 @@ export default function EmailInvite({
     };
 
     const handleBlur = () => {
-        setIsInputFocused(false);
         if (input && isValidEmail(input.trim())) {
             handleAddEmail(input);
         }
     };
 
-    const handleFocus = () => {
-        setIsInputFocused(true);
-    };
-
-    useEffect(() => {
-        if (selectedError.length === 0 && !isInputFocused) {
-            setError('inviteEmails', { message: 'Please add invite email' });
-        } else {
-            clearErrors('inviteEmails');
-        }
-    }, [selectedError, isInputFocused, setError, clearErrors]);
-
     return (
         <div className='place-items-center'>
             <div
                 className={cn(
-                    error ? 'border-customRed' : 'border-customBlue',
-                    'relative w-full rounded-xl border text-sm'
+                    'relative w-full rounded-xl border border-customBlue text-sm'
                 )}
             >
                 <input value={inviteEmails} id={field} {...register(field)} className='hidden' />
@@ -122,7 +98,6 @@ export default function EmailInvite({
                         onChange={handleInputChange}
                         onKeyDown={handleKeyDown}
                         onBlur={handleBlur}
-                        onFocus={handleFocus}
                     />
                 </div>
             </div>
