@@ -168,16 +168,7 @@ export default function ProjectDetails() {
                                         Complete project
                                     </button>
                                 ) : (
-                                    <button
-                                        onClick={handleDownload}
-                                        type='button'
-                                        className='primaryBtn'
-                                        disabled={isDownloading || shouldDownload}
-                                    >
-                                        <span className='flex gap-1'>
-                                            <DownloadSvg /> Download report
-                                        </span>
-                                    </button>
+                                    <></>
                                 )}
                                 {shouldDownload && (
                                     <DownloadFile
