@@ -136,7 +136,7 @@ export default function MultiSelector({
                                         }}
                                     >
                                         {user.firstName} {user.lastName} (
-                                        {'companyName' in user ? user.companyName : user.email}))
+                                        {'companyName' in user ? user.companyName : user.email})
                                     </li>
                                 ))
                             ) : (
