@@ -64,7 +64,7 @@ export default function GeneratedReports({ projectId }: { projectId: string }) {
                                 )}
                             >
                                 <td className='w-36 py-2 pl-6'>
-                                    {dayjs(report.createdAt).format('DD.MM.YYYY')}
+                                    {dayjs(report.startDate).format('DD.MM.YYYY')}
                                 </td>
                                 <td className='w-36 pr-6'>
                                     {dayjs(report.endDate).format('DD.MM.YYYY')}

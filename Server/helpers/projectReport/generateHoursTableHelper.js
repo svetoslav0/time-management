@@ -3,6 +3,8 @@ const fs = require("fs");
 
 const handlebars = require("handlebars");
 
+const { formatDateWithDay } = require("../../utils/formatDateUtil");
+
 const tableTemplatePath = path.join(__dirname, '../../templates/projectReport/hoursTableTemplate.hbs');
 const tableTemplateSource = fs.readFileSync(tableTemplatePath, 'utf8');
 const tableTemplate = handlebars.compile(tableTemplateSource);
@@ -30,7 +32,7 @@ handlebars.registerHelper('generateHoursTable', (hours) => {
       const hoursForDate = hoursMap.get(date) || [{}];
       return hoursForDate.map(hour => {
           return tableTemplate({
-              date: hour.dateWithDay,
+              date: formatDateWithDay(date),
               hours: (hour.hours || 0).toString(),
               notes: hour.notes || ''
           });
