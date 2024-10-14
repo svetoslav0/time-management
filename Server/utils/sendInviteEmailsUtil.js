@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const UserValidationErrors = require("../errors/userValidationErrors");
+const ApiException = require("../errors/ApiException");
 const generateInviteEmail = require("../templates/inviteEmailTemplate");
 
 const sendInviteEmails = async (inviteEmails) => {
@@ -32,7 +32,7 @@ const sendInviteEmails = async (inviteEmails) => {
         console.log("All emails sent successfully!");
     } catch (error) {
         console.error("Error sending invite emails:", error);
-        throw new UserValidationErrors("Error sending invite emails!");
+        throw new ApiException("Error sending invite emails!");
     }
 };
 

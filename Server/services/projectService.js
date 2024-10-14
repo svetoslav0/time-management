@@ -6,7 +6,7 @@ const {
     validateProjectData,
     validateProjectStatus,
 } = require("../utils/validateProjectDataUtil");
-const ProjectValidationErrors = require("../errors/projectsValidationErrors");
+const ApiException = require("../errors/ApiException");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
 const sendInvitesToNonExistingUsers = require("../utils/inviteEmailsUtils/sendInvitesToNonExistingUsers");
@@ -22,12 +22,15 @@ exports.createProject = async (req) => {
         customerIds: projectData.customerIds,
         projectName: projectData.projectName,
         startingDate: projectData.startingDate,
-        pricePerHour: projectData.pricePerHour,
+        pricePerHourForJunior: projectData.pricePerHourForJunior,
+        pricePerHourForMid: projectData.pricePerHourForMid,
+        pricePerHourForSenior: projectData.pricePerHourForSenior,
+        pricePerHourForArchitect: projectData.pricePerHourForArchitect,
         employeeIds: projectData.employeeIds,
     });
 
     if (projectData.inviteEmails) {
-        sendInvitesToNonExistingUsers(projectData.inviteEmails, project._id);
+        await sendInvitesToNonExistingUsers(projectData.inviteEmails, project._id);
     }
 
     return {
@@ -35,7 +38,10 @@ exports.createProject = async (req) => {
         customerIds: project.customerIds,
         projectName: project.projectName,
         startingDate: project.startingDate,
-        pricePerHour: project.pricePerHour,
+        pricePerHourForJunior: project.pricePerHourForJunior,
+        pricePerHourForMid: project.pricePerHourForMid,
+        pricePerHourForSenior: project.pricePerHourForSenior,
+        pricePerHourForArchitect: project.pricePerHourForArchitect,
         employeeIds: project.employeeIds,
     };
 };
@@ -48,7 +54,7 @@ exports.getProjects = async (req) => {
 
     if (employeeId) {
         if (!validateObjectId(employeeId)) {
-            throw new ProjectValidationErrors('Invalid employee ID format', 400);
+            throw new ApiException('Invalid employee ID format', 400);
         }
     }
 
@@ -102,7 +108,7 @@ exports.updateProject = async (req) => {
     const emailsToCheck = projectData.inviteEmails;
 
     if (!projectData.status) {
-        throw new ProjectValidationErrors('No status provided!', 400);
+        throw new ApiException('No status provided!', 400);
     }
 
     await validateProjectStatus(projectData.status);
@@ -120,10 +126,6 @@ exports.updateProject = async (req) => {
         new: true,
     });
 
-    if (project.status === "completed") {
-        await getReportBuffer(project._id, req.userToken.userId, req.userToken.userRole);
-    }
-
     if (emailsToCheck) {
         await sendInvitesToNonExistingUsers(emailsToCheck, projectId);
     }
@@ -132,7 +134,10 @@ exports.updateProject = async (req) => {
         customerIds: project.customerIds,
         projectName: project.projectName,
         startingDate: project.startingDate,
-        pricePerHour: project.pricePerHour,
+        pricePerHourForJunior: project.pricePerHourForJunior,
+        pricePerHourForMid: project.pricePerHourForMid,
+        pricePerHourForSenior: project.pricePerHourForSenior,
+        pricePerHourForArchitect: project.pricePerHourForArchitect,
         employeeIds: project.employeeIds,
     };
 };

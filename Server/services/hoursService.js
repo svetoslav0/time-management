@@ -1,5 +1,6 @@
-const HoursValidationErrors = require("../errors/hoursValidationErrors");
+const ApiException = require("../errors/ApiException");
 const Hours = require("../models/Hours");
+const Users = require("../models/User");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 
 const {
@@ -9,12 +10,12 @@ const Project = require("../models/Project");
 
 exports.getSingleHour = async (req) => {
     if (!validateObjectId(req.params.id)) {
-        throw new HoursValidationErrors("Invalid hour Id!", 400);
+        throw new ApiException("Invalid hour Id!", 400);
     }
 
     const hour = await Hours.findById(req.params.id);
     if (!hour) {
-        throw new HoursValidationErrors("Hour does not exist!", 404);
+        throw new ApiException("Hour does not exist!", 404);
     }
     return hour;
 };
@@ -26,13 +27,13 @@ exports.getAllHours = async (req) => {
 
     if (_id) {
         if (!validateObjectId(_id)) {
-            throw new HoursValidationErrors("Invalid user ID!", 400);
+            throw new ApiException("Invalid user ID!", 400);
         }
     }
 
     if (projectId) {
         if (!validateObjectId(projectId)) {
-            throw new HoursValidationErrors("Invalid project ID!", 400);
+            throw new ApiException("Invalid project ID!", 400);
         }
         filter.projectId = projectId;
     }
@@ -41,7 +42,8 @@ exports.getAllHours = async (req) => {
         const adminFilter = projectId ? { projectId } : {};
         return Hours.find(adminFilter)
             .populate({ path: "projectId", select: "projectName" })
-            .populate({ path: "userId", select: "email" });
+            .populate({ path: "userId", select: "email firstName lastName" })
+            .sort({ date: -1 });
     }
 
     if (userRole === "employee") {
@@ -78,7 +80,8 @@ exports.getAllHours = async (req) => {
 
     return await Hours.find(filter)
         .populate({ path: "projectId", select: "projectName" })
-        .populate({ path: "userId", select: "email" });
+        .populate({ path: "userId", select: "email" })
+        .sort({ date: -1 });
 };
 
 exports.logHours = async (req) => {
@@ -90,16 +93,23 @@ exports.logHours = async (req) => {
 
     const { projectId, userId, date, hours, notes } = hourData;
 
+    let experience = "Architect";
+    if (req.userToken.userRole === "employee") {
+        const user = await Users.findById(req.userToken._id);
+        experience = user.experienceLevel;
+    }
+
     const loggedHours = await Hours.create({
         projectId,
         userId,
         date,
         hours,
         notes,
+        userExperience: experience,
     });
 
     if (!loggedHours) {
-        throw new HoursValidationErrors("Hours not logged", 400);
+        throw new ApiException("Hours not logged", 400);
     }
     return loggedHours;
 };
@@ -110,15 +120,15 @@ exports.deleteHourLog = async (req) => {
     const isAdmin = req.isAdmin;
 
     if (!validateObjectId(hourLogId)) {
-        throw new HoursValidationErrors("Invalid hour log Id!", 400);
+        throw new ApiException("Invalid hour log Id!", 400);
     }
 
     const hourLog = await Hours.findById(hourLogId);
 
     if (!hourLog) {
-        throw new HoursValidationErrors("Hour log does not exist!", 400);
+        throw new ApiException("Hour log does not exist!", 400);
     } else if (hourLog.userId.toString() !== userId && !isAdmin) {
-        throw new HoursValidationErrors(
+        throw new ApiException(
             "Hour log does not belong to that user!",
             400
         );
@@ -138,16 +148,16 @@ exports.updateHourLog = async (req) => {
     hoursData.userId = userId;
 
     if (!validateObjectId(hourLogId)) {
-        throw new HoursValidationErrors("Invalid hour log Id!", 400);
+        throw new ApiException("Invalid hour log Id!", 400);
     }
 
     await validateHourDataOnLogHours(hoursData);
 
     const hourLog = await Hours.findById(hourLogId);
     if (!hourLog) {
-        throw new HoursValidationErrors("Hour log does not exist!", 400);
+        throw new ApiException("Hour log does not exist!", 400);
     } else if (hourLog.userId.toString() !== userId && !isAdmin) {
-        throw new HoursValidationErrors(
+        throw new ApiException(
             "Hour log does not belong to that user!",
             400
         );
@@ -162,7 +172,7 @@ exports.updateHourLog = async (req) => {
     const updatedHours = await hourLog.save();
 
     if (!updatedHours) {
-        throw new HoursValidationErrors("Hours not updated", 400);
+        throw new ApiException("Hours not updated", 400);
     }
 
     return updatedHours;

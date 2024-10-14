@@ -17,6 +17,8 @@ type InputComponentProps<T extends FieldValues> = {
     toggleVisibility?: () => void;
     isVisible?: boolean;
     shouldShowIcons?: boolean;
+    triggerError?: boolean;
+    showLabel?: boolean;
 } & ComponentPropsWithoutRef<'input'>;
 
 export default function InputComponent<T extends FieldValues>({
@@ -30,16 +32,21 @@ export default function InputComponent<T extends FieldValues>({
     toggleVisibility,
     isVisible,
     shouldShowIcons,
+    labelName,
+    triggerError = true,
+    showLabel = true,
     ...props
 }: InputComponentProps<T>) {
     return (
         <div className='mt-3 w-full'>
-            <label
-                htmlFor={field}
-                className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-            >
-                {capitalizeAndFormat(field)}
-            </label>
+            {showLabel && (
+                <label
+                    htmlFor={field}
+                    className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
+                >
+                    {capitalizeAndFormat(labelName ?? field)}
+                </label>
+            )}
             <div className='relative'>
                 {type === 'textarea' ? (
                     <textarea
@@ -88,7 +95,7 @@ export default function InputComponent<T extends FieldValues>({
                     </span>
                 )}
             </div>
-            {error && <span className='text-sm text-red-500'>{error}</span>}
+            {error && triggerError && <span className='text-sm text-red-500'>{error}</span>}
         </div>
     );
 }

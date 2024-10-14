@@ -8,7 +8,7 @@ import { ProjectDataType } from '@/shared/types';
 
 export default function useUpdateProject(id: string | undefined) {
     const { patch } = httpServices();
-    const { mutate: updateProject, isError } = useMutation({
+    const { mutate: updateProject, isError, isSuccess } = useMutation({
         mutationFn: (data: ProjectDataType) => patch(urlKeys.completeProject + id, data),
         onSuccess: () => {
             toast.success('Project Updated');
@@ -24,5 +24,5 @@ export default function useUpdateProject(id: string | undefined) {
         },
     });
 
-    return { updateProject, isError };
+    return { updateProject, isError, isSuccess };
 }

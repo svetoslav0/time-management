@@ -1,21 +1,21 @@
 const Invite = require("../../models/Invite");
 
-const InvitesValidationErrors = require("../../errors/invitesValidationErrors");
+const ApiException = require("../../errors/ApiException");
 const isValidUUID = require("./validateUuidUtil");
 
 const IsInviteValid = async (inviteUUID) => {
     if (!isValidUUID(inviteUUID)) {
-        throw new InvitesValidationErrors("Invalid UUID provided!", 400);
+        throw new ApiException("Invalid UUID provided!", 400);
     }
 
     const invite = await Invite.findOne({ uuid: inviteUUID });
 
     if (!invite) {
-        throw new InvitesValidationErrors("Invite not found!", 404);
+        throw new ApiException("Invite not found!", 404);
     }
 
     if (invite.expiresOn < new Date()) {
-        throw new InvitesValidationErrors("Invite has expired!", 410);
+        throw new ApiException("Invite has expired!", 410);
     }
 
     return invite;

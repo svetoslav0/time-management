@@ -12,7 +12,7 @@ export type UserDetails = {
     createdAt: string;
     description?: string | undefined;
     isGoogleLogin: boolean;
-    projects: {_id: string, projectName: string}[]
+    projects: { _id: string; projectName: string }[];
 };
 
 export type ExperienceLevel = 'Junior' | 'Mid-Level' | 'Senior' | 'Architect';
@@ -154,7 +154,10 @@ export type InvitesProjectData = {
 export type ProjectDataType = {
     _id?: string;
     projectName: string;
-    pricePerHour: number;
+    pricePerHourForArchitect: number;
+    pricePerHourForJunior: number;
+    pricePerHourForMid: number;
+    pricePerHourForSenior: number;
     employeeIds: UserData[];
     customerIds: UserData[];
     startingDate: string;
@@ -176,7 +179,7 @@ export interface ProjectReport {
 export interface ProjectDataFromReport {
     customerNames: string[];
     employeeNames: string[];
-    pricePerHours: number;
+    pricePerHour: number;
     projectName: string;
     startingDate: string;
 }
@@ -189,3 +192,15 @@ export interface HourTypeFromProjectReport {
     id: string;
     notes: string;
 }
+
+export type GeneratedReportsType = {
+    reports: {
+        createdAt: string;
+        endDate: string;
+        name: string;
+        projectId: string;
+        startDate: string;
+        updatedAt: string;
+        _id: string;
+    }[];
+};

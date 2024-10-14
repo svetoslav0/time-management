@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import useCompleteProject from '../hooks/useCompleteProject';
+import EditHoursForm from './EditHoursForm';
 import ExistingUsersCardLayout from './ExistingUsersCardLayout';
+import GeneratedReports from './GeneratedReports';
+import GenerateReport from './GenerateReport';
+import HoursListCard from './HoursListCard';
 import InviteUsersCardLayout from './InviteUsersCardLayout';
 
 import useFetchProjectById from '@/reactQuery/hooks/useFetchProjectById';
@@ -13,7 +17,6 @@ import GearSvg from '@/UI/design/GearSvg';
 import DownloadFile from '@/UI/DownloadFile';
 import Loader from '@/UI/Loader';
 import Modal from '@/UI/Modal';
-import cn from '@/util/cn';
 
 export default function ProjectDetails() {
     const navigate = useNavigate();
@@ -149,50 +152,47 @@ export default function ProjectDetails() {
             {project && (
                 <>
                     <div className='text-lg'>
-                        <div className='flex items-center  justify-between font-bold text-customDarkBlue'>
-                            <p>Project name: {project.projectName}</p>
-                            <p>Start Date: {dayjs(project.startingDate).format('DD.MM.YY')}</p>
-                            <p>Price: ${project.pricePerHour}/h</p>
-                            {project.status === 'inProgress' ? (
-                                <button
-                                    className='primaryBtn'
-                                    onClick={() => setShowActionCompleteModal(true)}
-                                >
-                                    Complete project
-                                </button>
-                            ) : (
-                                <button
-                                    onClick={handleDownload}
-                                    type='button'
-                                    className='primaryBtn'
-                                    disabled={isDownloading || shouldDownload}
-                                >
-                                    <span className='flex gap-1'>
-                                        <DownloadSvg /> Download report
-                                    </span>
-                                </button>
-                            )}
-                            {shouldDownload && (
-                                <DownloadFile
-                                    projectId={id}
-                                    onDownloadComplete={onDownloadComplete}
-                                />
-                            )}
+                        <div className='flex items-start  justify-between font-bold text-customDarkBlue'>
+                            <div>
+                                <p>Project name: {project.projectName}</p>
+                                <p>Start Date: {dayjs(project.startingDate).format('DD.MM.YY')}</p>
+                                <EditHoursForm project={project} />
+                            </div>
+                            <div className='flex gap-4'> 
+                                {id && <GenerateReport projectId={id} />}
+                                {project.status === 'inProgress' ? (
+                                    <button
+                                        className='primaryBtn'
+                                        onClick={() => setShowActionCompleteModal(true)}
+                                    >
+                                        Complete project
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={handleDownload}
+                                        type='button'
+                                        className='primaryBtn'
+                                        disabled={isDownloading || shouldDownload}
+                                    >
+                                        <span className='flex gap-1'>
+                                            <DownloadSvg /> Download report
+                                        </span>
+                                    </button>
+                                )}
+                                {shouldDownload && (
+                                    <DownloadFile
+                                        projectId={id}
+                                        onDownloadComplete={onDownloadComplete}
+                                    />
+                                )}
+                            </div>
                         </div>
-                        <p
-                            className={cn(
-                                project.status === 'inProgress'
-                                    ? 'text-customBlue'
-                                    : 'text-customGreen',
-                                'mt-6 font-normal'
-                            )}
-                        >
-                            Status: {project.status === 'inProgress' ? 'In Progress' : 'Completed'}
-                        </p>
                     </div>
                     <ExistingUsersCardLayout userType='employeeIds' project={project} />
                     <ExistingUsersCardLayout userType='customerIds' project={project} />
                     <InviteUsersCardLayout project={project} />
+                    {id && <HoursListCard projectId={id} />}
+                    {id && <GeneratedReports projectId={id} />}
                 </>
             )}
         </div>

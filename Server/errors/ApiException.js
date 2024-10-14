@@ -1,4 +1,4 @@
-class HoursValidationErrors extends Error {
+class ApiException extends Error {
     constructor(message, statusCode = 500) {
         super(message);
 
@@ -7,4 +7,4 @@ class HoursValidationErrors extends Error {
     }
 }
 
-module.exports = HoursValidationErrors;
+module.exports = ApiException;

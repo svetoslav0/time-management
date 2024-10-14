@@ -18,12 +18,23 @@ import useFetchUsers from '@/reactQuery/hooks/useFetchUsers';
 import LogoSvg from '@/UI/design/LogoSvg';
 
 dayjs.extend(customParseFormat);
+const initialPrices: {
+    pricePerHourForArchitect: number | string;
+    pricePerHourForJunior: number | string;
+    pricePerHourForMid: number | string;
+    pricePerHourForSenior: number | string;
+} = {
+    pricePerHourForArchitect: '',
+    pricePerHourForJunior: '',
+    pricePerHourForMid: '',
+    pricePerHourForSenior: '',
+};
 
 export default function ProjectFormControl() {
     const { data: employeeResponse } = useFetchUsers({ userRole: 'employee', status: 'active' });
     const { data: customerResponse } = useFetchUsers({ userRole: 'customer', status: 'active' });
     const [projectName, setProjectName] = useState('');
-    const [pricePerHour, setPricePerHour] = useState<number | string>('');
+    const [pricePerHour, setPricePerHour] = useState(initialPrices);
     const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
     const [selectedCustomer, setSelectedCustomer] = useState<string[]>([]);
     const [inviteEmails, setInviteEmails] = useState<string[]>([]);
@@ -54,7 +65,7 @@ export default function ProjectFormControl() {
         setInviteEmails([]);
         setSelectedEmployees([]);
         setSelectedCustomer([]);
-        setPricePerHour('');
+        setPricePerHour(initialPrices);
         setProjectName('');
         setSelectedDate('');
         navigate('/admin/projects');
@@ -116,34 +127,10 @@ export default function ProjectFormControl() {
                                 setValue('projectName', e.currentTarget.value);
                                 setProjectName(e.currentTarget.value);
                             }}
+                            showLabel={false}
+                            triggerError={false}
                         />
-                        <InputComponent
-                            error={errors.pricePerHour?.message}
-                            register={register}
-                            trigger={trigger}
-                            field='pricePerHour'
-                            type='number'
-                            value={pricePerHour}
-                            onChange={(e) => {
-                                setValue('pricePerHour', Number(e.currentTarget.value));
-                                setPricePerHour(Number(e.currentTarget.value));
-                            }}
-                            min={0}
-                        />
-                        <MultiSelector
-                            error={errors.customerIds?.message}
-                            usersList={customerResponse}
-                            selectedUsers={selectedCustomer}
-                            setSelectedUsers={setSelectedCustomer}
-                            field='customerIds'
-                            placeholder='Customers'
-                            setError={setError}
-                            clearErrors={clearErrors}
-                            selectedError={
-                                selectedCustomer.length > 0 ? selectedCustomer : inviteEmails
-                            }
-                        />
-                        <div className='relative'>
+                        <div className='relative mt-3'>
                             <input
                                 type='text'
                                 placeholder='Date'
@@ -176,6 +163,96 @@ export default function ProjectFormControl() {
                                 </div>
                             )}
                         </div>
+                        <InputComponent
+                            error={errors.pricePerHourForJunior?.message}
+                            register={register}
+                            trigger={trigger}
+                            field='pricePerHourForJunior'
+                            placeholder='Price per hour for Junior-level'
+                            type='number'
+                            value={pricePerHour.pricePerHourForJunior ?? ''}
+                            onChange={(e) => {
+                                setValue('pricePerHourForJunior', Number(e.target.value));
+                                setPricePerHour((prevPrices) => ({
+                                    ...prevPrices,
+                                    pricePerHourForJunior: Number(e.target.value),
+                                }));
+                            }}
+                            min={0}
+                            showLabel={false}
+                            triggerError={false}
+                        />
+                        <InputComponent
+                            error={errors.pricePerHourForMid?.message}
+                            register={register}
+                            trigger={trigger}
+                            field='pricePerHourForMid'
+                            type='number'
+                            placeholder='Price per hour for Mid-level'
+                            value={pricePerHour.pricePerHourForMid ?? ''}
+                            onChange={(e) => {
+                                setValue('pricePerHourForMid', Number(e.target.value));
+                                setPricePerHour((prevPrices) => ({
+                                    ...prevPrices,
+                                    pricePerHourForMid: Number(e.target.value),
+                                }));
+                            }}
+                            min={0}
+                            showLabel={false}
+                            triggerError={false}
+                        />
+                        <InputComponent
+                            error={errors.pricePerHourForSenior?.message}
+                            register={register}
+                            trigger={trigger}
+                            field='pricePerHourForSenior'
+                            type='number'
+                            placeholder='Price per hour for Senior-level'
+                            value={pricePerHour.pricePerHourForSenior ?? ''}
+                            onChange={(e) => {
+                                setValue('pricePerHourForSenior', Number(e.target.value));
+                                setPricePerHour((prevPrices) => ({
+                                    ...prevPrices,
+                                    pricePerHourForSenior: Number(e.target.value),
+                                }));
+                            }}
+                            min={0}
+                            showLabel={false}
+                            triggerError={false}
+                        />
+                        <InputComponent
+                            error={errors.pricePerHourForArchitect?.message}
+                            register={register}
+                            trigger={trigger}
+                            field='pricePerHourForArchitect'
+                            type='number'
+                            placeholder='Price per hour for Architect-level'
+                            value={pricePerHour.pricePerHourForArchitect ?? ''}
+                            onChange={(e) => {
+                                setValue('pricePerHourForArchitect', Number(e.target.value));
+                                setPricePerHour((prevPrices) => ({
+                                    ...prevPrices,
+                                    pricePerHourForArchitect: Number(e.target.value),
+                                }));
+                            }}
+                            min={0}
+                            showLabel={false}
+                            triggerError={false}
+                        />
+                        <MultiSelector
+                            error={errors.customerIds?.message}
+                            usersList={customerResponse}
+                            selectedUsers={selectedCustomer}
+                            setSelectedUsers={setSelectedCustomer}
+                            field='customerIds'
+                            placeholder='Customers'
+                            setError={setError}
+                            clearErrors={clearErrors}
+                            selectedError={
+                                selectedCustomer.length > 0 ? selectedCustomer : inviteEmails
+                            }
+                            handleError={false}
+                        />
 
                         <MultiSelector
                             error={errors.employeeIds?.message}
@@ -188,19 +265,20 @@ export default function ProjectFormControl() {
                             clearErrors={clearErrors}
                             selectedError={selectedEmployees}
                         />
+                        <div className='col-span-2 flex items-center justify-center'>
+                            <div className='w-20  border-t border-gray-400'></div>
+                            <span className='mx-4 text-gray-500'>or</span>
+                            <div className='w-20 border-t border-gray-400'></div>
+                        </div>
 
-                        <EmailInvite
-                            error={errors.inviteEmails?.message}
-                            inviteEmails={inviteEmails}
-                            setInviteEmails={setInviteEmails}
-                            field='inviteEmails'
-                            placeholder='Invite via email'
-                            selectedError={
-                                selectedCustomer.length > 0 ? selectedCustomer : inviteEmails
-                            }
-                            setError={setError}
-                            clearErrors={clearErrors}
-                        />
+                        <div className='col-span-2'>
+                            <EmailInvite
+                                inviteEmails={inviteEmails}
+                                setInviteEmails={setInviteEmails}
+                                field='inviteEmails'
+                                placeholder='Invite customers via email'
+                            />
+                        </div>
                     </div>
                     <div className='mb-4 ml-12 text-xs font-medium text-customRed'>
                         {errorMessages &&

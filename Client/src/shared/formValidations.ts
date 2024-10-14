@@ -1,3 +1,4 @@
+import dayjs, { Dayjs } from 'dayjs';
 import * as yup from 'yup';
 
 export const loginSchema = yup.object().shape({
@@ -97,39 +98,34 @@ export const editUserSchema = yup.object().shape({
 
 export const projectFormSchema = yup.object().shape({
     projectName: yup.string().required('Project name is required!'),
-    pricePerHour: yup
+    pricePerHourForJunior: yup
         .number()
-        .required('Price per hour is required!')
-        .positive('Price must be bigger then 0')
-        .typeError('Price per hour must be a number'),
+        .required('Junior price per hour is required!')
+        .positive('Junior price must be bigger then 0')
+        .typeError('Junior price per hour must be a number'),
+    pricePerHourForMid: yup
+        .number()
+        .required('Mid price per hour is required!')
+        .positive('Mid price must be bigger then 0')
+        .typeError('Mid price per hour must be a number'),
+    pricePerHourForSenior: yup
+        .number()
+        .required('Senior price per hour is required!')
+        .positive('Senior price must be bigger then 0')
+        .typeError('Senior price per hour must be a number'),
+    pricePerHourForArchitect: yup
+        .number()
+        .required('Architect price per hour is required!')
+        .positive('Architect price must be bigger then 0')
+        .typeError('Architect price per hour must be a number'),
     employeeIds: yup
         .array()
         .min(1, 'At least one employee must be selected')
         .of(yup.string().required())
         .required('At least one employee must be selected'),
-    customerIds: yup
-        .array()
-        .of(yup.string().required())
-        .test(
-            'customer-or-email',
-            'At least one customer or email must be selected',
-            function (value) {
-                const { inviteEmails } = this.parent;
-                return (value && value.length > 0) || (inviteEmails && inviteEmails.length > 0);
-            }
-        ),
+        customerIds: yup.array().of(yup.string()),
     startingDate: yup.string().required('Please select date'),
-    inviteEmails: yup
-        .array()
-        .of(yup.string().email('Must be a valid email').required())
-        .test(
-            'email-or-customer',
-            'At least one email or customer must be added',
-            function (value) {
-                const { customerIds } = this.parent;
-                return (value && value.length > 0) || (customerIds && customerIds.length > 0);
-            }
-        ),
+    inviteEmails: yup.array().of(yup.string().email('Must be a valid email')),
 });
 
 export const resetPasswordSchema = yup.object().shape({
@@ -143,10 +139,18 @@ export const resetPasswordSchema = yup.object().shape({
         .required('Please confirm your password'),
 });
 
+export const changeNamesSchema = yup.object().shape({
+    firstName: yup
+        .string()
+        .required('First name is required')
+        .min(3, 'First name must be at least 3 characters long'),
+    lastName: yup
+        .string()
+        .required('Last name is required')
+        .min(3, 'Last name must be at least 3 characters long'),
+});
+
 export const changePasswordSchema = yup.object().shape({
-    name: yup.string().required(),
-    _id: yup.string().required(),
-    email: yup.string().required(),
     oldPassword: yup
         .string()
         .required('Old password  is required!')
@@ -172,4 +176,49 @@ export const hoursFormSchema = yup.object().shape({
         .required('Please add time')
         .transform((value, originalValue) => (originalValue === '' ? undefined : value)),
     notes: yup.string().required('Please add note'),
+});
+
+export const generateReportSchema = yup.object().shape({
+    name: yup.string().required('Report name is required!'),
+    startDate: yup
+        .mixed<Dayjs | ''>()
+        .nullable()
+        .test(
+            'is-dayjs',
+            'Please select a valid starting date',
+            (value) => value === null || dayjs.isDayjs(value)
+        )
+        .required('Please select starting date'),
+    endDate: yup
+        .mixed<Dayjs | ''>()
+        .nullable()
+        .test(
+            'is-dayjs',
+            'Please select a valid ending date',
+            (value) => value === null || dayjs.isDayjs(value)
+        )
+        .required('Please select ending date'),
+});
+
+export const changePricesSchema = yup.object().shape({
+    pricePerHourForJunior: yup
+        .number()
+        .required('Junior price per hour is required and must be a number!')
+        .positive('Junior price must be bigger then 0')
+        .typeError('Junior price per hour is required and must be a number!'),
+    pricePerHourForMid: yup
+        .number()
+        .required('Mid price per hour is required and must be a number!')
+        .positive('Mid price must be bigger then 0')
+        .typeError('Mid price per hour is required and must be a number!'),
+    pricePerHourForSenior: yup
+        .number()
+        .required('Senior price per hour is required and must be a number!')
+        .positive('Senior price must be bigger then 0')
+        .typeError('Senior price per hour is required and must be a number!'),
+    pricePerHourForArchitect: yup
+        .number()
+        .required('Architect price per hour is required and must be a number!')
+        .positive('Architect price must be bigger then 0')
+        .typeError('Architect price per hour is required and must be a number!'),
 });

@@ -7,7 +7,11 @@ import httpServices from '@/services/httpServices';
 export default function useChangePassword() {
     const { patch } = httpServices();
 
-    const { mutate: changePassword, isSuccess } = useMutation({
+    const {
+        mutate: changePassword,
+        isSuccess,
+        isPending: isChangePasswordPending,
+    } = useMutation({
         mutationFn: (data: { _id: string; password: string; confirmPassword: string }) =>
             patch(urlKeys.editUser + `/${data._id}/password_restore`, data),
         onSuccess: () => {
@@ -18,5 +22,5 @@ export default function useChangePassword() {
         },
     });
 
-    return { changePassword, isSuccess };
+    return { changePassword, isSuccess, isChangePasswordPending };
 }

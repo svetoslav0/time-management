@@ -8,6 +8,7 @@ type AuthContextValue = {
     loginData: LoginResponseData | undefined;
     setLoginData: (userData: LoginResponseData) => void;
     clearLoginData: () => void;
+    changeContextNames: (firstName: string, lastName: string) => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -38,6 +39,17 @@ export const AuthContextProvider = ({ children }: PropsWithChildren<object>) => 
         clearUserData();
     };
 
+    const changeContextNames = (firstName: string, lastName: string) => {
+        if (loginData) {
+            const updatedLoginData = {
+                ...loginData,
+                firstName,
+                lastName,
+            };
+            setLoginData(updatedLoginData);
+        }
+    };
+
     useEffect(() => {
         if (loginData && loginData.expire) {
             const timeToExpire = loginData.expire - Date.now();
@@ -56,7 +68,9 @@ export const AuthContextProvider = ({ children }: PropsWithChildren<object>) => 
     }, [loginData, navigate]);
 
     return (
-        <AuthContext.Provider value={{ loginData, clearLoginData, setLoginData }}>
+        <AuthContext.Provider
+            value={{ loginData, clearLoginData, setLoginData, changeContextNames }}
+        >
             {children}
         </AuthContext.Provider>
     );

@@ -4,8 +4,6 @@ const hoursService = require("../services/hoursService");
 const isEmployeeOrAdmin = require("../middlewares/isEmployeeOrAdmin");
 const getJwtToken = require("../middlewares/getUserTokenMiddleware");
 
-const HoursValidationErrors = require("../errors/hoursValidationErrors");
-
 router.post("/", isEmployeeOrAdmin, getJwtToken, async (req, res, next) => {
     try {
         const hours = await hoursService.logHours(req);
@@ -19,6 +17,7 @@ router.post("/", isEmployeeOrAdmin, getJwtToken, async (req, res, next) => {
 router.get("/", getJwtToken, async (req, res, next) => {
     try {
         const hours = await hoursService.getAllHours(req);
+        
         res.status(200).json(hours);
     } catch (error) {
         next(error);

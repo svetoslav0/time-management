@@ -17,6 +17,22 @@ const projectSchema = new Schema({
   },
   pricePerHour: {
     type: Number,
+    required: false,
+  },
+  pricePerHourForJunior: {
+    type: Number,
+    required: true
+  },
+  pricePerHourForMid: {
+    type: Number,
+    required: true
+  },
+  pricePerHourForSenior: {
+    type: Number,
+    required: true
+  },
+  pricePerHourForArchitect: {
+    type: Number,
     required: true
   },
   status: {

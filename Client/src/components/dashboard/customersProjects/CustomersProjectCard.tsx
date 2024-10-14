@@ -15,7 +15,7 @@ export default function CustomersProjectCard({ project }: CustomersProjectCardPr
                 project.status === 'inProgress'
                     ? 'hover:border-customBlue'
                     : 'hover:border-customGreen',
-                'flex relative h-full w-[458px] border-collapse overflow-hidden rounded-2xl border-[1px] border-l-0 border-white transition duration-300 ease-out '
+                'relative flex h-full w-[458px] border-collapse overflow-hidden rounded-2xl border-[1px] border-l-0 border-white transition duration-300 ease-out '
             )}
         >
             <div
@@ -45,18 +45,13 @@ export default function CustomersProjectCard({ project }: CustomersProjectCardPr
                             {dayjs(project.startingDate).format('DD.MM.YY')}
                         </span>
                     </div>
-                    <div className='text-base text-customDarkBlue'>
-                        <span className='font-semibold '>Price: </span>
-                        <span className='font-medium'>${project.pricePerHour}/h</span>
-                    </div>
                 </div>
-                {project.status === 'completed' && (
-                    <div className='absolute bottom-[22px] right-[53px]'>
-                        <Link to={`/dashboard/${project._id}`} className='secondaryBtn'>
-                            Details
-                        </Link>
-                    </div>
-                )}
+
+                <div className='absolute bottom-[22px] right-[53px]'>
+                    <Link to={`/dashboard/${project._id}`} className='secondaryBtn'>
+                        Details
+                    </Link>
+                </div>
             </div>
         </div>
     );

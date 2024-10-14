@@ -4,7 +4,8 @@ import { AuthContextProvider } from './components/auth/AuthContext';
 import CreateUser from './components/auth/CreateUser';
 import GoogleCreateAcc from './components/auth/GoogleCreateAcc';
 import Login from './components/auth/Login';
-import CustomerProjectDetails from './components/dashboard/customerProjects/CustomerProjectDetails';
+import CustomerProjectReport from './components/dashboard/customerProjects/CustomerProjectReport';
+import CustomerProjectReportDetails from './components/dashboard/customerProjects/CustomerProjectReportDetails';
 import Dashboard from './components/dashboard/Dashboard';
 import {
     restrictAdminPages,
@@ -93,12 +94,16 @@ function App() {
                 },
                 {
                     path: 'dashboard/:id',
-                    element: <CustomerProjectDetails />,
+                    element: <CustomerProjectReport />,
                 },
                 {
                     path: 'profile',
-                    element: <MyProfile />
-                }
+                    element: <MyProfile />,
+                },
+                {
+                    path: 'reports/:id',
+                    element: <CustomerProjectReportDetails />,
+                },
             ],
         },
     ]);

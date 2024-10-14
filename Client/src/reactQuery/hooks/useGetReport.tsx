@@ -7,7 +7,7 @@ const { get } = httpServices();
 
 export default function useGetReport(id: string | undefined) {
     const queryKey = [queryKeys.pdf, id];
-    const generatedUrl = `/projects/${id}/report/pdf`;
+    const generatedUrl = `/reports/${id}/pdf`;
 
     const { data: report, error: downloadError } = useQuery<Blob>({
         queryKey,
