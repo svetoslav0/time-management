@@ -182,6 +182,7 @@ export default function CreateUser() {
                                         trigger={trigger}
                                         field='companyName'
                                         placeholder='Company Name'
+                                        labelName='Company Name'
                                     />
                                     <InputComponent
                                         error={errors.phoneNumber?.message}
@@ -189,6 +190,7 @@ export default function CreateUser() {
                                         trigger={trigger}
                                         field='phoneNumber'
                                         placeholder='Phone Number'
+                                        labelName='Phone Number'
                                     />
                                 </div>
                                 <InputComponent
@@ -222,6 +224,7 @@ export default function CreateUser() {
                                 toggleVisibility={toggleVisibility}
                                 isVisible={isVisible}
                                 placeholder='Confirm password'
+                                labelName='Confirm password'
                             />
                         </div>
                         <InputComponent
