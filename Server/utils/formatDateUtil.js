@@ -4,7 +4,7 @@ const formatDate = (date) => {
 };
 
 const formatDateWithDay = (date) => {
-    return moment(date).format("ddd, DD-MM-YYYY");
+    return moment(date).format("ddd, DD-MM-YY");
 };
 
 module.exports = {
