@@ -30,8 +30,7 @@ handlebars.registerHelper('generateHoursTable', (hours) => {
       const hoursForDate = hoursMap.get(date) || [{}];
       return hoursForDate.map(hour => {
           return tableTemplate({
-              date,
-              employeeName: hour.employeeName || '',
+              date: hour.dateWithDay,
               hours: (hour.hours || 0).toString(),
               notes: hour.notes || ''
           });

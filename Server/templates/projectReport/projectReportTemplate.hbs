@@ -2,7 +2,10 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Report</title>
+        <title>{{projectData.projectName}} - Report for {{startDate}} - {{endDate}}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&display=swap" rel="stylesheet">
         <style>
             * {
             margin: 0;
@@ -91,18 +94,23 @@
             .summary span {
             color: black;
             }
+            .opshero-title {
+                font-family: "Maven Pro", sans-serif;
+                font-weight: 400;
+                font-size: 64px;
+            }
         </style>
     </head>
     <body>
         <div class="header">
             <img src="http://localhost:3000/projects/logo" alt="Logo">
-            <h1>{{projectData.projectName}}</h1>
+            <h1 class="opshero-title">OpsHero</h1>
         </div>
-        <p>Starting Date: <strong>{{projectData.startingDate}}</strong></p>
-        <p>Customers: <strong>{{#each
+        <p>Date range: <strong>{{startDate}} to {{endDate}}</strong></p>
+        <p>Customer(s): <strong>{{#each
                 projectData.customerNames}}{{this}}{{#unless @last}},
                 {{/unless}}{{/each}}</strong></p>
-        <p>Employees: <strong>{{#each
+        <p>Employee(s): <strong>{{#each
                 projectData.employeeNames}}{{this}}{{#unless @last}},
                 {{/unless}}{{/each}}</strong></p>
 
@@ -110,7 +118,6 @@
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Employee</th>
                     <th>Hours</th>
                     <th>Notes</th>
                 </tr>
