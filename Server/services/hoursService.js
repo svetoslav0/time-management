@@ -43,7 +43,7 @@ exports.getAllHours = async (req) => {
         return Hours.find(adminFilter)
             .populate({ path: "projectId", select: "projectName" })
             .populate({ path: "userId", select: "email firstName lastName" })
-            .sort({ date: -1 });
+            .sort({ date: 1 });
     }
 
     if (userRole === "employee") {
@@ -81,7 +81,7 @@ exports.getAllHours = async (req) => {
     return await Hours.find(filter)
         .populate({ path: "projectId", select: "projectName" })
         .populate({ path: "userId", select: "email" })
-        .sort({ date: -1 });
+        .sort({ date: 1 });
 };
 
 exports.logHours = async (req) => {

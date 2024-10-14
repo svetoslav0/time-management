@@ -6,7 +6,7 @@ const Hours = require("../models/Hours");
 const { getProjectByRoleIfNotAdmin } = require("../utils/getProjectByRole");
 
 const validateReportParams = require("../utils/validationUtils/validateReportParamsUtil");
-const formatDate = require("../utils/formatDateUtil");
+const { formatDate, formatDateWithDay } = require("../utils/formatDateUtil");
 const generatePdf = require("../utils/generatePdfUtil");
 const { validateObjectId } = require("../utils/validateObjectIdUtil");
 const ApiException = require("../errors/ApiException");
@@ -51,7 +51,10 @@ exports.collectReportData = async (data) => {
         query.date = { ...query.date, $lte: new Date(endDate) };
     }
 
-    const hours = await Hours.find(query).populate("userId", "firstName lastName").sort({ date: -1 });
+    const hours = await Hours
+        .find(query)
+        .populate("userId", "firstName lastName")
+        .sort({ date: 1 });
 
     if (hours.length < 1 && startDate && endDate) {
 
@@ -79,17 +82,19 @@ exports.collectReportData = async (data) => {
             ),
             projectName: project.projectName,
             startingDate: formatDate(project.startingDate),
-            pricePerHour: project.pricePerHour,
         },
         hours: hours.map((hour) => ({
             id: hour._id,
             employeeName: `${hour.userId.firstName} ${hour.userId.lastName}`,
             date: formatDate(hour.date),
+            dateWithDay: formatDateWithDay(hour.date),
             hours: hour.hours,
             notes: hour.notes,
         })),
         totalPrice: totalPrice.toFixed(2),
         totalHours: totalHours,
+        startDate,
+        endDate,
     };
 };
 
