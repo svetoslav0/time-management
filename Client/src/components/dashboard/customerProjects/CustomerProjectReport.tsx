@@ -82,7 +82,7 @@ export default function CustomerProjectReport() {
                                             className={`${index % 2 === 0 ? 'bg-white' : 'bg-customDarkTableGrey shadow-TrInsetShadow'} min-h-12 cursor-pointer`}
                                         >
                                             <td className='w-32 p-4 text-base font-bold text-customDarkBlue'>
-                                                {dayjs(report.createdAt).format('DD.MM.YYYY')}
+                                                {dayjs(report.startDate).format('DD.MM.YYYY')}
                                             </td>
                                             <td className='w-32 p-4 text-base font-bold text-customDarkBlue'>
                                                 {dayjs(report.endDate).format('DD.MM.YYYY')}
