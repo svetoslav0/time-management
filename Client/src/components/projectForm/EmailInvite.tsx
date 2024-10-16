@@ -41,7 +41,7 @@ export default function EmailInvite({
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         const target = e.target as HTMLInputElement;
         if (e.code === 'Space') {
-            handleAddEmail(target.value);
+            handleAddEmail(target.value.replace(',', ''));
         }
     };
 
