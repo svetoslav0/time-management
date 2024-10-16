@@ -18,11 +18,11 @@ This project represents a web-based system with 3 different levels of access: **
  - Ivaylo Ivanov, ivaylo_ivanov84@yahoo.co.uk, [LinkedIn](https://www.linkedin.com/in/ivaylo-ivanov-4907baa8/)
  - Timi Pashov, pashov91@gmail.com, [LinkedIn](https://www.linkedin.com/in/timi-pashov-5876a1254/)
  - Emin Apturaim, eminapturaim@gmail.com, [LinkedIn](https://www.linkedin.com/in/emin-ap/)
- - Alex Petrov, alex.emilov.petrov@gmail.com
+ - Alexander Petrov, alex.emilov.petrov@gmail.com
 ## :bust_in_silhouette: UI/UX Design
  - Ana Dobreva, adobreva1211@gmail.com, [LinkedIn](https://www.linkedin.com/in/ana-dobreva-99062026b/)
-# Project Description & Documentation
-# Authentication, authorization & account creation
+# :bookmark_tabs: Project Description & Documentation
+# :guardsman: Authentication, authorization & account creation
 ## Login
 The application has two different authentication methods:
 1. The first one requires **email** and **password** in order to login. The credentials are validated for different set on criteria - the email has to be valid, the email has to be associated with an existing account that is active, and the password has to be valid. If some of those criteria is not satisfied, an error message will be shown that says that the login was not successful. 
@@ -38,7 +38,7 @@ While creating the account or after that, an administrator can **send an invite*
 The potential customer sees a form where they should fill some details - **email**, **first** and **last name**, **company name**, **phone number**, **address**, **password**, **confirm password**, and **description** (from those only description is not required).
 Or, alternatively, the can create an account with **Google** where Google window pops up and they have to login with their Google account. In those cases the application still requires some fields - the same without the email.
 
-# Common features
+# :speaker: Common features
 Every logged used has a navbar with a menu of options and settings. Each user has **My Profile**, **Projects**, and **Logout** buttons in their menus. Administrators have more options in order to manage **Users** and **Projects** but those features will be described bellow in the **Administrator features** section.
 ## My Profile
 My profile section displays very basic user information - **Email**, **first** and **last name**. From this page users can do two things:
@@ -51,7 +51,7 @@ Clicking on **Projects** button in the nav bar will lead to **Projects listing**
 ## Logout
 At the top right each logged in user has a **Logout** button that signs off from the application.
 
-# Administrator features
+# :necktie: Administrator features
 The administrator is the highest role in the context of the application. He can manage all the users, projects, and reports.
 ## Users
 ### User creation
@@ -121,7 +121,7 @@ From this section administrators can see all logged hours for the specified proj
 #### Generated reports
 From this section administrators can see all generated reports for the selected project. Displayed in a table, they can easily view the date range that the report covers and the name of the report. They can also download reports in a PDF files or reports can be deleted, if that's needed. 
 
-# Employee features
+# :man_office_worker: Employee features
 Logging in the application as an **employee**, users have all the information in a single page where they control the events they log.
 
 They see a list of all projects that they were assigned to and that are still **In progress**. Projects with status **Completed** will not be shown.
@@ -130,7 +130,7 @@ Clicking on any project will expand details for logged hours for the selected pr
 
 From there employees can view, add and edit records (Note: employees can delete and edit only their own records). For the records that someone else logged, edit and delete buttons will not be shown. Also, the email for the employee that logged the record can be seen.
 
-# Customer features
+# :handshake: Customer features
 Logging in the application as a **customer**, the user sees a list of all projects that are assigned to them. From there they can see very basic information only - **project name**, **status**, and **start date**. Clicking on the details button will lead them to the **project details** page.
 
 In the **project details** page customers can see additional data - employees that are working on this project, list of clients (Note: more than one customer might be assigned to a single project), and a list of already generated reports. Clicking on each of the reports will lead the user to the **report details** page.
